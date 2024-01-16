@@ -1,0 +1,23 @@
+.navbar {
+  z-index: 2;
+  box-shadow: 0px 0px 25px 0px #000;
+  border-color: transparent;
+
+  .item {
+    transition: border .5s ease-in-out, color .5s ease-in-out;
+    font-size: larger;
+    font-weight: bold;
+    padding: 20px;
+    border-color: #000;
+    z-index: 2;
+  }
+
+  .item:hover,
+  .item[aria-selected='true'] {
+    border-color: hsl(190, 70%, 70%);
+  }
+}
+
+.link {
+  text-decoration: none;
+}

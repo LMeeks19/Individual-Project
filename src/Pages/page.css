@@ -1,0 +1,8 @@
+.page {
+    height: -webkit-fill-available;
+    padding: 50px;
+
+    &.blur {
+        filter: blur(1px);
+    }
+}
