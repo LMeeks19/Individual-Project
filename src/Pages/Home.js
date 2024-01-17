@@ -1,7 +1,7 @@
 import { Heading, View } from "@aws-amplify/ui-react";
 import { useRecoilValue } from "recoil";
 import { sideBarState } from "../State/GlobalState";
-import './Home.css';
+import "./Home.css";
 
 export default function Home() {
   const sideBar = useRecoilValue(sideBarState);
