@@ -1,23 +1,132 @@
-.navbar {
-  z-index: 2;
-  box-shadow: 0px 0px 25px 0px #000;
-  border-color: transparent;
+.flex-container {
+  width: 100%;
+  box-shadow: 0px 10px 25px -4px #000;
+  z-index: 5;
+  position: relative;
+  background-color: #008080;
 
-  .item {
-    transition: border .5s ease-in-out, color .5s ease-in-out;
-    font-size: larger;
-    font-weight: bold;
-    padding: 20px;
-    border-color: #000;
-    z-index: 2;
+  .amplify-button {
+    display: none;
+    margin: 10px;
+    padding: 10px;
+    border: none;
+
+    .amplify-icon {
+      width: 1.4rem !important;
+      height: 1.4rem !important;
+
+    }
+
+    .amplify-icon>svg {
+      width: 1.4rem !important;
+      height: 1.4rem !important;
+
+    }
   }
 
-  .item:hover,
-  .item[aria-selected='true'] {
-    border-color: hsl(190, 70%, 70%);
+  .tab-container {
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+
+    .navbar {
+      z-index: 5;
+      border-color: transparent;
+      width: 100%;
+      display: flex;
+      justify-content: space-evenly;
+
+      .item {
+        transition: border .5s ease-in-out, color .5s ease-in-out;
+        font-size: larger;
+        font-weight: bold;
+        padding: 20px;
+        border-color: transparent;
+        z-index: 5;
+        display: flex;
+
+        .amplify-text {
+          margin-top: auto;
+          margin-bottom: auto;
+        }
+
+        .icon {
+          margin-right: 10px;
+          color: white;
+          margin-top: auto;
+          margin-bottom: auto;
+        }
+      }
+
+      .item:hover,
+      .item[aria-selected='true'] {
+        border-color: white;
+      }
+    }
+
+    .link {
+      text-decoration: none;
+    }
   }
 }
 
-.link {
-  text-decoration: none;
+.amplify-menu__wrapper {
+  .amplify-menu__content {
+    .amplify-button:hover {
+      background-color: #008080;
+    }
+  }
+}
+
+
+@media screen and (max-width: 1100px) {
+  .flex-container {
+    .tab-container {
+      .navbar {
+        .item {
+          font-size: medium;
+        }
+
+        .icon {
+          font-size: 1.25rem;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 990px) {
+  .flex-container {
+    .tab-container {
+      .navbar {
+        .item {
+          font-size: small;
+        }
+
+        .icon {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 862px) {
+  .flex-container {
+    .amplify-button {
+      display: flex;
+    }
+
+    .tab-container {
+      .navbar {
+        .item {
+          display: none;
+        }
+
+        .icon {
+          font-size: 0.75rem;
+        }
+      }
+    }
+  }
 }
