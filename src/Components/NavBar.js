@@ -29,7 +29,7 @@ export default function NavBar() {
   return (
     <Flex gap="0" className="flex-container">
       <Tabs.Container className="tab-container" defaultValue={activeTab}>
-        <Tabs.List className="navbar" spacing="left">
+        <Tabs.List className="navbar" spacing="equal">
           <Link className="link" to={"/dashboard"} component={Link}>
             <Tabs.Item
               className="item"
@@ -52,7 +52,7 @@ export default function NavBar() {
             </Tabs.Item>
           </Link>
 
-          <Link className="link" to={"/match-post"} component={Link}>
+          <Link className="link" to={"/match-posts"} component={Link}>
             <Tabs.Item
               className="item"
               value="3"
@@ -63,7 +63,7 @@ export default function NavBar() {
             </Tabs.Item>
           </Link>
 
-          <Link className="link" to={"/players-post"} component={Link}>
+          <Link className="link" to={"/player-posts"} component={Link}>
             <Tabs.Item
               className="item"
               value="4"
@@ -98,13 +98,44 @@ export default function NavBar() {
         </Tabs.List>
       </Tabs.Container>
       <Menu menuAlign="end">
-        <MenuItem>DASHBOARD</MenuItem>
+        <Link className="link" to={"/dashboard"} component={Link}>
+          <MenuItem>
+            <DashboardIcon className="icon" />
+            <Text margin="0px 0px 0px 5px">DASHBOARD</Text>
+          </MenuItem>
+        </Link>
         <Divider />
-        <MenuItem>MATCH POSTS</MenuItem>
-        <MenuItem>PLAYER POSTS</MenuItem>
+        <Link className="link" to={"/schedule"} component={Link}>
+          <MenuItem>
+            <CalendarMonthIcon className="icon" />
+            <Text margin="0px 0px 0px 5px">SCHEDULE</Text>
+          </MenuItem>
+        </Link>
+        <Link className="link" to={"/match-posts"} component={Link}>
+          <MenuItem>
+            <PostAddIcon className="icon" />
+            <Text margin="0px 0px 0px 5px">MATCH POSTS</Text>
+          </MenuItem>
+        </Link>
+        <Link className="link" to={"/player-posts"} component={Link}>
+          <MenuItem>
+            <PostAddIcon className="icon" />
+            <Text margin="0px 0px 0px 5px">PLAYER POSTS</Text>
+          </MenuItem>
+        </Link>
         <Divider />
-        <MenuItem>MESSAGES</MenuItem>
-        <MenuItem>ACCOUNT</MenuItem>
+        <Link className="link" to={"/messages"} component={Link}>
+          <MenuItem>
+            <ChatIcon className="icon" />
+            <Text margin="0px 0px 0px 5px">MESSAGES</Text>
+          </MenuItem>
+        </Link>
+        <Link className="link" to={"/account"} component={Link}>
+          <MenuItem>
+            <AccountCircleIcon className="icon" />
+            <Text margin="0px 0px 0px 5px">ACCOUNT</Text>
+          </MenuItem>
+        </Link>
       </Menu>
     </Flex>
   );

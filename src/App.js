@@ -1,17 +1,12 @@
 import "@aws-amplify/ui-react/styles.css";
 import React from "react";
-import {
-  ThemeProvider,
-  Authenticator,
-  Card,
-} from "@aws-amplify/ui-react";
+import { ThemeProvider, Authenticator, Card } from "@aws-amplify/ui-react";
 import { components, formFields } from "./Components/Authenticator";
 import { useRecoilValue } from "recoil";
 import { themeState } from "./State/GlobalState";
 import NavBar from "./Components/NavBar";
 import NavRouter from "./Components/Router";
 import { BrowserRouter as Router } from "react-router-dom";
-import "./Components/Authenticator.css";
 import "./App.css";
 
 function App() {
@@ -21,15 +16,15 @@ function App() {
     name: "my-theme",
     overrides: [
       {
-        colorMode: 'dark',
+        colorMode: "dark",
         tokens: {
           colors: {
             font: {
-              primary: { value: '#fff' },
+              primary: { value: "#fff" },
+              secondary: { value: "#fff" },
             },
             background: {
-              primary: { value: '#404040' },
-
+              primary: { value: "#404040" },
             },
           },
         },
@@ -39,18 +34,18 @@ function App() {
 
   return (
     <ThemeProvider theme={theme} colorMode={colourMode}>
-      <Authenticator
-        className="authenticator"
-        components={components}
-        formFields={formFields}
-      >
-        <Card padding="0">
+      <Card className="layout" padding="0">
+        <Authenticator
+          className="authenticator"
+          components={components}
+          formFields={formFields}
+        >
           <Router>
             <NavBar />
             <NavRouter />
           </Router>
-        </Card>
-      </Authenticator>
+        </Authenticator>
+      </Card>
     </ThemeProvider>
   );
 }

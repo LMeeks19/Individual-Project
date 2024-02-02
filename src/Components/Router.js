@@ -13,8 +13,8 @@ export default function NavRouter() {
       <Route index path="/" element={<Home />} />
       <Route path="/dashboard" element={<Home />} />
       <Route path="/schedule" element={<Schedule />} />
-      <Route path="/match-post" element={<MatchPost />} />
-      <Route path="/players-post" element={<PlayersPost />} />
+      <Route path="/match-posts" element={<MatchPost />} />
+      <Route path="/player-posts" element={<PlayersPost />} />
       <Route path="/account" element={<Account />} />
       <Route path="/messages" element={<Messages />} />
     </Routes>

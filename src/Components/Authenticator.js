@@ -15,23 +15,26 @@ export const components = {
         <View textAlign="center">
           <Heading
             padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
-            level={3}>
+            level={3}
+          >
             Sign in to your account
           </Heading>
         </View>
       );
     },
-    Footer() {
+    FormFields() {
+      
+    },
+     Footer() {
       const { toForgotPassword } = useAuthenticator();
 
       return (
         <View textAlign="center">
           <Button
-            fontWeight="normal"
+            fontWeight="large"
             onClick={toForgotPassword}
-            size="small"
             variation="link"
->
+          >
             Reset Password
           </Button>
         </View>
@@ -60,9 +63,8 @@ export const components = {
       return (
         <View textAlign="center">
           <Button
-            fontWeight="normal"
+            fontWeight="large"
             onClick={toSignIn}
-            size="small"
             variation="link"
           >
             Back to Sign In
@@ -140,9 +142,6 @@ export const components = {
 
 export const formFields = {
   signUp: {
-    name: {
-      order: 1,
-    },
     username: {
       order: 2,
     },
@@ -150,7 +149,6 @@ export const formFields = {
       order: 3,
     },
     password: {
-
       order: 4,
     },
     confirm_password: {
@@ -196,6 +194,3 @@ export const formFields = {
     },
   },
 };
-
-
-

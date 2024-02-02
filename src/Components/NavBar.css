@@ -63,11 +63,11 @@
         border-color: white;
       }
     }
-
-    .link {
-      text-decoration: none;
-    }
   }
+}
+
+.link {
+  text-decoration: none;
 }
 
 .amplify-menu__wrapper {
