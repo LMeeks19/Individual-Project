@@ -1,0 +1,20 @@
+enum AccountType {
+  COACH
+  PARENT
+}
+
+type Profile @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  username: String!
+  name: String!
+  dob: String
+  email: String!
+  accountType: AccountType
+  buildingNameNumber: String
+  street: String
+  townCity: String
+  county: String
+  postcode: String
+  phoneNumber: String
+}
+ 

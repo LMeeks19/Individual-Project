@@ -17,125 +17,117 @@ import ChatIcon from "@mui/icons-material/Chat";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 export default function NavBar() {
-  const activeTab =
-    window.localStorage.getItem("activeTab") === null
-      ? "1"
-      : window.localStorage.getItem("activeTab");
-
-  const setActiveTab = (tab) => {
-    window.localStorage.setItem("activeTab", tab);
-  };
 
   return (
     <Flex gap="0" className="flex-container">
-      <Tabs.Container className="tab-container" defaultValue={activeTab}>
+      <Tabs.Container className="tab-container" defaultValue="1">
         <Tabs.List className="navbar" spacing="equal">
           <Link className="link" to={"/dashboard"} component={Link}>
-            <Tabs.Item
-              className="item"
-              value="1"
-              onClick={() => setActiveTab("1")}
-            >
-              <DashboardIcon className="icon" />
-              <Text>DASHBOARD</Text>
+            <Tabs.Item className="item" value="1">
+              <Text display="flex">
+                <DashboardIcon className="icon" />
+                <Text>DASHBOARD</Text>
+              </Text>
             </Tabs.Item>
           </Link>
 
           <Link className="link" to={"/schedule"} component={Link}>
-            <Tabs.Item
-              className="item"
-              value="2"
-              onClick={() => setActiveTab("2")}
-            >
-              <CalendarMonthIcon className="icon" />
-              <Text>SCHEDULE</Text>
+            <Tabs.Item className="item" value="2">
+              <Text display="flex">
+                <CalendarMonthIcon className="icon" />
+                <Text>SCHEDULE</Text>
+              </Text>
             </Tabs.Item>
           </Link>
 
           <Link className="link" to={"/match-posts"} component={Link}>
-            <Tabs.Item
-              className="item"
-              value="3"
-              onClick={() => setActiveTab("3")}
-            >
-              <PostAddIcon className="icon" />
-              <Text>MATCH POST</Text>
+            <Tabs.Item className="item" value="3">
+              <Text display="flex">
+                <PostAddIcon className="icon" />
+                <Text>MATCH POSTS</Text>
+              </Text>
             </Tabs.Item>
           </Link>
 
           <Link className="link" to={"/player-posts"} component={Link}>
-            <Tabs.Item
-              className="item"
-              value="4"
-              onClick={() => setActiveTab("4")}
-            >
-              <PostAddIcon className="icon" />
-              <Text>PLAYERS POST</Text>
+            <Tabs.Item className="item" value="4">
+              <Text display="flex">
+                <PostAddIcon className="icon" />
+                <Text>PLAYER POSTS</Text>
+              </Text>
             </Tabs.Item>
           </Link>
 
           <Link className="link" to={"/messages"} component={Link}>
-            <Tabs.Item
-              className="item"
-              value="5"
-              onClick={() => setActiveTab("5")}
-            >
-              <ChatIcon className="icon" />
-              <Text>MESSAGES</Text>
+            <Tabs.Item className="item" value="5">
+              <Text display="flex">
+                <ChatIcon className="icon" />
+                <Text>MESSAGES</Text>
+              </Text>
             </Tabs.Item>
           </Link>
 
-          <Link className="link" to={"/account"} component={Link}>
-            <Tabs.Item
-              className="item"
-              value="6"
-              onClick={() => setActiveTab("6")}
-            >
-              <AccountCircleIcon className="icon" />
-              <Text>ACCOUNT</Text>
+          <Link className="link" to={"/view-account"} component={Link}>
+            <Tabs.Item className="item" value="6">
+              <Text display="flex">
+                <AccountCircleIcon className="icon" />
+                <Text>ACCOUNT</Text>
+              </Text>
             </Tabs.Item>
           </Link>
         </Tabs.List>
       </Tabs.Container>
-      <Menu menuAlign="end">
-        <Link className="link" to={"/dashboard"} component={Link}>
-          <MenuItem>
-            <DashboardIcon className="icon" />
-            <Text margin="0px 0px 0px 5px">DASHBOARD</Text>
-          </MenuItem>
-        </Link>
+      <Menu height="75vh" overflow="auto" menuAlign="end">
+        <MenuItem>
+          <Link className="link" to={"/dashboard"} component={Link}>
+            <Text display="flex">
+              <DashboardIcon className="icon" />
+              <Text margin="0px 0px 0px 5px">DASHBOARD</Text>
+            </Text>
+          </Link>
+        </MenuItem>
         <Divider />
-        <Link className="link" to={"/schedule"} component={Link}>
-          <MenuItem>
-            <CalendarMonthIcon className="icon" />
-            <Text margin="0px 0px 0px 5px">SCHEDULE</Text>
-          </MenuItem>
-        </Link>
-        <Link className="link" to={"/match-posts"} component={Link}>
-          <MenuItem>
-            <PostAddIcon className="icon" />
-            <Text margin="0px 0px 0px 5px">MATCH POSTS</Text>
-          </MenuItem>
-        </Link>
-        <Link className="link" to={"/player-posts"} component={Link}>
-          <MenuItem>
-            <PostAddIcon className="icon" />
-            <Text margin="0px 0px 0px 5px">PLAYER POSTS</Text>
-          </MenuItem>
-        </Link>
+        <MenuItem>
+          <Link className="link" to={"/schedule"} component={Link}>
+            <Text display="flex">
+              <CalendarMonthIcon className="icon" />
+              <Text margin="0px 0px 0px 5px">SCHEDULE</Text>
+            </Text>
+          </Link>
+        </MenuItem>
+        <MenuItem>
+          <Link className="link" to={"/match-posts"} component={Link}>
+            <Text display="flex">
+              <PostAddIcon className="icon" />
+              <Text margin="0px 0px 0px 5px">MATCH POSTS</Text>
+            </Text>
+          </Link>
+        </MenuItem>
+        <MenuItem>
+          <Link className="link" to={"/player-posts"} component={Link}>
+            <Text display="flex">
+              <PostAddIcon className="icon" />
+              <Text margin="0px 0px 0px 5px">PLAYER POSTS</Text>
+            </Text>
+          </Link>
+        </MenuItem>
         <Divider />
-        <Link className="link" to={"/messages"} component={Link}>
-          <MenuItem>
-            <ChatIcon className="icon" />
-            <Text margin="0px 0px 0px 5px">MESSAGES</Text>
-          </MenuItem>
-        </Link>
-        <Link className="link" to={"/account"} component={Link}>
-          <MenuItem>
-            <AccountCircleIcon className="icon" />
-            <Text margin="0px 0px 0px 5px">ACCOUNT</Text>
-          </MenuItem>
-        </Link>
+        <MenuItem>
+          <Link className="link" to={"/messages"} component={Link}>
+            <Text display="flex">
+              <ChatIcon className="icon" />
+              <Text margin="0px 0px 0px 5px">MESSAGES</Text>
+            </Text>
+          </Link>
+        </MenuItem>
+        <MenuItem>
+          <Link className="link" to={"/view-account"} component={Link}>
+            <Text display="flex">
+              <AccountCircleIcon className="icon" />
+              <Text margin="0px 0px 0px 5px">ACCOUNT</Text>
+            </Text>
+          </Link>
+        </MenuItem>
       </Menu>
     </Flex>
   );

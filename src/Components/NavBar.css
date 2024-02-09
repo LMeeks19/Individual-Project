@@ -4,6 +4,7 @@
   z-index: 5;
   position: relative;
   background-color: #008080;
+  flex-shrink: 0;
 
   .amplify-button {
     display: none;
@@ -37,7 +38,7 @@
       justify-content: space-evenly;
 
       .item {
-        transition: border .5s ease-in-out, color .5s ease-in-out;
+        transition: border .5s ease-in-out;
         font-size: larger;
         font-weight: bold;
         padding: 20px;
@@ -51,8 +52,7 @@
         }
 
         .icon {
-          margin-right: 10px;
-          color: white;
+          margin-right: 5px;
           margin-top: auto;
           margin-bottom: auto;
         }
@@ -77,7 +77,6 @@
     }
   }
 }
-
 
 @media screen and (max-width: 1100px) {
   .flex-container {

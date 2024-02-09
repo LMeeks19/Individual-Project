@@ -1,8 +1,15 @@
-.page {
-    height: -webkit-fill-available;
-    padding: 50px;
+.layout {
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
 
-    &.blur {
-        filter: blur(1px);
-    }
+.page {
+    padding: 50px;
+}
+
+.container {
+    position: relative;
+    overflow: auto;
 }

@@ -1,0 +1,30 @@
+.warning {
+	background-color: indianred;
+	height: auto;
+	border-radius: 20px;
+	text-align: center;
+	padding: 20px;
+	position: relative;
+	margin: 50px;
+	margin-bottom: 0px;
+}
+	
+.warning-header {
+	font-size: x-large;
+	font-weight: bold;
+}
+
+.warning-message, .warning-link {
+	margin-top: 10px;
+	font-size: larger;
+}
+
+.warning-close {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 20px;
+	font-size: larger;
+	font-weight: bold;
+	cursor: pointer;
+}

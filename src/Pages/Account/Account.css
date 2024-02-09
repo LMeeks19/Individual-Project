@@ -1,0 +1,47 @@
+.heading {
+    margin-bottom: 20px;
+}
+
+.custom-button {
+    background-color: #008080;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.custom-button:focus {
+    opacity: 50%;
+}
+
+.account-tab:hover,
+.account-tab[aria-selected='true'] {
+    color: #008080;
+    border-color: #008080;
+}
+
+.account-table-row {
+    text-align: center;
+    transition: opacity .25s ease-in-out;
+}
+
+.account-table-row:nth-child(odd) {
+    background-color: #008080;
+}
+
+.account-table-cell {
+    width: 50%;
+}
+
+.account-table-cell-input {
+    height: 20px;
+    border-color: #fff;
+}
+
+.link {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.icon {
+    margin-top: auto;
+    margin-bottom: auto;
+}
