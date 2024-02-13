@@ -8,13 +8,14 @@
 	margin: 50px;
 	margin-bottom: 0px;
 }
-	
+
 .warning-header {
 	font-size: x-large;
 	font-weight: bold;
 }
 
-.warning-message, .warning-link {
+.warning-message,
+.warning-link {
 	margin-top: 10px;
 	font-size: larger;
 }
@@ -27,4 +28,10 @@
 	font-size: larger;
 	font-weight: bold;
 	cursor: pointer;
+}
+
+.warning-link {
+	text-decoration: underline;
+	cursor: pointer;
+	font-weight: lighter;
 }

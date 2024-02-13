@@ -4,6 +4,7 @@
   z-index: 5;
   position: relative;
   background-color: #008080;
+  display: flex;
   flex-shrink: 0;
 
   .amplify-button {

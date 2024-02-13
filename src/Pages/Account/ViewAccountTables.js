@@ -15,8 +15,13 @@ import { themeState } from "../../State/GlobalState";
 import { MdLightMode } from "react-icons/md";
 import { MdDarkMode } from "react-icons/md";
 import { VscColorMode } from "react-icons/vsc";
+import { format } from "date-fns";
 
 export function ViewPersonalTable(props) {
+
+  function formatDate(date) {
+    return format(new Date(date), "do MMMM yyyy")
+  }
 
   return (
     <Table
@@ -33,6 +38,12 @@ export function ViewPersonalTable(props) {
           </TableCell>
         </TableRow>
         <TableRow className="account-table-row">
+          <TableCell className="account-table-cell">Email</TableCell>
+          <TableCell className="account-table-cell">
+            {props.currentUser?.email ?? "Undefined"}
+          </TableCell>
+        </TableRow>
+        <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Name</TableCell>
           <TableCell className="account-table-cell">
             {props.currentUser?.name ?? "Undefined"}
@@ -41,13 +52,7 @@ export function ViewPersonalTable(props) {
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Date of Birth</TableCell>
           <TableCell className="account-table-cell">
-            {props.currentUser?.dob ?? "Undefined"}
-          </TableCell>
-        </TableRow>
-        <TableRow className="account-table-row">
-          <TableCell className="account-table-cell">Email</TableCell>
-          <TableCell className="account-table-cell">
-            {props.currentUser?.email ?? "Undefined"}
+            {formatDate(props.currentUser.dob)}
           </TableCell>
         </TableRow>
         <TableRow className="account-table-row">
@@ -76,12 +81,6 @@ export function ViewAddressTable(props) {
       highlightOnHover={false}
     >
       <TableBody>
-        <TableRow className="account-table-row">
-          <TableCell className="account-table-cell">Name/Number</TableCell>
-          <TableCell className="account-table-cell">
-            {props.currentUser?.buildingNameNumber ?? "Undefined"}
-          </TableCell>
-        </TableRow>
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Street</TableCell>
           <TableCell className="account-table-cell">

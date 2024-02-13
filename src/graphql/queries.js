@@ -15,7 +15,6 @@ export const getProfile = /* GraphQL */ `
       email
       phoneNumber
       accountType
-      buildingNameNumber
       street
       townCity
       county
@@ -45,7 +44,6 @@ export const listProfiles = /* GraphQL */ `
         email
         phoneNumber
         accountType
-        buildingNameNumber
         street
         townCity
         county

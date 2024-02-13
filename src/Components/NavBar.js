@@ -17,7 +17,6 @@ import ChatIcon from "@mui/icons-material/Chat";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 export default function NavBar() {
-
   return (
     <Flex gap="0" className="flex-container">
       <Tabs.Container className="tab-container" defaultValue="1">
@@ -26,7 +25,7 @@ export default function NavBar() {
             <Tabs.Item className="item" value="1">
               <Text display="flex">
                 <DashboardIcon className="icon" />
-                <Text>DASHBOARD</Text>
+                DASHBOARD
               </Text>
             </Tabs.Item>
           </Link>
@@ -35,7 +34,7 @@ export default function NavBar() {
             <Tabs.Item className="item" value="2">
               <Text display="flex">
                 <CalendarMonthIcon className="icon" />
-                <Text>SCHEDULE</Text>
+                SCHEDULE
               </Text>
             </Tabs.Item>
           </Link>
@@ -44,7 +43,7 @@ export default function NavBar() {
             <Tabs.Item className="item" value="3">
               <Text display="flex">
                 <PostAddIcon className="icon" />
-                <Text>MATCH POSTS</Text>
+                MATCH POSTS
               </Text>
             </Tabs.Item>
           </Link>
@@ -53,7 +52,7 @@ export default function NavBar() {
             <Tabs.Item className="item" value="4">
               <Text display="flex">
                 <PostAddIcon className="icon" />
-                <Text>PLAYER POSTS</Text>
+                PLAYER POSTS
               </Text>
             </Tabs.Item>
           </Link>
@@ -62,7 +61,7 @@ export default function NavBar() {
             <Tabs.Item className="item" value="5">
               <Text display="flex">
                 <ChatIcon className="icon" />
-                <Text>MESSAGES</Text>
+                MESSAGES
               </Text>
             </Tabs.Item>
           </Link>
@@ -71,7 +70,7 @@ export default function NavBar() {
             <Tabs.Item className="item" value="6">
               <Text display="flex">
                 <AccountCircleIcon className="icon" />
-                <Text>ACCOUNT</Text>
+                ACCOUNT
               </Text>
             </Tabs.Item>
           </Link>
@@ -82,7 +81,7 @@ export default function NavBar() {
           <Link className="link" to={"/dashboard"} component={Link}>
             <Text display="flex">
               <DashboardIcon className="icon" />
-              <Text margin="0px 0px 0px 5px">DASHBOARD</Text>
+              DASHBOARD
             </Text>
           </Link>
         </MenuItem>
@@ -91,7 +90,7 @@ export default function NavBar() {
           <Link className="link" to={"/schedule"} component={Link}>
             <Text display="flex">
               <CalendarMonthIcon className="icon" />
-              <Text margin="0px 0px 0px 5px">SCHEDULE</Text>
+              SCHEDULE
             </Text>
           </Link>
         </MenuItem>
@@ -99,7 +98,7 @@ export default function NavBar() {
           <Link className="link" to={"/match-posts"} component={Link}>
             <Text display="flex">
               <PostAddIcon className="icon" />
-              <Text margin="0px 0px 0px 5px">MATCH POSTS</Text>
+              MATCH POSTS
             </Text>
           </Link>
         </MenuItem>
@@ -107,7 +106,7 @@ export default function NavBar() {
           <Link className="link" to={"/player-posts"} component={Link}>
             <Text display="flex">
               <PostAddIcon className="icon" />
-              <Text margin="0px 0px 0px 5px">PLAYER POSTS</Text>
+              PLAYER POSTS
             </Text>
           </Link>
         </MenuItem>
@@ -116,7 +115,7 @@ export default function NavBar() {
           <Link className="link" to={"/messages"} component={Link}>
             <Text display="flex">
               <ChatIcon className="icon" />
-              <Text margin="0px 0px 0px 5px">MESSAGES</Text>
+              MESSAGES
             </Text>
           </Link>
         </MenuItem>
@@ -124,7 +123,7 @@ export default function NavBar() {
           <Link className="link" to={"/view-account"} component={Link}>
             <Text display="flex">
               <AccountCircleIcon className="icon" />
-              <Text margin="0px 0px 0px 5px">ACCOUNT</Text>
+              ACCOUNT
             </Text>
           </Link>
         </MenuItem>

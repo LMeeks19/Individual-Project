@@ -16,9 +16,12 @@ import {
   ViewSettingsTable,
 } from "./ViewAccountTables";
 
-import { currentUserState } from "../../State/GlobalState";
-import { useRecoilValue } from "recoil";
-import { Link } from "react-router-dom";
+import {
+  CreateProfileModalIsShownState,
+  UpdateProfileModalIsShownState,
+  currentUserState,
+} from "../../State/GlobalState";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import LogoutIcon from "@mui/icons-material/Logout";
 import EditIcon from "@mui/icons-material/Edit";
@@ -27,6 +30,17 @@ export default function ViewAccount() {
   const currentUser = useRecoilValue(currentUserState);
   const { signOut } = useAuthenticator();
 
+  const setCreateProfileModal = useSetRecoilState(
+    CreateProfileModalIsShownState
+  );
+  const setUpdateProfileModal = useSetRecoilState(
+    UpdateProfileModalIsShownState
+  );
+
+  function hasNoProfile(object) {
+    return Object.values(object).some((v) => v === null);
+  }
+
   return (
     <View className="page">
       <Flex className="heading" direction="row" justifyContent="space-between">
@@ -34,7 +48,7 @@ export default function ViewAccount() {
         <Button className="custom-button" variation="primary" onClick={signOut}>
           <Text display="flex">
             <LogoutIcon fontSize="small" className="icon" />
-            <Text marginLeft="5px">SignOut</Text>
+            SignOut
           </Text>
         </Button>
       </Flex>
@@ -57,14 +71,29 @@ export default function ViewAccount() {
         <Tabs.Panel value="1">
           <Flex marginBottom="20px" justifyContent="space-between">
             <Heading level={2}>Profile</Heading>
-            <Link className="link" to={"/edit-account"} component={Link}>
-              <Button className="custom-button" variation="primary">
+            {!hasNoProfile(currentUser) ? (
+              <Button
+                className="custom-button"
+                variation="primary"
+                onClick={() => setUpdateProfileModal(true)}
+              >
                 <Text display="flex">
                   <EditIcon fontSize="small" className="icon" />
-                  <Text marginLeft="5px">Edit</Text>
+                  Edit
                 </Text>
               </Button>
-            </Link>
+            ) : (
+              <Button
+                className="custom-button"
+                variation="primary"
+                onClick={() => setCreateProfileModal(true)}
+              >
+                <Text display="flex">
+                  <EditIcon fontSize="small" className="icon" />
+                  Create
+                </Text>
+              </Button>
+            )}
           </Flex>
 
           <Heading level={4}>Personal</Heading>

@@ -6,13 +6,7 @@
 
 /* eslint-disable */
 import * as React from "react";
-import {
-  Button,
-  Flex,
-  Grid,
-  SelectField,
-  TextField,
-} from "@aws-amplify/ui-react";
+import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
 import { createProfile } from "../graphql/mutations";
@@ -34,7 +28,6 @@ export default function ProfileCreateForm(props) {
     dob: "",
     email: "",
     accountType: "",
-    buildingNameNumber: "",
     street: "",
     townCity: "",
     county: "",
@@ -47,9 +40,6 @@ export default function ProfileCreateForm(props) {
   const [email, setEmail] = React.useState(initialValues.email);
   const [accountType, setAccountType] = React.useState(
     initialValues.accountType
-  );
-  const [buildingNameNumber, setBuildingNameNumber] = React.useState(
-    initialValues.buildingNameNumber
   );
   const [street, setStreet] = React.useState(initialValues.street);
   const [townCity, setTownCity] = React.useState(initialValues.townCity);
@@ -65,7 +55,6 @@ export default function ProfileCreateForm(props) {
     setDob(initialValues.dob);
     setEmail(initialValues.email);
     setAccountType(initialValues.accountType);
-    setBuildingNameNumber(initialValues.buildingNameNumber);
     setStreet(initialValues.street);
     setTownCity(initialValues.townCity);
     setCounty(initialValues.county);
@@ -79,7 +68,6 @@ export default function ProfileCreateForm(props) {
     dob: [],
     email: [{ type: "Required" }],
     accountType: [],
-    buildingNameNumber: [],
     street: [],
     townCity: [],
     county: [],
@@ -117,7 +105,6 @@ export default function ProfileCreateForm(props) {
           dob,
           email,
           accountType,
-          buildingNameNumber,
           street,
           townCity,
           county,
@@ -190,7 +177,6 @@ export default function ProfileCreateForm(props) {
               dob,
               email,
               accountType,
-              buildingNameNumber,
               street,
               townCity,
               county,
@@ -224,7 +210,6 @@ export default function ProfileCreateForm(props) {
               dob,
               email,
               accountType,
-              buildingNameNumber,
               street,
               townCity,
               county,
@@ -258,7 +243,6 @@ export default function ProfileCreateForm(props) {
               dob: value,
               email,
               accountType,
-              buildingNameNumber,
               street,
               townCity,
               county,
@@ -292,7 +276,6 @@ export default function ProfileCreateForm(props) {
               dob,
               email: value,
               accountType,
-              buildingNameNumber,
               street,
               townCity,
               county,
@@ -312,10 +295,10 @@ export default function ProfileCreateForm(props) {
         hasError={errors.email?.hasError}
         {...getOverrideProps(overrides, "email")}
       ></TextField>
-      <SelectField
+      <TextField
         label="Account type"
-        placeholder="Please select an option"
-        isDisabled={false}
+        isRequired={false}
+        isReadOnly={false}
         value={accountType}
         onChange={(e) => {
           let { value } = e.target;
@@ -326,7 +309,6 @@ export default function ProfileCreateForm(props) {
               dob,
               email,
               accountType: value,
-              buildingNameNumber,
               street,
               townCity,
               county,
@@ -345,53 +327,6 @@ export default function ProfileCreateForm(props) {
         errorMessage={errors.accountType?.errorMessage}
         hasError={errors.accountType?.hasError}
         {...getOverrideProps(overrides, "accountType")}
-      >
-        <option
-          children="Coach"
-          value="COACH"
-          {...getOverrideProps(overrides, "accountTypeoption0")}
-        ></option>
-        <option
-          children="Parent"
-          value="PARENT"
-          {...getOverrideProps(overrides, "accountTypeoption1")}
-        ></option>
-      </SelectField>
-      <TextField
-        label="Building name number"
-        isRequired={false}
-        isReadOnly={false}
-        value={buildingNameNumber}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              username,
-              name,
-              dob,
-              email,
-              accountType,
-              buildingNameNumber: value,
-              street,
-              townCity,
-              county,
-              postcode,
-              phoneNumber,
-            };
-            const result = onChange(modelFields);
-            value = result?.buildingNameNumber ?? value;
-          }
-          if (errors.buildingNameNumber?.hasError) {
-            runValidationTasks("buildingNameNumber", value);
-          }
-          setBuildingNameNumber(value);
-        }}
-        onBlur={() =>
-          runValidationTasks("buildingNameNumber", buildingNameNumber)
-        }
-        errorMessage={errors.buildingNameNumber?.errorMessage}
-        hasError={errors.buildingNameNumber?.hasError}
-        {...getOverrideProps(overrides, "buildingNameNumber")}
       ></TextField>
       <TextField
         label="Street"
@@ -407,7 +342,6 @@ export default function ProfileCreateForm(props) {
               dob,
               email,
               accountType,
-              buildingNameNumber,
               street: value,
               townCity,
               county,
@@ -441,7 +375,6 @@ export default function ProfileCreateForm(props) {
               dob,
               email,
               accountType,
-              buildingNameNumber,
               street,
               townCity: value,
               county,
@@ -475,7 +408,6 @@ export default function ProfileCreateForm(props) {
               dob,
               email,
               accountType,
-              buildingNameNumber,
               street,
               townCity,
               county: value,
@@ -509,7 +441,6 @@ export default function ProfileCreateForm(props) {
               dob,
               email,
               accountType,
-              buildingNameNumber,
               street,
               townCity,
               county,
@@ -543,7 +474,6 @@ export default function ProfileCreateForm(props) {
               dob,
               email,
               accountType,
-              buildingNameNumber,
               street,
               townCity,
               county,

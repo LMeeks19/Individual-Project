@@ -14,7 +14,6 @@ export const createProfile = /* GraphQL */ `
       email
       phoneNumber
       accountType
-      buildingNameNumber
       street
       townCity
       county
@@ -38,7 +37,6 @@ export const updateProfile = /* GraphQL */ `
       email
       phoneNumber
       accountType
-      buildingNameNumber
       street
       townCity
       county
@@ -66,7 +64,6 @@ export const deleteProfile = /* GraphQL */ `
       email
       phoneNumber
       accountType
-      buildingNameNumber
       street
       townCity
       county

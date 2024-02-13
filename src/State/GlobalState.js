@@ -15,7 +15,6 @@ export const currentUserState = atom({
         email: null,
         phoneNumber: null,
         accountType: null,
-        buildingNameNumber: null,
         street: null,
         townCity: null,
         county: null,
@@ -26,4 +25,14 @@ export const currentUserState = atom({
 export const warningIsShownState = atom({
     key: 'warningIsShownState',
     default: true
+})
+
+export const CreateProfileModalIsShownState = atom({
+    key: 'CreateProfileModalIsShownState',
+    default: false
+})
+
+export const UpdateProfileModalIsShownState = atom({
+    key: 'UpdateProfileModalIsShownState',
+    default: false
 })

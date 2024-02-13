@@ -8,38 +8,55 @@ import { fetchUserAttributes } from "aws-amplify/auth";
 
 export async function FetchCurrentUser(user) {
   const client = generateClient();
+  const authenticationAttributes = fetchUserAttributes();
+
 
   const apiData = await client.graphql({
     query: getProfile,
-    variables: { id: "33536d35-fb18-4f0d-8124-7ec32cc2ee8f" },
+    variables: { id: user.userId },
   });
+
+  if (apiData.data.getProfile === null) {
+    return {
+      id: user.userId,
+      username: user.username,
+      email: (await authenticationAttributes).email,
+      dob: null,
+      phoneNumber: null,
+      accountType: null,
+      street: null,
+      townCity: null,
+      county: null,
+      postcode: null,
+    };
+  }
+
   return apiData.data.getProfile;
 }
 
-export async function CreateProfile(user) {
+export async function CreateProfile(data) {
   const client = generateClient();
 
-  const loggedInUser = await fetchUserAttributes();
-  const data = {
-    id: `${user.userId}`,
-    name: `${loggedInUser.name}`,
-    dob: `${user.dob}`,
-    username: `${user.username}`,
-    email: `${loggedInUser.email}`,
-    phoneNumber: `${user.phoneNumber}`,
-    accountType: `${user.accountType}`,
-    buildingNameNumber: `${user.buildingNameNumber}`,
-    street: `${user.street}`,
-    townCity: `${user.townCity}`,
-    county: `${user.county}`,
-    postcode: `${user.postcode}`,
-  };
-  var apidata = await client.graphql({
+  const createdProfile = await client.graphql({
     query: createProfileMutation,
-    variables: { input: data },
+    variables: {
+      input: {
+        id: data.id,
+        name: data.name,
+        dob: data.dob,
+        username: data.username,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        accountType: data.accountType,
+        street: data.street,
+        townCity: data.townCity,
+        county: data.county,
+        postcode: data.postcode,
+      },
+    },
   });
 
-  return apidata.data.createProfile;
+  return createdProfile.data.createProfile;
 }
 
 export async function UpdateProfile(data) {
@@ -52,7 +69,6 @@ export async function UpdateProfile(data) {
         id: data.id,
         name: data.name,
         dob: data.dob,
-        buildingNameNumber: data.buildingNameNumber,
         street: data.street,
         townCity: data.townCity,
         county: data.county,

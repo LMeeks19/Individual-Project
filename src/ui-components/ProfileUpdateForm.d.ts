@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, SelectFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -27,7 +27,6 @@ export declare type ProfileUpdateFormInputValues = {
     dob?: string;
     email?: string;
     accountType?: string;
-    buildingNameNumber?: string;
     street?: string;
     townCity?: string;
     county?: string;
@@ -40,7 +39,6 @@ export declare type ProfileUpdateFormValidationValues = {
     dob?: ValidationFunction<string>;
     email?: ValidationFunction<string>;
     accountType?: ValidationFunction<string>;
-    buildingNameNumber?: ValidationFunction<string>;
     street?: ValidationFunction<string>;
     townCity?: ValidationFunction<string>;
     county?: ValidationFunction<string>;
@@ -54,8 +52,7 @@ export declare type ProfileUpdateFormOverridesProps = {
     name?: PrimitiveOverrideProps<TextFieldProps>;
     dob?: PrimitiveOverrideProps<TextFieldProps>;
     email?: PrimitiveOverrideProps<TextFieldProps>;
-    accountType?: PrimitiveOverrideProps<SelectFieldProps>;
-    buildingNameNumber?: PrimitiveOverrideProps<TextFieldProps>;
+    accountType?: PrimitiveOverrideProps<TextFieldProps>;
     street?: PrimitiveOverrideProps<TextFieldProps>;
     townCity?: PrimitiveOverrideProps<TextFieldProps>;
     county?: PrimitiveOverrideProps<TextFieldProps>;
