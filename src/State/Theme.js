@@ -41,7 +41,7 @@ export const theme = {
             secondary: { value: "#000" },
           },
           background: {
-            primary: { value: "#f4f4f4" },
+            primary: { value: "#f9f1f1" },
           },
         },
         components: {
@@ -60,6 +60,9 @@ export const theme = {
               borderColor: { value: "#000" },
             },
           },
+          table: {
+            borderColor: { value: "#000" }
+          }
         },
       },
     },

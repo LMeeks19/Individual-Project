@@ -27,7 +27,6 @@ export function ViewPersonalTable(props) {
     <Table
       marginTop="20px"
       marginBottom="20px"
-      className="account-table"
       highlightOnHover={false}
     >
       <TableBody>

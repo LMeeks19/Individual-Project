@@ -1,73 +1,27 @@
-.modal {
-    height: 75vh;
-    width: 75%;
-    padding: 0;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 100;
+.content {
+    padding: 40px;
+    height: calc((100% - 70.8px));
+    overflow-y: auto;
+    overflow-x: hidden;
 
-    .banner {
-        width: 100%;
-        box-shadow: 0px 10px 25px -4px #000;
-        z-index: 5;
-        position: relative;
-        background-color: #008080;
-        flex-shrink: 0;
-        height: 70.8px;
-        display: flex;
-        justify-content: space-between;
-        padding: 20px;
-        flex-shrink: 0;
 
-        .header {
-            margin-top: auto;
-            margin-bottom: auto;
-        }
-
-        .close {
-            display: flex;
-            margin-top: auto;
-            margin-bottom: auto;
-            cursor: pointer;
-            border-radius: 20px;
-
-            .icon {
-                margin-top: auto;
-                margin-bottom: auto;
-                margin-right: 5px;
-            }
-        }
-
-        .close:hover {
-            opacity: 50%;
-        }
+    .card-header {
+        margin-bottom: 5px;
     }
 
-    .content {
-        padding: 40px; 
-        height: calc((100% - 70.8px));
-        overflow: auto;
-
-        .card-header {
-            margin-bottom: 5px;
-        }
-
-        .input-fields {
-            margin-top: 10px;
-        }
+    .input-fields {
+        margin-top: 10px;
+    }
 
 
-        .modal-button {
-            background-color: #008080;
-            width: 100%;
-            border-radius: 10px;
-            margin-top: 10px;
-        }
+    .modal-button {
+        background-color: #008080;
+        width: 100%;
+        border-radius: 10px;
+        margin-top: 10px;
+    }
 
-        .modal-button:hover {
-            opacity: 50%;
-        }
+    .modal-button:hover {
+        opacity: 50%;
     }
 }

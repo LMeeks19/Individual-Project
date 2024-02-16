@@ -5,10 +5,6 @@ export const getProfile = /* GraphQL */ `
   query GetProfile($id: ID!) {
     getProfile(id: $id) {
       id
-      username
-      name
-      email
-      id
       name
       dob
       username
@@ -34,10 +30,6 @@ export const listProfiles = /* GraphQL */ `
     listProfiles(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        username
-        name
-        email
-        id
         name
         dob
         username
@@ -48,6 +40,63 @@ export const listProfiles = /* GraphQL */ `
         townCity
         county
         postcode
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+
+export const getPlayer = /* GraphQL */ `
+  query GetPlayer($id: ID!) {
+    getPlayer(id: $id) {
+      id
+      name
+      dob
+      ageGroup
+      positions
+      skillLevel
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+
+export const getPlayersByProfileId = 
+`query getPlayersByProfileId($profileId: ID!) {
+  playersByProfileId(profileId: $profileId) {
+    items {
+      id
+      profileId
+      name
+      dob
+      ageGroup
+      positions
+      skillLevel
+      createdAt
+      updatedAt
+    }
+  }
+}`;
+
+export const listPlayers = /* GraphQL */ `
+  query ListPlayers(
+    $filter: ModelPlayerFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPlayers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        dob
+        ageGroup
+        positions
+        skillLevel
         createdAt
         updatedAt
         __typename

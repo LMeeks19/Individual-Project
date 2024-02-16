@@ -8,34 +8,40 @@ import {
   useAuthenticator,
 } from "@aws-amplify/ui-react";
 import "./Account.css";
-
 import {
   ViewPersonalTable,
   ViewAddressTable,
   ViewSecurityTable,
   ViewSettingsTable,
-} from "./ViewAccountTables";
+} from "./ProfileTables";
+import ViewRegisteredPlayers from "./RegisteredPlayers";
 
 import {
-  CreateProfileModalIsShownState,
-  UpdateProfileModalIsShownState,
   currentUserState,
+  modalIsShownState,
+  modalSlotState,
 } from "../../State/GlobalState";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import LogoutIcon from "@mui/icons-material/Logout";
 import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
 
-export default function ViewAccount() {
+import UpdateProfileModal from "../../Components/Modals/UpdateProfileModal";
+import CreateProfileModal from "../../Components/Modals/CreateProfileModal";
+import AddPlayerModal from "../../Components/Modals/AddPlayerModal";
+
+export default function Profile() {
   const currentUser = useRecoilValue(currentUserState);
   const { signOut } = useAuthenticator();
 
-  const setCreateProfileModal = useSetRecoilState(
-    CreateProfileModalIsShownState
-  );
-  const setUpdateProfileModal = useSetRecoilState(
-    UpdateProfileModalIsShownState
-  );
+  const setModalIsShown = useSetRecoilState(modalIsShownState);
+  const setModalSlot = useSetRecoilState(modalSlotState);
+  
+  function openModal(component, title) {
+    setModalSlot({ component: component, title: title });
+    setModalIsShown(true);
+  }
 
   function hasNoProfile(object) {
     return Object.values(object).some((v) => v === null);
@@ -75,7 +81,9 @@ export default function ViewAccount() {
               <Button
                 className="custom-button"
                 variation="primary"
-                onClick={() => setUpdateProfileModal(true)}
+                onClick={() =>
+                  openModal(<UpdateProfileModal />, "Update Profile")
+                }
               >
                 <Text display="flex">
                   <EditIcon fontSize="small" className="icon" />
@@ -86,7 +94,9 @@ export default function ViewAccount() {
               <Button
                 className="custom-button"
                 variation="primary"
-                onClick={() => setCreateProfileModal(true)}
+                onClick={() =>
+                  openModal(<CreateProfileModal />, "Create Profile")
+                }
               >
                 <Text display="flex">
                   <EditIcon fontSize="small" className="icon" />
@@ -112,11 +122,25 @@ export default function ViewAccount() {
         </Tabs.Panel>
 
         <Tabs.Panel value="3">
-          <View marginBottom="20px">
+          <Flex
+            className="heading"
+            direction="row"
+            justifyContent="space-between"
+          >
             <Heading level={2}>Players</Heading>
-          </View>
+            <Button
+              className="custom-button"
+              variation="primary"
+              onClick={() => openModal(<AddPlayerModal />, "Add Player")}
+            >
+              <Text display="flex">
+                <AddIcon className="icon" />
+                Add
+              </Text>
+            </Button>
+          </Flex>
           <Heading level={4}>Registered Players</Heading>
-          Hello
+          <ViewRegisteredPlayers />
         </Tabs.Panel>
 
         <Tabs.Panel value="4">

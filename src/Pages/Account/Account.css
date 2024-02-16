@@ -6,6 +6,10 @@
     background-color: #008080;
     margin-top: auto;
     margin-bottom: auto;
+
+    .amplify-text {
+        color: #fff;
+    }
 }
 
 .custom-button:focus {
@@ -20,20 +24,14 @@
 
 .account-table-row {
     text-align: center;
-    transition: opacity .25s ease-in-out;
 }
 
 .account-table-row:nth-child(odd) {
-    background-color: #008080;
+    background-color: #008080 !important;
 }
 
 .account-table-cell {
     width: 50%;
-}
-
-.account-table-cell-input {
-    height: 20px;
-    border-color: #fff;
 }
 
 .link {
@@ -45,4 +43,55 @@
     margin-top: auto;
     margin-bottom: auto;
     margin-right: 5px;
+}
+
+.registered-player-card {
+    margin-top: 20px;
+    margin-bottom: 30px;
+    overflow: hidden;
+    transition: height 1s ease-in-out;
+    padding: 0;
+    height: 56px;
+
+    border-radius: 0;
+    border: 1px solid #fff;
+
+    .registered-player-heading {
+        padding: 15px;
+        background-color: #008080;
+        color: #f9f1f1;
+
+        .header {
+            color: #f9f1f1;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .icon-button {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            color: #f9f1f1;
+        }
+    }
+
+    .info {
+        padding: 15px;
+
+        .text {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            font-size: large;
+
+            .position-badge {
+                background-color: #008080;
+            }
+        }
+    }
+
+    &.show {
+        height: 335px;
+    }
 }

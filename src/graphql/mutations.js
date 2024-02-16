@@ -24,6 +24,7 @@ export const createProfile = /* GraphQL */ `
     }
   }
 `;
+
 export const updateProfile = /* GraphQL */ `
   mutation UpdateProfile(
     $input: UpdateProfileInput!
@@ -47,6 +48,7 @@ export const updateProfile = /* GraphQL */ `
     }
   }
 `;
+
 export const deleteProfile = /* GraphQL */ `
   mutation DeleteProfile(
     $input: DeleteProfileInput!
@@ -68,6 +70,66 @@ export const deleteProfile = /* GraphQL */ `
       townCity
       county
       postcode
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+
+export const createPlayer = /* GraphQL */ `
+  mutation CreatePlayer(
+    $input: CreatePlayerInput!
+    $condition: ModelPlayerConditionInput
+  ) {
+    createPlayer(input: $input, condition: $condition) {
+      id
+      profileId
+      name
+      dob
+      ageGroup
+      positions
+      skillLevel
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+
+export const updatePlayer = /* GraphQL */ `
+  mutation UpdatePlayer(
+    $input: UpdatePlayerInput!
+    $condition: ModelPlayerConditionInput
+  ) {
+    updatePlayer(input: $input, condition: $condition) {
+      id
+      profileId
+      name
+      dob
+      ageGroup
+      positions
+      skillLevel
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+
+export const deletePlayer = /* GraphQL */ `
+  mutation DeletePlayer(
+    $input: DeletePlayerInput!
+    $condition: ModelPlayerConditionInput
+  ) {
+    deletePlayer(input: $input, condition: $condition) {
+      id
+      profileId
+      name
+      dob
+      ageGroup
+      positions
+      skillLevel
       createdAt
       updatedAt
       __typename

@@ -65,14 +65,14 @@ export default function ProfileCreateForm(props) {
   const validations = {
     username: [{ type: "Required" }],
     name: [{ type: "Required" }],
-    dob: [],
+    dob: [{ type: "Required" }],
     email: [{ type: "Required" }],
-    accountType: [],
-    street: [],
-    townCity: [],
-    county: [],
-    postcode: [],
-    phoneNumber: [],
+    accountType: [{ type: "Required" }],
+    street: [{ type: "Required" }],
+    townCity: [{ type: "Required" }],
+    county: [{ type: "Required" }],
+    postcode: [{ type: "Required" }],
+    phoneNumber: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -231,7 +231,7 @@ export default function ProfileCreateForm(props) {
       ></TextField>
       <TextField
         label="Dob"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={dob}
         onChange={(e) => {
@@ -297,7 +297,7 @@ export default function ProfileCreateForm(props) {
       ></TextField>
       <TextField
         label="Account type"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={accountType}
         onChange={(e) => {
@@ -330,7 +330,7 @@ export default function ProfileCreateForm(props) {
       ></TextField>
       <TextField
         label="Street"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={street}
         onChange={(e) => {
@@ -363,7 +363,7 @@ export default function ProfileCreateForm(props) {
       ></TextField>
       <TextField
         label="Town city"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={townCity}
         onChange={(e) => {
@@ -396,7 +396,7 @@ export default function ProfileCreateForm(props) {
       ></TextField>
       <TextField
         label="County"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={county}
         onChange={(e) => {
@@ -429,7 +429,7 @@ export default function ProfileCreateForm(props) {
       ></TextField>
       <TextField
         label="Postcode"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={postcode}
         onChange={(e) => {
@@ -462,7 +462,7 @@ export default function ProfileCreateForm(props) {
       ></TextField>
       <TextField
         label="Phone number"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={phoneNumber}
         onChange={(e) => {

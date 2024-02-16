@@ -12,11 +12,11 @@
     margin: 10px;
     padding: 10px;
     border: none;
+    color: #fff;
 
     .amplify-icon {
       width: 1.4rem !important;
       height: 1.4rem !important;
-
     }
 
     .amplify-icon>svg {
@@ -48,6 +48,7 @@
         display: flex;
 
         .amplify-text {
+          color: #fff;
           margin-top: auto;
           margin-bottom: auto;
         }

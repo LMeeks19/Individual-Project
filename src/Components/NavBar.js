@@ -76,7 +76,7 @@ export default function NavBar() {
           </Link>
         </Tabs.List>
       </Tabs.Container>
-      <Menu height="75vh" overflow="auto" menuAlign="end">
+      <Menu height="75vh" overflow-y="auto" menuAlign="end">
         <MenuItem>
           <Link className="link" to={"/dashboard"} component={Link}>
             <Text display="flex">

@@ -1,6 +1,7 @@
 .app {
     height: 100vh;
-    overflow: auto;
+    overflow-y: auto;
+    border-radius: 0;
 }
 
 .authenticator {

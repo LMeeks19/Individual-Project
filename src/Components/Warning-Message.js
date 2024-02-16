@@ -2,11 +2,11 @@ import { View, Text } from "@aws-amplify/ui-react";
 import CloseIcon from "@mui/icons-material/Close";
 import "./Warning-Message.css";
 import { useSetRecoilState } from "recoil";
-import { CreateProfileModalIsShownState, warningIsShownState } from "../State/GlobalState";
+import { modalIsShownState, warningIsShownState } from "../State/GlobalState";
 
 export default function WarningMessage() {
   const setWarningIsShown = useSetRecoilState(warningIsShownState);
-  const setIsCreateProfileModalShown = useSetRecoilState(CreateProfileModalIsShownState);
+  const setModalIsShown = useSetRecoilState(modalIsShownState);
 
   return (
     <View className="warning">
@@ -22,7 +22,7 @@ export default function WarningMessage() {
         <Text>
           Access to certain features is be disabled until account set-up has been completed
         </Text>
-        <Text className="warning-link" onClick={() => setIsCreateProfileModalShown(true)}>Create Profile</Text>
+        <Text className="warning-link" onClick={() => setModalIsShown(true)}>Create Profile</Text>
       </View>
     </View>
   );
