@@ -10,33 +10,32 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "@aws-amplify/ui-react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import {
-  currentUserState,
   usersRegisteredPlayersState,
   modalIsShownState,
   modalSlotState,
 } from "../../State/GlobalState";
-import { CreatePlayer } from "../../State/Server";
+import { GetCurrentUsersPlayers, UpdatePlayer } from "../../State/Server";
 import {useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import "./AddPlayerModal.css";
 
-export default function AddPlayerModal() {
-  const currentUser = useRecoilValue(currentUserState);
+export default function UpdatePlayerModal(props) {
   const [usersPlayers, setUsersPlayers] = useRecoilState(
     usersRegisteredPlayersState
   );
   const setModalIsShown = useSetRecoilState(modalIsShownState);
   const setModalSlot = useSetRecoilState(modalSlotState);
 
-  const [newPlayerInfo, setNewPlayerInfo] = useState({
-    profileId: currentUser.id,
-    name: null,
-    dob: null,
-    ageGroup: null,
-    positions: [],
-    skillLevel: null,
+  const [playerInfo, setNewPlayerInfo] = useState({
+    id: props.player.id,
+    profileId: props.player.profileId,
+    name: props.player.name,
+    dob: props.player.dob,
+    ageGroup: props.player.ageGroup,
+    positions: props.player.positions,
+    skillLevel: props.player.skillLevel,
   });
 
   const positions = [
@@ -74,23 +73,23 @@ export default function AddPlayerModal() {
   const skillLevels = ["Beginner", "Intermediate", "Experienced"];
 
   function togglePosition(position) {
-    if (!newPlayerInfo.positions.includes(position)) {
+    if (!playerInfo.positions.includes(position)) {
       setNewPlayerInfo({
-        ...newPlayerInfo,
+        ...playerInfo,
         positions: position,
       });
     } else {
       setNewPlayerInfo({
-        ...newPlayerInfo,
-        positions: newPlayerInfo.positions.filter((pos) => pos !== position),
+        ...playerInfo,
+        positions: playerInfo.positions.filter((pos) => pos !== position),
       });
     }
   }
 
-  async function addPlayer(event) {
+  async function updatePlayer(event) {
     event.preventDefault();
-    const newPlayer = await CreatePlayer(newPlayerInfo);
-    setUsersPlayers([...usersPlayers, newPlayer]);
+    const newPlayer = await UpdatePlayer(playerInfo);
+    setUsersPlayers(await GetCurrentUsersPlayers(newPlayer.profileId));
     setModalIsShown(false);
     setModalSlot(false);
   }
@@ -108,8 +107,9 @@ export default function AddPlayerModal() {
           <Input
             marginTop="5px"
             name="name"
+            defaultValue={playerInfo.name}
             onChange={(e) =>
-              setNewPlayerInfo({ ...newPlayerInfo, name: e.target.value })
+              setNewPlayerInfo({ ...playerInfo, name: e.target.value })
             }
           />
         </Flex>
@@ -119,8 +119,9 @@ export default function AddPlayerModal() {
             marginTop="5px"
             name="dob"
             type="date"
+            defaultValue={playerInfo.dob}
             onChange={(e) =>
-              setNewPlayerInfo({ ...newPlayerInfo, dob: e.target.value })
+              setNewPlayerInfo({ ...playerInfo, dob: e.target.value })
             }
           />
         </Flex>
@@ -132,9 +133,10 @@ export default function AddPlayerModal() {
             labelHidden
             padding="0"
             name="ageGroup"
+            value={playerInfo.ageGroup}
             onChange={(e) =>
               setNewPlayerInfo({
-                ...newPlayerInfo,
+                ...playerInfo,
                 ageGroup: e.target.value,
               })
             }
@@ -156,7 +158,7 @@ export default function AddPlayerModal() {
             marginTop="5px"
             name="positions"
             direction="row"
-            value={newPlayerInfo.positions}
+            value={playerInfo.positions}
             onChange={(value) => togglePosition(value)}
           >
             {positions.map((position) => {
@@ -175,9 +177,10 @@ export default function AddPlayerModal() {
             marginTop="5px"
             labelHidden
             name="skillLevel"
+            value={playerInfo.skillLevel}
             onChange={(e) =>
               setNewPlayerInfo({
-                ...newPlayerInfo,
+                ...playerInfo,
                 skillLevel: e.target.value,
               })
             }
@@ -193,9 +196,9 @@ export default function AddPlayerModal() {
           </SelectField>
         </Flex>
 
-        <Button className="modal-button" onClick={(e) => addPlayer(e)}>
+        <Button className="modal-button" onClick={(e) => updatePlayer(e)}>
           <AddIcon fontSize="small" className="icon" />
-          Add
+          Save
         </Button>
       </View>
     </View>

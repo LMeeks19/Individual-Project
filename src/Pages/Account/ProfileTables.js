@@ -18,30 +18,13 @@ import { VscColorMode } from "react-icons/vsc";
 import { format } from "date-fns";
 
 export function ViewPersonalTable(props) {
-
   function formatDate(date) {
-    return format(new Date(date), "do MMMM yyyy")
+    return format(new Date(date), "do MMMM yyyy");
   }
 
   return (
-    <Table
-      marginTop="20px"
-      marginBottom="20px"
-      highlightOnHover={false}
-    >
+    <Table marginTop="20px" marginBottom="20px" highlightOnHover={false}>
       <TableBody>
-        <TableRow className="account-table-row">
-          <TableCell className="account-table-cell">Username</TableCell>
-          <TableCell className="account-table-cell">
-            {props.currentUser?.username ?? "Undefined"}
-          </TableCell>
-        </TableRow>
-        <TableRow className="account-table-row">
-          <TableCell className="account-table-cell">Email</TableCell>
-          <TableCell className="account-table-cell">
-            {props.currentUser?.email ?? "Undefined"}
-          </TableCell>
-        </TableRow>
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Name</TableCell>
           <TableCell className="account-table-cell">
@@ -118,6 +101,18 @@ export function ViewSecurityTable(props) {
       highlightOnHover={false}
     >
       <TableBody>
+        <TableRow className="account-table-row">
+          <TableCell className="account-table-cell">Username</TableCell>
+          <TableCell className="account-table-cell">
+            {props.currentUser?.username ?? "Undefined"}
+          </TableCell>
+        </TableRow>
+        <TableRow className="account-table-row">
+          <TableCell className="account-table-cell">Email</TableCell>
+          <TableCell className="account-table-cell">
+            {props.currentUser?.email ?? "Undefined"}
+          </TableCell>
+        </TableRow>
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Password</TableCell>
           <TableCell className="account-table-cell"></TableCell>

@@ -72,6 +72,10 @@
             display: flex;
             align-items: center;
             color: #f9f1f1;
+
+            &.delete {
+                color: red !important;
+            }
         }
     }
 

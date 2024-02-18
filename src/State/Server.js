@@ -142,6 +142,8 @@ export async function UpdatePlayer(data) {
     query: updatePlayerMutation,
     variables: {
       input: {
+        id: data.id,
+        profileId: data.profileId,
         name: data.name,
         dob: data.dob,
         ageGroup: data.ageGroup,

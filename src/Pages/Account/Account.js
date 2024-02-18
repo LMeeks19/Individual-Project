@@ -37,7 +37,7 @@ export default function Profile() {
 
   const setModalIsShown = useSetRecoilState(modalIsShownState);
   const setModalSlot = useSetRecoilState(modalSlotState);
-  
+
   function openModal(component, title) {
     setModalSlot({ component: component, title: title });
     setModalIsShown(true);
@@ -59,17 +59,24 @@ export default function Profile() {
         </Button>
       </Flex>
       <Tabs.Container defaultValue="1">
-        <Tabs.List>
-          <Tabs.Item className="account-tab" value="1">
+        <Tabs.List justifyContent="space-around">
+          <Tabs.Item className="account-tab" value="1" width="100%">
             PROFILE
           </Tabs.Item>
-          <Tabs.Item className="account-tab" value="2">
+          <Tabs.Item className="account-tab" value="2" width="100%">
             SECURITY
           </Tabs.Item>
-          <Tabs.Item className="account-tab" value="3">
+          {currentUser.accountType === "COACH" ? (
+            <Tabs.Item className="account-tab" value="3" width="100%">
+              TEAM
+            </Tabs.Item>
+          ) : (
+            <></>
+          )}
+          <Tabs.Item className="account-tab" value="4" width="100%">
             PLAYERS
           </Tabs.Item>
-          <Tabs.Item className="account-tab" value="4">
+          <Tabs.Item className="account-tab" value="5" width="100%">
             SETTINGS
           </Tabs.Item>
         </Tabs.List>
@@ -121,7 +128,7 @@ export default function Profile() {
           <ViewSecurityTable currentUser={currentUser} />
         </Tabs.Panel>
 
-        <Tabs.Panel value="3">
+        <Tabs.Panel value="4">
           <Flex
             className="heading"
             direction="row"
@@ -143,7 +150,7 @@ export default function Profile() {
           <ViewRegisteredPlayers />
         </Tabs.Panel>
 
-        <Tabs.Panel value="4">
+        <Tabs.Panel value="5">
           <View marginBottom="20px">
             <Heading level={2}>Settings</Heading>
           </View>

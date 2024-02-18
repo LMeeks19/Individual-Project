@@ -40,7 +40,7 @@ export default function CreateProfileModal() {
   }
 
   return (
-    <View className="content" as="form" onSubmit={(e) => createProfile(e)}>
+    <View className="content">
       <Heading className="card-header" level={5}>
         Profile Information
       </Heading>
@@ -51,7 +51,6 @@ export default function CreateProfileModal() {
           <Label htmlFor="name">Name:</Label>
           <Input
             name="name"
-            isRequired
             onChange={(e) =>
               setNewProfileInfo({ ...newProfileInfo, name: e.target.value })
             }
@@ -62,7 +61,6 @@ export default function CreateProfileModal() {
           <Input
             name="dob"
             type="date"
-            isRequired
             onChange={(e) =>
               setNewProfileInfo({ ...newProfileInfo, dob: e.target.value })
             }
@@ -72,7 +70,6 @@ export default function CreateProfileModal() {
           <Label htmlFor="phoneNumber">Phone Number:</Label>
           <Input
             name="phoneNumber"
-            isRequired
             onChange={(e) =>
               setNewProfileInfo({
                 ...newProfileInfo,
@@ -85,7 +82,6 @@ export default function CreateProfileModal() {
           <Label htmlFor="accountType">Account Type:</Label>
           <SelectField
             name="accountType"
-            isRequired
             onChange={(e) =>
               setNewProfileInfo({
                 ...newProfileInfo,
@@ -102,7 +98,6 @@ export default function CreateProfileModal() {
           <Label htmlFor="street">Street:</Label>
           <Input
             name="street"
-            isRequired
             onChange={(e) =>
               setNewProfileInfo({
                 ...newProfileInfo,
@@ -115,7 +110,6 @@ export default function CreateProfileModal() {
           <Label htmlFor="townCity">Town/City:</Label>
           <Input
             name="townCity"
-            isRequired
             onChange={(e) =>
               setNewProfileInfo({
                 ...newProfileInfo,
@@ -128,7 +122,6 @@ export default function CreateProfileModal() {
           <Label htmlFor="county">County:</Label>
           <Input
             name="county"
-            isRequired
             onChange={(e) =>
               setNewProfileInfo({
                 ...newProfileInfo,
@@ -141,7 +134,6 @@ export default function CreateProfileModal() {
           <Label htmlFor="postcode">Postcode:</Label>
           <Input
             name="postcode"
-            isRequired
             onChange={(e) =>
               setNewProfileInfo({
                 ...newProfileInfo,
@@ -152,7 +144,7 @@ export default function CreateProfileModal() {
         </Flex>
       </View>
 
-      <Button className="modal-button" type="submit">
+      <Button className="modal-button" onClick={(e) => createProfile(e)}>
         <AddIcon fontSize="small" className="icon" />
         Create
       </Button>

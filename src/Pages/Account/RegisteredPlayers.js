@@ -1,6 +1,10 @@
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import "./Account.css";
-import { usersRegisteredPlayersState } from "../../State/GlobalState";
+import {
+  modalIsShownState,
+  modalSlotState,
+  usersRegisteredPlayersState,
+} from "../../State/GlobalState";
 import { Card, View, Heading, Flex, Text, Badge } from "@aws-amplify/ui-react";
 import { format } from "date-fns";
 
@@ -9,11 +13,15 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { DeletePlayer } from "../../State/Server";
+import UpdatePlayerModal from "../../Components/Modals/UpdatePlayerModal";
 
 export default function ViewRegisteredPlayers() {
   const [usersRegisteredPlayers, setUsersRegisteredPlayers] = useRecoilState(
     usersRegisteredPlayersState
   );
+
+  const setModalSlot = useSetRecoilState(modalSlotState);
+  const setModalIsShown = useSetRecoilState(modalIsShownState);
 
   function formatDate(date) {
     return format(new Date(date), "do MMMM yyyy");
@@ -34,6 +42,11 @@ export default function ViewRegisteredPlayers() {
     setUsersRegisteredPlayers(
       usersRegisteredPlayers.filter((player) => player.id !== playerId)
     );
+  }
+
+  function openUpdatePlayerModal(component, title) {
+    setModalSlot({ component: component, title: title });
+    setModalIsShown(true);
   }
 
   return (
@@ -68,16 +81,21 @@ export default function ViewRegisteredPlayers() {
                     <Text>
                       <EditIcon
                         className="icon-button"
-                        onClick={() => deletePlayer(registeredPlayer.id)}
+                        onClick={() =>
+                          openUpdatePlayerModal(
+                            <UpdatePlayerModal player={registeredPlayer} />,
+                            "Update Player"
+                          )
+                        }
                       />
                     </Text>
                     <Text>
                       <DeleteIcon
-                        className="icon-button"
+                        className="icon-button delete"
                         onClick={() => deletePlayer(registeredPlayer.id)}
                       />
                     </Text>
-                    <Text display="flex" alignItems="center">
+                    <Text>
                       {registeredPlayer.isShown ? (
                         <KeyboardArrowUpIcon
                           className="icon-button"

@@ -14,6 +14,7 @@ import { modalIsShownState, currentUserState } from "../../State/GlobalState";
 import { useEffect, useState } from "react";
 import { UpdateProfile } from "../../State/Server";
 import { format } from "date-fns";
+import "./UpdatePlayerModal.css";
 
 export default function UpdateProfileModal() {
   const setModalIsShown = useSetRecoilState(modalIsShownState);
@@ -63,7 +64,6 @@ export default function UpdateProfileModal() {
           <Input
             name="name"
             defaultValue={updatedProfileInfo.name}
-            isRequired
             onChange={(e) =>
               setUpdatedProfileInfo({
                 ...updatedProfileInfo,
@@ -79,7 +79,6 @@ export default function UpdateProfileModal() {
             defaultValue={updatedProfileInfo.dob}
             type="date"
             max={maxDateAllowed}
-            isRequired
             onChange={(e) =>
               setUpdatedProfileInfo({
                 ...updatedProfileInfo,
@@ -93,7 +92,6 @@ export default function UpdateProfileModal() {
           <Input
             name="phoneNumber"
             defaultValue={updatedProfileInfo.phoneNumber}
-            isRequired
             onChange={(e) =>
               setUpdatedProfileInfo({
                 ...updatedProfileInfo,
@@ -107,7 +105,6 @@ export default function UpdateProfileModal() {
           <Input
             name="street"
             defaultValue={updatedProfileInfo.street}
-            isRequired
             onChange={(e) =>
               setUpdatedProfileInfo({
                 ...updatedProfileInfo,
@@ -121,7 +118,6 @@ export default function UpdateProfileModal() {
           <Input
             name="townCity"
             defaultValue={updatedProfileInfo.townCity}
-            isRequired
             onChange={(e) =>
               setUpdatedProfileInfo({
                 ...updatedProfileInfo,
@@ -135,7 +131,6 @@ export default function UpdateProfileModal() {
           <Input
             name="county"
             defaultValue={updatedProfileInfo.county}
-            isRequired
             onChange={(e) =>
               setUpdatedProfileInfo({
                 ...updatedProfileInfo,
@@ -149,7 +144,6 @@ export default function UpdateProfileModal() {
           <Input
             name="postcode"
             defaultValue={updatedProfileInfo.postcode}
-            isRequired
             onChange={(e) =>
               setUpdatedProfileInfo({
                 ...updatedProfileInfo,

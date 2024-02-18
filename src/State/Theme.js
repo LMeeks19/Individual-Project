@@ -24,9 +24,11 @@ export const theme = {
           togglebutton: {
             _pressed: {
               borderColor: { value: "#fff" },
+              backgroundColor: { value: "#008080" },
             },
             _focus: {
               borderColor: { value: "#fff" },
+              backgroundColor: { value: "#008080" },
             },
           },
         },
@@ -55,14 +57,13 @@ export const theme = {
           togglebutton: {
             _pressed: {
               borderColor: { value: "#000" },
+              backgroundColor: { value: "#008080" },
             },
             _focus: {
               borderColor: { value: "#000" },
+              backgroundColor: { value: "#008080" },
             },
           },
-          table: {
-            borderColor: { value: "#000" }
-          }
         },
       },
     },
