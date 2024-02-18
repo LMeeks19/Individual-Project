@@ -10,7 +10,7 @@ import {
 } from "@aws-amplify/ui-react";
 import "./Account.css";
 import { useRecoilState } from "recoil";
-import { themeState } from "../../State/GlobalState";
+import { themeState } from "../../Functions/GlobalState";
 
 import { MdLightMode } from "react-icons/md";
 import { MdDarkMode } from "react-icons/md";

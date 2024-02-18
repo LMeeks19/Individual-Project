@@ -31,3 +31,11 @@
         opacity: 50%;
     }
 }
+
+.error-message {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #950404;
+    font-weight: bold;
+}

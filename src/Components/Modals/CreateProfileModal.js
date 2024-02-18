@@ -7,16 +7,24 @@ import {
   Label,
   Button,
   SelectField,
+  Text,
 } from "@aws-amplify/ui-react";
 import AddIcon from "@mui/icons-material/Add";
 import "./CreateProfileModal.css";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { modalIsShownState, currentUserState } from "../../State/GlobalState";
+import {
+  modalIsShownState,
+  currentUserState,
+  modalSlotState,
+} from "../../Functions/GlobalState";
 import { useState } from "react";
-import { CreateProfile } from "../../State/Server";
+import { CreateProfile } from "../../Functions/Server";
+import ErrorIcon from "@mui/icons-material/Error";
+import { ValidateProfileModal } from "../../Functions/Validatiion";
 
 export default function CreateProfileModal() {
   const setModalIsShown = useSetRecoilState(modalIsShownState);
+  const setModalSlot = useSetRecoilState(modalSlotState);
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
 
   const [newProfileInfo, setNewProfileInfo] = useState({
@@ -33,10 +41,17 @@ export default function CreateProfileModal() {
     postcode: null,
   });
 
+  const [errors, setErrors] = useState([]);
+
   async function createProfile(event) {
     event.preventDefault();
-    setCurrentUser(await CreateProfile(newProfileInfo));
-    setModalIsShown(false);
+    const validationErrors = ValidateProfileModal(newProfileInfo);
+    if (validationErrors.length > 0) setErrors(validationErrors);
+    else {
+      setCurrentUser(await CreateProfile(newProfileInfo));
+      setModalIsShown(false);
+      setModalSlot(null);
+    }
   }
 
   return (
@@ -48,7 +63,19 @@ export default function CreateProfileModal() {
 
       <View className="input-fields">
         <Flex direction="column" marginBottom="10px" gap="0">
-          <Label htmlFor="name">Name:</Label>
+          <Flex justifyContent="space-between">
+            <Label htmlFor="name" fontWeight="bold">
+              Player Name:
+            </Label>
+            {errors?.some((error) => error?.field === "name") ? (
+              <Text className="error-message">
+                <ErrorIcon fontSize="small" />
+                {errors?.find((error) => error?.field === "name")?.message}
+              </Text>
+            ) : (
+              <></>
+            )}
+          </Flex>
           <Input
             name="name"
             onChange={(e) =>
@@ -57,7 +84,19 @@ export default function CreateProfileModal() {
           />
         </Flex>
         <Flex direction="column" marginBottom="10px" gap="0">
-          <Label htmlFor="dob">Date of Birth:</Label>
+          <Flex justifyContent="space-between">
+            <Label htmlFor="dob" fontWeight="bold">
+              Date of Birth
+            </Label>
+            {errors?.some((error) => error?.field === "dob") ? (
+              <Text className="error-message">
+                <ErrorIcon fontSize="small" />
+                {errors?.find((error) => error?.field === "dob")?.message}
+              </Text>
+            ) : (
+              <></>
+            )}
+          </Flex>
           <Input
             name="dob"
             type="date"
@@ -67,7 +106,22 @@ export default function CreateProfileModal() {
           />
         </Flex>
         <Flex direction="column" marginBottom="10px" gap="0">
-          <Label htmlFor="phoneNumber">Phone Number:</Label>
+          <Flex justifyContent="space-between">
+            <Label htmlFor="phoneNumber" fontWeight="bold">
+              Phone Number:
+            </Label>
+            {errors?.some((error) => error?.field === "phoneNumber") ? (
+              <Text className="error-message">
+                <ErrorIcon fontSize="small" />
+                {
+                  errors?.find((error) => error?.field === "phoneNumber")
+                    ?.message
+                }
+              </Text>
+            ) : (
+              <></>
+            )}
+          </Flex>
           <Input
             name="phoneNumber"
             onChange={(e) =>
@@ -79,7 +133,22 @@ export default function CreateProfileModal() {
           />
         </Flex>
         <Flex direction="column" marginBottom="10px" gap="0">
-          <Label htmlFor="accountType">Account Type:</Label>
+          <Flex justifyContent="space-between">
+            <Label htmlFor="accountType" fontWeight="bold">
+              Account Type:
+            </Label>
+            {errors?.some((error) => error?.field === "accountType") ? (
+              <Text className="error-message">
+                <ErrorIcon fontSize="small" />
+                {
+                  errors?.find((error) => error?.field === "accountType")
+                    ?.message
+                }
+              </Text>
+            ) : (
+              <></>
+            )}
+          </Flex>
           <SelectField
             name="accountType"
             onChange={(e) =>
@@ -95,7 +164,19 @@ export default function CreateProfileModal() {
           </SelectField>
         </Flex>
         <Flex direction="column" marginBottom="10px" gap="0">
-          <Label htmlFor="street">Street:</Label>
+          <Flex justifyContent="space-between">
+            <Label htmlFor="street" fontWeight="bold">
+              Street:
+            </Label>
+            {errors?.some((error) => error?.field === "street") ? (
+              <Text className="error-message">
+                <ErrorIcon fontSize="small" />
+                {errors?.find((error) => error?.field === "street")?.message}
+              </Text>
+            ) : (
+              <></>
+            )}
+          </Flex>
           <Input
             name="street"
             onChange={(e) =>
@@ -107,7 +188,19 @@ export default function CreateProfileModal() {
           />
         </Flex>
         <Flex direction="column" marginBottom="10px" gap="0">
-          <Label htmlFor="townCity">Town/City:</Label>
+          <Flex justifyContent="space-between">
+            <Label htmlFor="townCity" fontWeight="bold">
+              Town/City:
+            </Label>
+            {errors?.some((error) => error?.field === "townCity") ? (
+              <Text className="error-message">
+                <ErrorIcon fontSize="small" />
+                {errors?.find((error) => error?.field === "townCity")?.message}
+              </Text>
+            ) : (
+              <></>
+            )}
+          </Flex>
           <Input
             name="townCity"
             onChange={(e) =>
@@ -119,7 +212,19 @@ export default function CreateProfileModal() {
           />
         </Flex>
         <Flex direction="column" marginBottom="10px" gap="0">
-          <Label htmlFor="county">County:</Label>
+          <Flex justifyContent="space-between">
+            <Label htmlFor="county" fontWeight="bold">
+              County:
+            </Label>
+            {errors?.some((error) => error?.field === "county") ? (
+              <Text className="error-message">
+                <ErrorIcon fontSize="small" />
+                {errors?.find((error) => error?.field === "county")?.message}
+              </Text>
+            ) : (
+              <></>
+            )}
+          </Flex>
           <Input
             name="county"
             onChange={(e) =>
@@ -131,7 +236,19 @@ export default function CreateProfileModal() {
           />
         </Flex>
         <Flex direction="column" marginBottom="10px" gap="0">
-          <Label htmlFor="postcode">Postcode:</Label>
+          <Flex justifyContent="space-between">
+            <Label htmlFor="postcode" fontWeight="bold">
+              Postcode:
+            </Label>
+            {errors?.some((error) => error?.field === "postcode") ? (
+              <Text className="error-message">
+                <ErrorIcon fontSize="small" />
+                {errors?.find((error) => error?.field === "postcode")?.message}
+              </Text>
+            ) : (
+              <></>
+            )}
+          </Flex>
           <Input
             name="postcode"
             onChange={(e) =>

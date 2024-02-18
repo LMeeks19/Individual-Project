@@ -4,7 +4,7 @@ import {
   modalIsShownState,
   modalSlotState,
   usersRegisteredPlayersState,
-} from "../../State/GlobalState";
+} from "../../Functions/GlobalState";
 import { Card, View, Heading, Flex, Text, Badge } from "@aws-amplify/ui-react";
 import { format } from "date-fns";
 
@@ -12,7 +12,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { DeletePlayer } from "../../State/Server";
+import { DeletePlayer } from "../../Functions/Server";
 import UpdatePlayerModal from "../../Components/Modals/UpdatePlayerModal";
 
 export default function ViewRegisteredPlayers() {

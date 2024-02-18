@@ -23,3 +23,22 @@
         opacity: 50%;
     }
 }
+
+.error-message {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #950404;
+    font-weight: bold;
+}
+
+@media screen and (max-width: 1150px) {
+    .positions-container {
+        flex-wrap: wrap !important;
+
+        .positions {
+            border-radius: 0;
+            margin-inline-start: 0 !important;
+        }
+    }
+}

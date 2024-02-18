@@ -2,7 +2,7 @@ import { View, Text } from "@aws-amplify/ui-react";
 import CloseIcon from "@mui/icons-material/Close";
 import "./Warning-Message.css";
 import { useSetRecoilState } from "recoil";
-import { modalIsShownState, warningIsShownState } from "../State/GlobalState";
+import { modalIsShownState, warningIsShownState } from "../Functions/GlobalState";
 
 export default function WarningMessage() {
   const setWarningIsShown = useSetRecoilState(warningIsShownState);

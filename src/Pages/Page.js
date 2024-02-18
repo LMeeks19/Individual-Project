@@ -7,11 +7,11 @@ import {
   usersRegisteredPlayersState,
   warningIsShownState,
   modalIsShownState,
-} from "../State/GlobalState";
+} from "../Functions/GlobalState";
 import NavBar from "../Components/NavBar";
 import NavRouter from "../Components/Router";
 import { BrowserRouter as Router } from "react-router-dom";
-import { FetchCurrentUser, GetCurrentUsersPlayers } from "../State/Server";
+import { FetchCurrentUser, GetCurrentUsersPlayers } from "../Functions/Server";
 import "./Page.css";
 import WarningMessage from "../Components/Warning-Message";
 import Modal from "../Components/Modals/Modal";

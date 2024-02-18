@@ -3,9 +3,9 @@ import React from "react";
 import { ThemeProvider, Authenticator, Card } from "@aws-amplify/ui-react";
 import { components, formFields } from "./Components/Authenticator";
 import { useRecoilValue } from "recoil";
-import { themeState } from "./State/GlobalState";
+import { themeState } from "./Functions/GlobalState";
 import Page from "./Pages/Page";
-import { theme } from "./State/Theme";
+import { theme } from "./Functions/Theme";
 import "./App.css";
 
 function App() {

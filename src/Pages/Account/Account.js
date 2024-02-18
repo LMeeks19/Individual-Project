@@ -20,7 +20,7 @@ import {
   currentUserState,
   modalIsShownState,
   modalSlotState,
-} from "../../State/GlobalState";
+} from "../../Functions/GlobalState";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import LogoutIcon from "@mui/icons-material/Logout";

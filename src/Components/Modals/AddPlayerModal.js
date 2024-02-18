@@ -9,6 +9,7 @@ import {
   Button,
   ToggleButton,
   ToggleButtonGroup,
+  Text,
 } from "@aws-amplify/ui-react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
@@ -16,11 +17,13 @@ import {
   usersRegisteredPlayersState,
   modalIsShownState,
   modalSlotState,
-} from "../../State/GlobalState";
-import { CreatePlayer } from "../../State/Server";
-import {useState } from "react";
+} from "../../Functions/GlobalState";
+import { CreatePlayer } from "../../Functions/Server";
+import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import "./AddPlayerModal.css";
+import { ValidatePlayerModal } from "../../Functions/Validatiion";
+import ErrorIcon from "@mui/icons-material/Error";
 
 export default function AddPlayerModal() {
   const currentUser = useRecoilValue(currentUserState);
@@ -87,12 +90,19 @@ export default function AddPlayerModal() {
     }
   }
 
+  const [errors, setErrors] = useState([]);
+
   async function addPlayer(event) {
     event.preventDefault();
-    const newPlayer = await CreatePlayer(newPlayerInfo);
-    setUsersPlayers([...usersPlayers, newPlayer]);
-    setModalIsShown(false);
-    setModalSlot(false);
+    const validationErrors = ValidatePlayerModal(newPlayerInfo);
+    if (validationErrors.length > 0) 
+    setErrors(validationErrors);
+    else {
+      const newPlayer = await CreatePlayer(newPlayerInfo);
+      setUsersPlayers([...usersPlayers, newPlayer]);
+      setModalIsShown(false);
+      setModalSlot(null);
+    }
   }
 
   return (
@@ -104,7 +114,19 @@ export default function AddPlayerModal() {
 
       <View className="input-fields">
         <Flex direction="column" marginBottom="10px" gap="0">
-          <Label htmlFor="name">Player Name:</Label>
+          <Flex justifyContent="space-between">
+            <Label htmlFor="name" fontWeight="bold">
+              Player Name:
+            </Label>
+            {errors?.some((error) => error?.field === "name") ? (
+              <Text className="error-message">
+                <ErrorIcon fontSize="small" />
+                {errors?.find((error) => error?.field === "name")?.message}
+              </Text>
+            ) : (
+              <></>
+            )}
+          </Flex>
           <Input
             marginTop="5px"
             name="name"
@@ -114,7 +136,19 @@ export default function AddPlayerModal() {
           />
         </Flex>
         <Flex direction="column" marginBottom="10px" gap="0">
-          <Label htmlFor="dob">Date of Birth:</Label>
+          <Flex justifyContent="space-between">
+            <Label htmlFor="dob" fontWeight="bold">
+              Date of Birth:
+            </Label>
+            {errors?.some((error) => error?.field === "dob") ? (
+              <Text className="error-message">
+                <ErrorIcon fontSize="small" />
+                {errors?.find((error) => error?.field === "dob")?.message}
+              </Text>
+            ) : (
+              <></>
+            )}
+          </Flex>
           <Input
             marginTop="5px"
             name="dob"
@@ -126,7 +160,19 @@ export default function AddPlayerModal() {
         </Flex>
 
         <Flex direction="column" marginBottom="10px" gap="0">
-          <Label htmlFor="ageGroup">Age Group:</Label>
+          <Flex justifyContent="space-between">
+            <Label htmlFor="ageGroup" fontWeight="bold">
+              Age Group:
+            </Label>
+            {errors?.some((error) => error?.field === "ageGroup") ? (
+              <Text className="error-message">
+                <ErrorIcon fontSize="small" />
+                {errors?.find((error) => error?.field === "ageGroup")?.message}
+              </Text>
+            ) : (
+              <></>
+            )}
+          </Flex>
           <SelectField
             marginTop="5px"
             labelHidden
@@ -151,17 +197,35 @@ export default function AddPlayerModal() {
         </Flex>
 
         <Flex direction="column" marginBottom="10px" gap="0">
-          <Label htmlFor="positions">Positions:</Label>
+          <Flex justifyContent="space-between">
+            <Label htmlFor="positions" fontWeight="bold">
+              Positions:
+            </Label>
+            {errors?.some((error) => error?.field === "positions") ? (
+              <Text className="error-message">
+                <ErrorIcon fontSize="small" />
+                {errors?.find((error) => error?.field === "positions")?.message}
+              </Text>
+            ) : (
+              <></>
+            )}
+          </Flex>
           <ToggleButtonGroup
             marginTop="5px"
             name="positions"
             direction="row"
             value={newPlayerInfo.positions}
             onChange={(value) => togglePosition(value)}
+            className="positions-container"
           >
             {positions.map((position) => {
               return (
-                <ToggleButton key={position} value={position} isFullWidth>
+                <ToggleButton
+                  className="positions"
+                  key={position}
+                  value={position}
+                  isFullWidth
+                >
                   {position}
                 </ToggleButton>
               );
@@ -170,7 +234,19 @@ export default function AddPlayerModal() {
         </Flex>
 
         <Flex direction="column" marginBottom="10px" gap="0">
-          <Label htmlFor="skillLevel">Skill Level:</Label>
+          <Flex justifyContent="space-between">
+            <Label htmlFor="skillLevel" fontWeight="bold">
+              Skill Level:
+            </Label>
+            {errors?.some((error) => error?.field === "skillLevel") ? (
+              <Text className="error-message">
+                <ErrorIcon fontSize="small" />
+                {errors?.find((error) => error?.field === "skillLevel")?.message}
+              </Text>
+            ) : (
+              <></>
+            )}
+          </Flex>
           <SelectField
             marginTop="5px"
             labelHidden

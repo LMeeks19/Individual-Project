@@ -9,22 +9,24 @@ import {
   Button,
   ToggleButton,
   ToggleButtonGroup,
+  Text,
 } from "@aws-amplify/ui-react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import {
   usersRegisteredPlayersState,
   modalIsShownState,
   modalSlotState,
-} from "../../State/GlobalState";
-import { GetCurrentUsersPlayers, UpdatePlayer } from "../../State/Server";
-import {useState } from "react";
+} from "../../Functions/GlobalState";
+import { GetCurrentUsersPlayers, UpdatePlayer } from "../../Functions/Server";
+import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
-import "./AddPlayerModal.css";
+import ErrorIcon from "@mui/icons-material/Error";
+
+import { ValidatePlayerModal } from "../../Functions/Validatiion";
+import "./UpdatePlayerModal.css";
 
 export default function UpdatePlayerModal(props) {
-  const [usersPlayers, setUsersPlayers] = useRecoilState(
-    usersRegisteredPlayersState
-  );
+  const setUsersPlayers = useSetRecoilState(usersRegisteredPlayersState);
   const setModalIsShown = useSetRecoilState(modalIsShownState);
   const setModalSlot = useSetRecoilState(modalSlotState);
 
@@ -86,12 +88,18 @@ export default function UpdatePlayerModal(props) {
     }
   }
 
+  const [errors, setErrors] = useState([]);
+
   async function updatePlayer(event) {
     event.preventDefault();
-    const newPlayer = await UpdatePlayer(playerInfo);
-    setUsersPlayers(await GetCurrentUsersPlayers(newPlayer.profileId));
-    setModalIsShown(false);
-    setModalSlot(false);
+    const validationErrors = ValidatePlayerModal(playerInfo);
+    if (validationErrors.length > 0) setErrors(validationErrors);
+    else {
+      const newPlayer = await UpdatePlayer(playerInfo);
+      setUsersPlayers(await GetCurrentUsersPlayers(newPlayer.profileId));
+      setModalIsShown(false);
+      setModalSlot(null);
+    }
   }
 
   return (
@@ -103,7 +111,19 @@ export default function UpdatePlayerModal(props) {
 
       <View className="input-fields">
         <Flex direction="column" marginBottom="10px" gap="0">
-          <Label htmlFor="name">Player Name:</Label>
+          <Flex justifyContent="space-between">
+            <Label htmlFor="name" fontWeight="bold">
+              Player Name:
+            </Label>
+            {errors?.some((error) => error?.field === "name") ? (
+              <Text className="error-message">
+                <ErrorIcon fontSize="small" />
+                {errors?.find((error) => error?.field === "name")?.message}
+              </Text>
+            ) : (
+              <></>
+            )}
+          </Flex>
           <Input
             marginTop="5px"
             name="name"
@@ -114,11 +134,24 @@ export default function UpdatePlayerModal(props) {
           />
         </Flex>
         <Flex direction="column" marginBottom="10px" gap="0">
-          <Label htmlFor="dob">Date of Birth:</Label>
+          <Flex justifyContent="space-between">
+            <Label htmlFor="dob" fontWeight="bold">
+              Date of Birth:
+            </Label>
+            {errors?.some((error) => error?.field === "dob") ? (
+              <Text className="error-message">
+                <ErrorIcon fontSize="small" />
+                {errors?.find((error) => error?.field === "dob")?.message}
+              </Text>
+            ) : (
+              <></>
+            )}
+          </Flex>
           <Input
             marginTop="5px"
             name="dob"
             type="date"
+            placeholder="Please Select..."
             defaultValue={playerInfo.dob}
             onChange={(e) =>
               setNewPlayerInfo({ ...playerInfo, dob: e.target.value })
@@ -127,7 +160,19 @@ export default function UpdatePlayerModal(props) {
         </Flex>
 
         <Flex direction="column" marginBottom="10px" gap="0">
-          <Label htmlFor="ageGroup">Age Group:</Label>
+          <Flex justifyContent="space-between">
+            <Label htmlFor="ageGroup" fontWeight="bold">
+              Age Group:
+            </Label>
+            {errors?.some((error) => error?.field === "ageGroup") ? (
+              <Text className="error-message">
+                <ErrorIcon fontSize="small" />
+                {errors?.find((error) => error?.field === "ageGroup")?.message}
+              </Text>
+            ) : (
+              <></>
+            )}
+          </Flex>
           <SelectField
             marginTop="5px"
             labelHidden
@@ -153,7 +198,19 @@ export default function UpdatePlayerModal(props) {
         </Flex>
 
         <Flex direction="column" marginBottom="10px" gap="0">
-          <Label htmlFor="positions">Positions:</Label>
+          <Flex justifyContent="space-between">
+            <Label htmlFor="positions" fontWeight="bold">
+              Positions:
+            </Label>
+            {errors?.some((error) => error?.field === "positions") ? (
+              <Text className="error-message">
+                <ErrorIcon fontSize="small" />
+                {errors?.find((error) => error?.field === "positions")?.message}
+              </Text>
+            ) : (
+              <></>
+            )}
+          </Flex>
           <ToggleButtonGroup
             marginTop="5px"
             name="positions"
@@ -172,7 +229,19 @@ export default function UpdatePlayerModal(props) {
         </Flex>
 
         <Flex direction="column" marginBottom="10px" gap="0">
-          <Label htmlFor="skillLevel">Skill Level:</Label>
+          <Flex justifyContent="space-between">
+            <Label htmlFor="skillLevel" fontWeight="bold">
+              Skill Level:
+            </Label>
+            {errors?.some((error) => error?.field === "skillLevel") ? (
+              <Text className="error-message">
+                <ErrorIcon fontSize="small" />
+                {errors?.find((error) => error?.field === "skillLevel")?.message}
+              </Text>
+            ) : (
+              <></>
+            )}
+          </Flex>
           <SelectField
             marginTop="5px"
             labelHidden
