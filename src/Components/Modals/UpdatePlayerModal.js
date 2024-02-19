@@ -46,15 +46,11 @@ export default function UpdatePlayerModal(props) {
     "CB",
     "RB",
     "LM",
-    "CDM",
     "CM",
-    "CAM",
     "RM",
-    "LW",
-    "RW",
-    "CF",
     "ST",
   ];
+
 
   const ageGroups = [
     "U7",

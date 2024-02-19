@@ -30,6 +30,7 @@ import AddIcon from "@mui/icons-material/Add";
 import UpdateProfileModal from "../../Components/Modals/UpdateProfileModal";
 import CreateProfileModal from "../../Components/Modals/CreateProfileModal";
 import AddPlayerModal from "../../Components/Modals/AddPlayerModal";
+import { TeamDetails, TeamRoster } from "./TeamTables";
 
 export default function Profile() {
   const currentUser = useRecoilValue(currentUserState);
@@ -59,31 +60,37 @@ export default function Profile() {
         </Button>
       </Flex>
       <Tabs.Container defaultValue="1">
-        <Tabs.List justifyContent="space-around">
-          <Tabs.Item className="account-tab" value="1" width="100%">
+        <Tabs.List spacing="equal" wrap="wrap">
+          <Tabs.Item className="account-tab" value="1">
             PROFILE
           </Tabs.Item>
-          <Tabs.Item className="account-tab" value="2" width="100%">
+          <Tabs.Item className="account-tab" value="2">
             SECURITY
           </Tabs.Item>
-          {currentUser.accountType === "COACH" ? (
-            <Tabs.Item className="account-tab" value="3" width="100%">
+          {currentUser.accountType === "COACH" ||
+          currentUser.accountType === "ADMIN" ? (
+            <Tabs.Item className="account-tab" value="3">
               TEAM
             </Tabs.Item>
           ) : (
             <></>
           )}
-          <Tabs.Item className="account-tab" value="4" width="100%">
-            PLAYERS
-          </Tabs.Item>
-          <Tabs.Item className="account-tab" value="5" width="100%">
+          {currentUser.accountType === "PARENT" ||
+          currentUser.accountType === "ADMIN" ? (
+            <Tabs.Item className="account-tab" value="4">
+              PLAYERS
+            </Tabs.Item>
+          ) : (
+            <></>
+          )}
+          <Tabs.Item className="account-tab" value="5">
             SETTINGS
           </Tabs.Item>
         </Tabs.List>
 
         <Tabs.Panel value="1">
           <Flex marginBottom="20px" justifyContent="space-between">
-            <Heading level={2}>Profile</Heading>
+            <Heading level={2}>My Profile</Heading>
             {!hasNoProfile(currentUser) ? (
               <Button
                 className="custom-button"
@@ -128,27 +135,47 @@ export default function Profile() {
           <ViewSecurityTable currentUser={currentUser} />
         </Tabs.Panel>
 
-        <Tabs.Panel value="4">
-          <Flex
-            className="heading"
-            direction="row"
-            justifyContent="space-between"
-          >
-            <Heading level={2}>Players</Heading>
-            <Button
-              className="custom-button"
-              variation="primary"
-              onClick={() => openModal(<AddPlayerModal />, "Add Player")}
+        {currentUser.accountType === "COACH" ||
+        currentUser.accountType === "ADMIN" ? (
+          <Tabs.Panel value="3">
+            <View marginBottom="20px">
+              <Heading level={2}>My Team</Heading>
+            </View>
+            <Heading level={4}>Details</Heading>
+            <TeamDetails currentUser={currentUser} />
+            <Heading level={4}>Roster</Heading>
+            <TeamRoster currentUser={currentUser} />
+          </Tabs.Panel>
+        ) : (
+          <></>
+        )}
+
+        {currentUser.accountType === "PARENT" ||
+        currentUser.accountType === "ADMIN" ? (
+          <Tabs.Panel value="4">
+            <Flex
+              className="heading"
+              direction="row"
+              justifyContent="space-between"
             >
-              <Text display="flex">
-                <AddIcon className="icon" />
-                Add
-              </Text>
-            </Button>
-          </Flex>
-          <Heading level={4}>Registered Players</Heading>
-          <ViewRegisteredPlayers />
-        </Tabs.Panel>
+              <Heading level={2}>Players</Heading>
+              <Button
+                className="custom-button"
+                variation="primary"
+                onClick={() => openModal(<AddPlayerModal />, "Add Player")}
+              >
+                <Text display="flex">
+                  <AddIcon className="icon" />
+                  Add
+                </Text>
+              </Button>
+            </Flex>
+            <Heading level={4}>Registered Players</Heading>
+            <ViewRegisteredPlayers />
+          </Tabs.Panel>
+        ) : (
+          <></>
+        )}
 
         <Tabs.Panel value="5">
           <View marginBottom="20px">

@@ -48,13 +48,8 @@ export default function AddPlayerModal() {
     "CB",
     "RB",
     "LM",
-    "CDM",
     "CM",
-    "CAM",
     "RM",
-    "LW",
-    "RW",
-    "CF",
     "ST",
   ];
 

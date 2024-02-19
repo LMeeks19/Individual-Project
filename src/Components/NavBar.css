@@ -46,6 +46,7 @@
         border-color: transparent;
         z-index: 5;
         display: flex;
+        justify-content: center;
 
         .amplify-text {
           color: #fff;
@@ -68,12 +69,14 @@
   }
 }
 
-.link {
-  text-decoration: none;
-}
-
 .amplify-menu__wrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+
   .amplify-menu__content {
+    overflow: auto !important;
+
     .amplify-button:hover {
       background-color: #008080;
     }

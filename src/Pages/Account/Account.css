@@ -99,3 +99,11 @@
         height: 335px;
     }
 }
+
+.card-container {
+	display: flex;
+	justify-content: center;
+
+	width: 100%;
+}
+

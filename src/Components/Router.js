@@ -15,7 +15,7 @@ export default function NavRouter() {
       <Route path="/schedule" element={<Schedule />} />
       <Route path="/match-posts" element={<MatchPost />} />
       <Route path="/player-posts" element={<PlayersPost />} />
-      <Route path="/view-account" element={<Account />} />
+      <Route path="/account" element={<Account />} />
       <Route path="/messages" element={<Messages />} />
     </Routes>
   );
