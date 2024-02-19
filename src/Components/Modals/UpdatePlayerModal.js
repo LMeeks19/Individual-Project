@@ -213,6 +213,7 @@ export default function UpdatePlayerModal(props) {
             direction="row"
             value={playerInfo.positions}
             onChange={(value) => togglePosition(value)}
+            className="positions-container"
           >
             {positions.map((position) => {
               return (
