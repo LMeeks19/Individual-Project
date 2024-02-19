@@ -23,54 +23,10 @@ export function TeamRoster(props) {
           <Avatar variant="square" sx={{ width: "100%", height: "100%" }} />
         </Card>
         <Card className="details">
-          <Heading level={4}>Louie Meeks</Heading>
-          <Text>Age: 21</Text>
-          <Text>Number: 10</Text>
-          <Text>Positions: <Badge backgroundColor="#404040">GK</Badge></Text>
-        </Card>
-      </Card>
-      <Card className="card">
-        <Card className="avatar-container">
-          <Avatar variant="square" sx={{ width: "100%", height: "100%" }} />
-        </Card>
-        <Card className="details">
-          <Heading level={4}>Louie Meeks</Heading>
-          <Text>Age: 21</Text>
-          <Text>Number: 10</Text>
-          <Text>Positions: <Badge backgroundColor="#404040">GK</Badge></Text>
-        </Card>
-      </Card>
-      <Card className="card">
-        <Card className="avatar-container">
-          <Avatar variant="square" sx={{ width: "100%", height: "100%" }} />
-        </Card>
-        <Card className="details">
-          <Heading level={4}>Louie Meeks</Heading>
-          <Text>Age: 21</Text>
-          <Text>Number: 10</Text>
-          <Text>Positions: <Badge backgroundColor="#404040">GK</Badge></Text>
-        </Card>
-      </Card>
-      <Card className="card">
-        <Card className="avatar-container">
-          <Avatar variant="square" sx={{ width: "100%", height: "100%" }} />
-        </Card>
-        <Card className="details">
-          <Heading level={4}>Louie Meeks</Heading>
-          <Text>Age: 21</Text>
-          <Text>Number: 10</Text>
-          <Text>Positions: <Badge backgroundColor="#404040">GK</Badge></Text>
-        </Card>
-      </Card>
-      <Card className="card">
-        <Card className="avatar-container">
-          <Avatar variant="square" sx={{ width: "100%", height: "100%" }} />
-        </Card>
-        <Card className="details">
-          <Heading level={4}>Louie Meeks</Heading>
-          <Text>Age: 21</Text>
-          <Text>Number: 10</Text>
-          <Text>Positions: <Badge backgroundColor="#404040">GK</Badge></Text>
+          <Heading color="#fff" level={4}>Louie Meeks</Heading>
+          <Text color="#fff" >Age: 21</Text>
+          <Text color="#fff" >Number: 10</Text>
+          <Text color="#fff" >Positions: <Badge color="#fff" backgroundColor="#404040">GK</Badge></Text>
         </Card>
       </Card>
     </Grid>
