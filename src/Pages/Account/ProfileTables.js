@@ -7,6 +7,7 @@ import {
   TableBody,
   ToggleButtonGroup,
   ToggleButton,
+  Card,
 } from "@aws-amplify/ui-react";
 import "./Account.css";
 import { useRecoilState } from "recoil";
@@ -126,37 +127,26 @@ export function ViewSettingsTable() {
   const [theme, setTheme] = useRecoilState(themeState);
 
   return (
-    <Table
-      marginTop="20px"
-      marginBottom="20px"
-      className="account-table"
-      highlightOnHover={false}
-    >
-      <TableBody>
-        <TableRow className="account-table-row">
-          <TableCell className="account-table-cell">Mode</TableCell>
-          <TableCell className="account-table-cell">
-            <ToggleButtonGroup
-              value={theme}
-              height="20px"
-              justifyContent="center"
-              onChange={(value) => setTheme(value)}
-              isExclusive
-              isSelectionRequired
-            >
-              <ToggleButton value="light">
-                <MdLightMode />
-              </ToggleButton>
-              <ToggleButton value="dark">
-                <MdDarkMode />
-              </ToggleButton>
-              <ToggleButton value="system">
-                <VscColorMode />
-              </ToggleButton>
-            </ToggleButtonGroup>
-          </TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
+    <Card backgroundColor="#008080" padding="20px" borderRadius="15px" marginTop="15px" boxShadow="0px 0px 20px -4px #000">
+      <ToggleButtonGroup
+        value={theme}
+        height="20px"
+        justifyContent="center"
+        onChange={(value) => setTheme(value)}
+        isExclusive
+        isSelectionRequired
+
+      >
+        <ToggleButton value="light" width="100%">
+          <MdLightMode />
+        </ToggleButton>
+        <ToggleButton value="dark" width="100%">
+          <MdDarkMode />
+        </ToggleButton>
+        <ToggleButton value="system" width="100%">
+          <VscColorMode />
+        </ToggleButton>
+      </ToggleButtonGroup>
+    </Card>
   );
 }

@@ -26,6 +26,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import LogoutIcon from "@mui/icons-material/Logout";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import UpdateProfileModal from "../../Components/Modals/UpdateProfileModal";
 import CreateProfileModal from "../../Components/Modals/CreateProfileModal";
@@ -138,10 +139,27 @@ export default function Profile() {
         {currentUser.accountType === "COACH" ||
         currentUser.accountType === "ADMIN" ? (
           <Tabs.Panel value="3">
-            <View marginBottom="20px">
+            <Flex marginBottom="20px" justifyContent="space-between">
               <Heading level={2}>My Team</Heading>
-            </View>
-            <Heading level={4}>Details</Heading>
+              <Button
+                className="custom-button delete"
+                variation="primary"
+              >
+                <Text display="flex">
+                  <DeleteIcon fontSize="small" className="icon" />
+                  Delete Team
+                </Text>
+              </Button>
+            </Flex>
+            <Flex justifyContent="space-between" alignItems="center">
+              <Heading level={4}>Details</Heading>
+              <Button className="custom-button" variation="primary">
+                <Text display="flex">
+                  <EditIcon fontSize="small" className="icon" />
+                  Edit
+                </Text>
+              </Button>
+            </Flex>
             <TeamDetails currentUser={currentUser} />
             <Heading level={4}>Roster</Heading>
             <TeamRoster currentUser={currentUser} />
@@ -170,7 +188,6 @@ export default function Profile() {
                 </Text>
               </Button>
             </Flex>
-            <Heading level={4}>Registered Players</Heading>
             <ViewRegisteredPlayers />
           </Tabs.Panel>
         ) : (
