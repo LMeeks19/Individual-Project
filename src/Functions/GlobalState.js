@@ -19,28 +19,32 @@ export const currentUserState = atom({
     townCity: null,
     county: null,
     postcode: null,
+    players: [],
+    team: {
+      id: null,
+      profileId: null,
+      name: null,
+      league: null,
+      ageGroup: null,
+      location: null,
+      email: null,
+      phoneNumber: null,
+      website: null,
+      players: []
+    }
   },
-});
-
-export const usersRegisteredPlayersState = atom({
-  key: "usersRegisteredPlayersState",
-  default: [],
 });
 
 export const warningIsShownState = atom({
   key: "warningIsShownState",
-  default: true,
-});
-
-export const modalIsShownState = atom({
-  key: "modalIsShownState",
   default: false,
 });
 
-export const modalSlotState = atom({
-  key: "modalSlotState",
+export const modalState = atom({
+  key: "modalState",
   default: {
     component: <></>,
     title: null,
+    isShown: false
   },
 });

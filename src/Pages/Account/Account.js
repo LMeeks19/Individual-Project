@@ -16,12 +16,8 @@ import {
 } from "./ProfileTables";
 import ViewRegisteredPlayers from "./RegisteredPlayers";
 
-import {
-  currentUserState,
-  modalIsShownState,
-  modalSlotState,
-} from "../../Functions/GlobalState";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { currentUserState, modalState } from "../../Functions/GlobalState";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 import LogoutIcon from "@mui/icons-material/Logout";
 import EditIcon from "@mui/icons-material/Edit";
@@ -32,17 +28,24 @@ import UpdateProfileModal from "../../Components/Modals/UpdateProfileModal";
 import CreateProfileModal from "../../Components/Modals/CreateProfileModal";
 import AddPlayerModal from "../../Components/Modals/AddPlayerModal";
 import { TeamDetails, TeamRoster } from "./TeamTables";
+import UpdateTeamModal from "../../Components/Modals/UpdateTeamModal";
+import { DeleteTeam } from "../../Functions/Server";
 
 export default function Profile() {
-  const currentUser = useRecoilValue(currentUserState);
+  const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const { signOut } = useAuthenticator();
 
-  const setModalIsShown = useSetRecoilState(modalIsShownState);
-  const setModalSlot = useSetRecoilState(modalSlotState);
+  const setModal = useSetRecoilState(modalState);
 
   function openModal(component, title) {
-    setModalSlot({ component: component, title: title });
-    setModalIsShown(true);
+    setModal({ component: component, title: title, isShown: true });
+  }
+
+  async function deleteTeam(id) {
+    try {
+      await DeleteTeam(id);
+      setCurrentUser({ ...currentUser, team: null });
+    } catch (e) {}
   }
 
   function hasNoProfile(object) {
@@ -144,6 +147,7 @@ export default function Profile() {
               <Button
                 className="custom-button delete"
                 variation="primary"
+                onClick={() => deleteTeam(currentUser.team.id)}
               >
                 <Text display="flex">
                   <DeleteIcon fontSize="small" className="icon" />
@@ -153,16 +157,22 @@ export default function Profile() {
             </Flex>
             <Flex justifyContent="space-between" alignItems="center">
               <Heading level={4}>Details</Heading>
-              <Button className="custom-button" variation="primary">
+              <Button
+                className="custom-button"
+                variation="primary"
+                onClick={() => openModal(<UpdateTeamModal />, "Update Team")}
+              >
                 <Text display="flex">
                   <EditIcon fontSize="small" className="icon" />
                   Edit
                 </Text>
               </Button>
             </Flex>
-            <TeamDetails currentUser={currentUser} />
+            <TeamDetails team={currentUser.team} />
             <Heading level={4}>Roster</Heading>
-            <TeamRoster currentUser={currentUser} />
+            <Flex marginTop="20px" wrap="wrap">
+              <TeamRoster players={currentUser.team.players} />
+            </Flex>
           </Tabs.Panel>
         ) : (
           <></>

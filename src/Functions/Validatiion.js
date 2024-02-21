@@ -76,3 +76,9 @@ export function ValidateProfileModal(inputs) {
 
   return errors;
 }
+
+export function ValidateTeamModal(inputs) {
+  let errors = [];
+
+  return errors;
+}

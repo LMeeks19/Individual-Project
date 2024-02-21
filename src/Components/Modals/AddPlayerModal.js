@@ -11,12 +11,10 @@ import {
   ToggleButtonGroup,
   Text,
 } from "@aws-amplify/ui-react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   currentUserState,
-  usersRegisteredPlayersState,
-  modalIsShownState,
-  modalSlotState,
+  modalState,
 } from "../../Functions/GlobalState";
 import { CreatePlayer } from "../../Functions/Server";
 import { useState } from "react";
@@ -26,12 +24,8 @@ import { ValidatePlayerModal } from "../../Functions/Validatiion";
 import ErrorIcon from "@mui/icons-material/Error";
 
 export default function AddPlayerModal() {
-  const currentUser = useRecoilValue(currentUserState);
-  const [usersPlayers, setUsersPlayers] = useRecoilState(
-    usersRegisteredPlayersState
-  );
-  const setModalIsShown = useSetRecoilState(modalIsShownState);
-  const setModalSlot = useSetRecoilState(modalSlotState);
+  const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
+  const setModal = useSetRecoilState(modalState);
 
   const [newPlayerInfo, setNewPlayerInfo] = useState({
     profileId: currentUser.id,
@@ -42,16 +36,7 @@ export default function AddPlayerModal() {
     skillLevel: null,
   });
 
-  const positions = [
-    "GK",
-    "LB",
-    "CB",
-    "RB",
-    "LM",
-    "CM",
-    "RM",
-    "ST",
-  ];
+  const positions = ["GK", "LB", "CB", "RB", "LM", "CM", "RM", "ST"];
 
   const ageGroups = [
     "U7",
@@ -69,6 +54,7 @@ export default function AddPlayerModal() {
     "U20",
     "U21",
   ];
+  
   const skillLevels = ["Beginner", "Intermediate", "Experienced"];
 
   function togglePosition(position) {
@@ -87,16 +73,13 @@ export default function AddPlayerModal() {
 
   const [errors, setErrors] = useState([]);
 
-  async function addPlayer(event) {
-    event.preventDefault();
+  async function addPlayer() {
     const validationErrors = ValidatePlayerModal(newPlayerInfo);
-    if (validationErrors.length > 0) 
-    setErrors(validationErrors);
+    if (validationErrors.length > 0) setErrors(validationErrors);
     else {
       const newPlayer = await CreatePlayer(newPlayerInfo);
-      setUsersPlayers([...usersPlayers, newPlayer]);
-      setModalIsShown(false);
-      setModalSlot(null);
+      setCurrentUser({...currentUser, players: newPlayer});
+      setModal({ component: <></>, title: null, isShown: false });
     }
   }
 
@@ -123,8 +106,9 @@ export default function AddPlayerModal() {
             )}
           </Flex>
           <Input
+            autoComplete="off"
             marginTop="5px"
-            name="name"
+            id="name"
             onChange={(e) =>
               setNewPlayerInfo({ ...newPlayerInfo, name: e.target.value })
             }
@@ -146,7 +130,7 @@ export default function AddPlayerModal() {
           </Flex>
           <Input
             marginTop="5px"
-            name="dob"
+            id="dob"
             type="date"
             onChange={(e) =>
               setNewPlayerInfo({ ...newPlayerInfo, dob: e.target.value })
@@ -172,7 +156,7 @@ export default function AddPlayerModal() {
             marginTop="5px"
             labelHidden
             padding="0"
-            name="ageGroup"
+            id="ageGroup"
             onChange={(e) =>
               setNewPlayerInfo({
                 ...newPlayerInfo,
@@ -207,7 +191,6 @@ export default function AddPlayerModal() {
           </Flex>
           <ToggleButtonGroup
             marginTop="5px"
-            name="positions"
             direction="row"
             value={newPlayerInfo.positions}
             onChange={(value) => togglePosition(value)}
@@ -216,6 +199,7 @@ export default function AddPlayerModal() {
             {positions.map((position) => {
               return (
                 <ToggleButton
+                  id="positions"
                   className="positions"
                   key={position}
                   value={position}
@@ -236,7 +220,10 @@ export default function AddPlayerModal() {
             {errors?.some((error) => error?.field === "skillLevel") ? (
               <Text className="error-message">
                 <ErrorIcon fontSize="small" />
-                {errors?.find((error) => error?.field === "skillLevel")?.message}
+                {
+                  errors?.find((error) => error?.field === "skillLevel")
+                    ?.message
+                }
               </Text>
             ) : (
               <></>
@@ -245,7 +232,7 @@ export default function AddPlayerModal() {
           <SelectField
             marginTop="5px"
             labelHidden
-            name="skillLevel"
+            id="skillLevel"
             onChange={(e) =>
               setNewPlayerInfo({
                 ...newPlayerInfo,
@@ -264,7 +251,7 @@ export default function AddPlayerModal() {
           </SelectField>
         </Flex>
 
-        <Button className="modal-button" onClick={(e) => addPlayer(e)}>
+        <Button className="modal-button" onClick={(e) => addPlayer()}>
           <AddIcon fontSize="small" className="icon" />
           Add
         </Button>

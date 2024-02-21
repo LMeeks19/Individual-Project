@@ -11,11 +11,7 @@ import {
 import SaveIcon from "@mui/icons-material/Save";
 import "./UpdateProfileModal.css";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import {
-  modalIsShownState,
-  currentUserState,
-  modalSlotState,
-} from "../../Functions/GlobalState";
+import { currentUserState, modalState } from "../../Functions/GlobalState";
 import { useEffect, useState } from "react";
 import { UpdateProfile } from "../../Functions/Server";
 import { format } from "date-fns";
@@ -23,8 +19,7 @@ import ErrorIcon from "@mui/icons-material/Error";
 import { ValidateProfileModal } from "../../Functions/Validatiion";
 
 export default function UpdateProfileModal() {
-  const setModalIsShown = useSetRecoilState(modalIsShownState);
-  const setModalSlot = useSetRecoilState(modalSlotState);
+  const setModal = useSetRecoilState(modalState);
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
 
   const [updatedProfileInfo, setUpdatedProfileInfo] = useState({
@@ -43,14 +38,12 @@ export default function UpdateProfileModal() {
 
   const [errors, setErrors] = useState([]);
 
-  async function updateProfile(event) {
-    event.preventDefault();
+  async function updateProfile() {
     const validationErrors = ValidateProfileModal(updatedProfileInfo);
     if (validationErrors.length > 0) setErrors(validationErrors);
     else {
       setCurrentUser(await UpdateProfile(updatedProfileInfo));
-      setModalIsShown(false);
-      setModalSlot(null);
+      setModal({ component: <></>, title: null, isShown: false });
     }
   }
 
@@ -88,8 +81,9 @@ export default function UpdateProfileModal() {
             )}
           </Flex>
           <Input
+            autoComplete="name"
             marginTop="5px"
-            name="name"
+            id="name"
             defaultValue={updatedProfileInfo.name}
             onChange={(e) =>
               setUpdatedProfileInfo({
@@ -115,7 +109,7 @@ export default function UpdateProfileModal() {
           </Flex>
           <Input
             marginTop="5px"
-            name="dob"
+            id="dob"
             defaultValue={updatedProfileInfo.dob}
             type="date"
             max={maxDateAllowed}
@@ -146,7 +140,7 @@ export default function UpdateProfileModal() {
           </Flex>
           <Input
             marginTop="5px"
-            name="phoneNumber"
+            id="phoneNumber"
             defaultValue={updatedProfileInfo.phoneNumber}
             onChange={(e) =>
               setUpdatedProfileInfo({
@@ -172,7 +166,7 @@ export default function UpdateProfileModal() {
           </Flex>
           <Input
             marginTop="5px"
-            name="street"
+            id="street"
             defaultValue={updatedProfileInfo.street}
             onChange={(e) =>
               setUpdatedProfileInfo({
@@ -198,7 +192,7 @@ export default function UpdateProfileModal() {
           </Flex>
           <Input
             marginTop="5px"
-            name="townCity"
+            id="townCity"
             defaultValue={updatedProfileInfo.townCity}
             onChange={(e) =>
               setUpdatedProfileInfo({
@@ -224,7 +218,7 @@ export default function UpdateProfileModal() {
           </Flex>
           <Input
             marginTop="5px"
-            name="county"
+            id="county"
             defaultValue={updatedProfileInfo.county}
             onChange={(e) =>
               setUpdatedProfileInfo({
@@ -250,7 +244,7 @@ export default function UpdateProfileModal() {
           </Flex>
           <Input
             marginTop="5px"
-            name="postcode"
+            id="postcode"
             defaultValue={updatedProfileInfo.postcode}
             onChange={(e) =>
               setUpdatedProfileInfo({

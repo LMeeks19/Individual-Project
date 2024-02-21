@@ -11,13 +11,9 @@ import {
   ToggleButtonGroup,
   Text,
 } from "@aws-amplify/ui-react";
-import { useSetRecoilState } from "recoil";
-import {
-  usersRegisteredPlayersState,
-  modalIsShownState,
-  modalSlotState,
-} from "../../Functions/GlobalState";
-import { GetCurrentUsersPlayers, UpdatePlayer } from "../../Functions/Server";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { currentUserState, modalState } from "../../Functions/GlobalState";
+import { UpdatePlayer } from "../../Functions/Server";
 import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import ErrorIcon from "@mui/icons-material/Error";
@@ -26,9 +22,8 @@ import { ValidatePlayerModal } from "../../Functions/Validatiion";
 import "./UpdatePlayerModal.css";
 
 export default function UpdatePlayerModal(props) {
-  const setUsersPlayers = useSetRecoilState(usersRegisteredPlayersState);
-  const setModalIsShown = useSetRecoilState(modalIsShownState);
-  const setModalSlot = useSetRecoilState(modalSlotState);
+  const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
+  const setModal = useSetRecoilState(modalState);
 
   const [playerInfo, setNewPlayerInfo] = useState({
     id: props.player.id,
@@ -40,17 +35,7 @@ export default function UpdatePlayerModal(props) {
     skillLevel: props.player.skillLevel,
   });
 
-  const positions = [
-    "GK",
-    "LB",
-    "CB",
-    "RB",
-    "LM",
-    "CM",
-    "RM",
-    "ST",
-  ];
-
+  const positions = ["GK", "LB", "CB", "RB", "LM", "CM", "RM", "ST"];
 
   const ageGroups = [
     "U7",
@@ -68,6 +53,7 @@ export default function UpdatePlayerModal(props) {
     "U20",
     "U21",
   ];
+
   const skillLevels = ["Beginner", "Intermediate", "Experienced"];
 
   function togglePosition(position) {
@@ -86,15 +72,19 @@ export default function UpdatePlayerModal(props) {
 
   const [errors, setErrors] = useState([]);
 
-  async function updatePlayer(event) {
-    event.preventDefault();
+  async function updatePlayer() {
     const validationErrors = ValidatePlayerModal(playerInfo);
     if (validationErrors.length > 0) setErrors(validationErrors);
     else {
-      const newPlayer = await UpdatePlayer(playerInfo);
-      setUsersPlayers(await GetCurrentUsersPlayers(newPlayer.profileId));
-      setModalIsShown(false);
-      setModalSlot(null);
+      let updatedPlayers = currentUser.players.filter(
+        (player) => player.id !== playerInfo.id
+      );
+      updatedPlayers.push(await UpdatePlayer(playerInfo));
+      setCurrentUser({
+        ...currentUser,
+        players: updatedPlayers.sort((player) => player.name),
+      });
+      setModal({ component: <></>, title: null, isShown: false });
     }
   }
 
@@ -121,8 +111,9 @@ export default function UpdatePlayerModal(props) {
             )}
           </Flex>
           <Input
+            autoComplete="off"
             marginTop="5px"
-            name="name"
+            id="name"
             defaultValue={playerInfo.name}
             onChange={(e) =>
               setNewPlayerInfo({ ...playerInfo, name: e.target.value })
@@ -145,7 +136,7 @@ export default function UpdatePlayerModal(props) {
           </Flex>
           <Input
             marginTop="5px"
-            name="dob"
+            id="dob"
             type="date"
             placeholder="Please Select..."
             defaultValue={playerInfo.dob}
@@ -173,7 +164,7 @@ export default function UpdatePlayerModal(props) {
             marginTop="5px"
             labelHidden
             padding="0"
-            name="ageGroup"
+            id="ageGroup"
             value={playerInfo.ageGroup}
             onChange={(e) =>
               setNewPlayerInfo({
@@ -209,7 +200,6 @@ export default function UpdatePlayerModal(props) {
           </Flex>
           <ToggleButtonGroup
             marginTop="5px"
-            name="positions"
             direction="row"
             value={playerInfo.positions}
             onChange={(value) => togglePosition(value)}
@@ -217,7 +207,12 @@ export default function UpdatePlayerModal(props) {
           >
             {positions.map((position) => {
               return (
-                <ToggleButton key={position} value={position} isFullWidth>
+                <ToggleButton
+                  id="positions"
+                  key={position}
+                  value={position}
+                  isFullWidth
+                >
                   {position}
                 </ToggleButton>
               );
@@ -233,7 +228,10 @@ export default function UpdatePlayerModal(props) {
             {errors?.some((error) => error?.field === "skillLevel") ? (
               <Text className="error-message">
                 <ErrorIcon fontSize="small" />
-                {errors?.find((error) => error?.field === "skillLevel")?.message}
+                {
+                  errors?.find((error) => error?.field === "skillLevel")
+                    ?.message
+                }
               </Text>
             ) : (
               <></>
@@ -242,7 +240,7 @@ export default function UpdatePlayerModal(props) {
           <SelectField
             marginTop="5px"
             labelHidden
-            name="skillLevel"
+            id="skillLevel"
             value={playerInfo.skillLevel}
             onChange={(e) =>
               setNewPlayerInfo({
@@ -262,7 +260,7 @@ export default function UpdatePlayerModal(props) {
           </SelectField>
         </Flex>
 
-        <Button className="modal-button" onClick={(e) => updatePlayer(e)}>
+        <Button className="modal-button" onClick={(e) => updatePlayer()}>
           <AddIcon fontSize="small" className="icon" />
           Save
         </Button>

@@ -25,22 +25,38 @@ export function TeamDetails(props) {
           </Heading>
           <Divider />
           <View className="info">
-            <Text className="text">Name:</Text>
-            <Text className="text">League:</Text>
-            <Text className="text">Age Group:</Text>
-            <Text className="text">Location:</Text>
-            <Text className="text">Website:</Text>
+            <Text className="text">Name: {props.team.name}</Text>
+            <Text className="text">
+              League: {props.team.league}
+            </Text>
+            <Text className="text">
+              Age Group: {props.team.ageGroup}
+            </Text>
+            <Text className="text">
+              Location: {props.team.location}
+            </Text>
           </View>
         </View>
         <View className="coach-info">
           <Heading className="header" level={4}>
-            Coach Information
+            Contact Information
           </Heading>
           <Divider />
           <View className="info">
-            <Text className="text">Name:</Text>
-            <Text className="text">Email:</Text>
-            <Text className="text">Phone Nmuber:</Text>
+            <Text className="text">Email: {props.team.email}</Text>
+            <Text className="text">
+              Phone Nmuber: {props.team.phoneNumber}
+            </Text>
+            <Text className="text">
+              Website:{" "}
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href={props.team.website}
+              >
+                {props.team.website}
+              </a>
+            </Text>
           </View>
         </View>
       </Flex>
@@ -51,30 +67,39 @@ export function TeamDetails(props) {
 export function TeamRoster(props) {
   return (
     <Flex marginTop="20px" wrap="wrap">
-      <Card className="card">
-        <Card className="avatar-container">
-          <Avatar variant="square" sx={{ width: "100%", height: "100%" }} />
-        </Card>
-        <Card className="details">
-          <Heading className="header" color="#fff" level={4}>
-            <Text>Louie Meeks</Text>
-            <Flex className="icons">
-              <EditIcon className="icon" />
-              <DeleteIcon className="icon" htmlColor="red" />
+      {props.players.map((player) => {
+        <Card key={player.id} className="card">
+          <Card className="avatar-container">
+            <Avatar variant="square" sx={{ width: "100%", height: "100%" }} />
+          </Card>
+          <Card className="details">
+            <Heading className="header" color="#fff" level={4}>
+              <Text>{player.name}</Text>
+              <Flex className="icons">
+                <EditIcon className="icon" />
+                <DeleteIcon className="icon" htmlColor="red" />
+              </Flex>
+            </Heading>
+            <Text color="#fff">Age: {player.age}</Text>
+            <Text color="#fff">Number: {player.kitNumber}</Text>
+            <Flex wrap="wrap" gap="0">
+              <Text marginRight="4px" as="div" color="#fff">
+                Positions:
+              </Text>
+              {player.positions.map((position) => {
+                <Badge
+                  key={position}
+                  marginRight="4px"
+                  color="#fff"
+                  backgroundColor="#404040"
+                >
+                  {position}
+                </Badge>;
+              })}
             </Flex>
-          </Heading>
-          <Text color="#fff">Age: 21</Text>
-          <Text color="#fff">Number: 10</Text>
-          <Flex wrap="wrap" gap="0">
-            <Text marginRight="4px" as="div" color="#fff">
-              Positions:
-            </Text>
-            <Badge marginRight="4px" color="#fff" backgroundColor="#404040">
-              GK
-            </Badge>
-          </Flex>
-        </Card>
-      </Card>
+          </Card>
+        </Card>;
+      })}
     </Flex>
   );
 }

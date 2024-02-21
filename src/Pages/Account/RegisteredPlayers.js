@@ -1,10 +1,6 @@
 import { useRecoilState, useSetRecoilState } from "recoil";
 import "./Account.css";
-import {
-  modalIsShownState,
-  modalSlotState,
-  usersRegisteredPlayersState,
-} from "../../Functions/GlobalState";
+import { modalState, currentUserState } from "../../Functions/GlobalState";
 import { Card, View, Heading, Flex, Text, Badge } from "@aws-amplify/ui-react";
 import { format } from "date-fns";
 
@@ -16,42 +12,40 @@ import { DeletePlayer } from "../../Functions/Server";
 import UpdatePlayerModal from "../../Components/Modals/UpdatePlayerModal";
 
 export default function ViewRegisteredPlayers() {
-  const [usersRegisteredPlayers, setUsersRegisteredPlayers] = useRecoilState(
-    usersRegisteredPlayersState
-  );
-
-  const setModalSlot = useSetRecoilState(modalSlotState);
-  const setModalIsShown = useSetRecoilState(modalIsShownState);
+  const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
+  const setModal = useSetRecoilState(modalState);
 
   function formatDate(date) {
     return format(new Date(date), "do MMMM yyyy");
   }
 
   function updateIsShown(registeredPlayerId) {
-    let updatedList = [...usersRegisteredPlayers].map((item) => {
+    let updatedList = [...currentUser.players].map((item) => {
       if (item.id === registeredPlayerId)
         return { ...item, isShown: !item.isShown };
       else return item;
     });
 
-    setUsersRegisteredPlayers(updatedList);
+    setCurrentUser({ ...currentUser, players: updatedList });
   }
 
   async function deletePlayer(playerId) {
     await DeletePlayer(playerId);
-    setUsersRegisteredPlayers(
-      usersRegisteredPlayers.filter((player) => player.id !== playerId)
-    );
+    setCurrentUser({
+      ...currentUser,
+      players: currentUser.players.filter(
+        (player) => player.id !== playerId
+      ),
+    });
   }
 
   function openUpdatePlayerModal(component, title) {
-    setModalSlot({ component: component, title: title });
-    setModalIsShown(true);
+    setModal({ component: component, title: title, isShown: true });
   }
 
   return (
     <View>
-      {usersRegisteredPlayers.length === 0 ? (
+      {currentUser.players.length === 0 ? (
         <Card className="registered-player-card">
           <View className="registered-player-heading">
             <Heading textAlign="center" className="header" level={5}>
@@ -61,7 +55,7 @@ export default function ViewRegisteredPlayers() {
         </Card>
       ) : (
         <View>
-          {usersRegisteredPlayers.map((registeredPlayer) => {
+          {currentUser.players.map((registeredPlayer) => {
             return (
               <Card
                 className={`registered-player-card ${

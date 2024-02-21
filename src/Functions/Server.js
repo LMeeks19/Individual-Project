@@ -4,7 +4,10 @@ import {
   listProfiles,
   getPlayer as getPlayerQuery,
   listPlayers as listPlayersQuery,
-  getPlayersByProfileId as getPlayersByProfileIdQuery,
+  playersByProfileId as getPlayersByProfileIdQuery,
+  getTeam as getTeamQuery,
+  listTeams as listTeamsQuery,
+  teamPlayersByTeamId as getTeamPlayersByTeamIdQuery,
 } from "../graphql/queries";
 import {
   createProfile as createProfileMutation,
@@ -13,6 +16,12 @@ import {
   createPlayer as createPlayerMutation,
   updatePlayer as updatePlayerMutation,
   deletePlayer as deletePlayerMutation,
+  createTeam as createTeamMutation,
+  updateTeam as updateTeamMutation,
+  deleteTeam as deleteTeamMutation,
+  createTeamPlayer as createTeamPlayerMutation,
+  updateTeamPlayer as updateTeamPlayerMutation,
+  deleteTeamPlayer as deleteTeamPlayerMutation,
 } from "../graphql/mutations";
 import { fetchUserAttributes } from "aws-amplify/auth";
 
@@ -195,8 +204,181 @@ export async function GetCurrentUsersPlayers(profileId) {
 
   const apiData = await client.graphql({
     query: getPlayersByProfileIdQuery,
-    variables: { profileId: profileId },
+    variables: { profileID: profileId },
   });
 
-  return apiData.data.playersByProfileId.items;
+  return apiData.data.playersByProfileID.items;
+}
+
+export async function CreateTeam(data) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: createTeamMutation,
+    variables: {
+      input: {
+        id: data.id,
+        profileId: data.profileId,
+        name: data.name,
+        league: data.league,
+        ageGroup: data.ageGroup,
+        location: data.location,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        website: data.website,
+      },
+    },
+  });
+
+  return apiData.data.createTeam;
+}
+
+export async function UpdateTeam(data) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: updateTeamMutation,
+    variables: {
+      input: {
+        id: data.id,
+        profileId: data.profileId,
+        name: data.name,
+        league: data.league,
+        ageGroup: data.ageGroup,
+        location: data.location,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        website: data.website,
+      },
+    },
+  });
+
+  return apiData.data.updateTeam;
+}
+
+export async function DeleteTeam(recordId) {
+  const client = generateClient();
+
+  const apidata = await client.graphql({
+    query: deleteTeamMutation,
+    variables: {
+      input: {
+        id: recordId,
+      },
+    },
+  });
+
+  return apidata.data.deleteTeam;
+}
+
+export async function GetTeam(recordId) {
+  const client = generateClient();
+
+  // Get a specific item
+  const apiData = await client.graphql({
+    query: getTeamQuery,
+    variables: { id: recordId },
+  });
+
+  return apiData.data.getTeam;
+}
+
+export async function GetAllTeams() {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: listTeamsQuery,
+  });
+
+  return apiData.data.listTeams.items;
+}
+
+export async function GetTeamByProfileId(profileId) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: listTeamsQuery,
+    filter: { profileId: profileId },
+  });
+
+  let team = {
+    id: apiData.data.listTeams.items[0].id,
+    league: apiData.data.listTeams.items[0].league,
+    name: apiData.data.listTeams.items[0].name,
+    ageGroup: apiData.data.listTeams.items[0].ageGroup,
+    location: apiData.data.listTeams.items[0].location,
+    phoneNumber: apiData.data.listTeams.items[0].phoneNumber,
+    website: apiData.data.listTeams.items[0].website,
+    players: [],
+  };
+
+  team.players.push(...(await GetTeamPlayersByTeamId(team.id)));
+
+  return team;
+}
+
+export async function CreateTeamPlayer(data) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: createTeamPlayerMutation,
+    variables: {
+      input: {
+        id: data.id,
+        teamID: data.teamId,
+        name: data.name,
+        age: data.age,
+        kitNumber: data.kitNumber,
+        positions: data.positions,
+      },
+    },
+  });
+
+  return apiData.data.createTeamPlayer;
+}
+
+export async function UpdateTeamPlayer(data) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: updateTeamPlayerMutation,
+    variables: {
+      input: {
+        id: data.id,
+        teamID: data.teamId,
+        name: data.name,
+        age: data.age,
+        kitNumber: data.kitNumber,
+        positions: data.positions,
+      },
+    },
+  });
+
+  return apiData.data.updateTeamPlayer;
+}
+
+export async function DeleteTeamPlayer(id) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: deleteTeamPlayerMutation,
+    variables: {
+      input: {
+        id: id,
+      },
+    },
+  });
+
+  return apiData.data.deleteTeamPlayer;
+}
+
+export async function GetTeamPlayersByTeamId(teamId) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: getTeamPlayersByTeamIdQuery,
+    variables: { teamID: teamId },
+  });
+
+  return apiData.data.teamPlayersByTeamID.items;
 }

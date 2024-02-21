@@ -12,19 +12,14 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import "./CreateProfileModal.css";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import {
-  modalIsShownState,
-  currentUserState,
-  modalSlotState,
-} from "../../Functions/GlobalState";
+import { modalState, currentUserState } from "../../Functions/GlobalState";
 import { useState } from "react";
 import { CreateProfile } from "../../Functions/Server";
 import ErrorIcon from "@mui/icons-material/Error";
 import { ValidateProfileModal } from "../../Functions/Validatiion";
 
 export default function CreateProfileModal() {
-  const setModalIsShown = useSetRecoilState(modalIsShownState);
-  const setModalSlot = useSetRecoilState(modalSlotState);
+  const setModal = useSetRecoilState(modalState);
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
 
   const [newProfileInfo, setNewProfileInfo] = useState({
@@ -43,14 +38,12 @@ export default function CreateProfileModal() {
 
   const [errors, setErrors] = useState([]);
 
-  async function createProfile(event) {
-    event.preventDefault();
+  async function createProfile() {
     const validationErrors = ValidateProfileModal(newProfileInfo);
     if (validationErrors.length > 0) setErrors(validationErrors);
     else {
       setCurrentUser(await CreateProfile(newProfileInfo));
-      setModalIsShown(false);
-      setModalSlot(null);
+      setModal({ component: <></>, title: null, isShown: false });
     }
   }
 
@@ -77,7 +70,9 @@ export default function CreateProfileModal() {
             )}
           </Flex>
           <Input
-            name="name"
+            autoComplete="name"
+            marginTop="5px"
+            id="name"
             onChange={(e) =>
               setNewProfileInfo({ ...newProfileInfo, name: e.target.value })
             }
@@ -98,7 +93,8 @@ export default function CreateProfileModal() {
             )}
           </Flex>
           <Input
-            name="dob"
+            id="dob"
+            marginTop="5px"
             type="date"
             onChange={(e) =>
               setNewProfileInfo({ ...newProfileInfo, dob: e.target.value })
@@ -123,7 +119,8 @@ export default function CreateProfileModal() {
             )}
           </Flex>
           <Input
-            name="phoneNumber"
+            id="phoneNumber"
+            marginTop="5px"
             onChange={(e) =>
               setNewProfileInfo({
                 ...newProfileInfo,
@@ -150,7 +147,8 @@ export default function CreateProfileModal() {
             )}
           </Flex>
           <SelectField
-            name="accountType"
+            id="accountType"
+            marginTop="5px"
             onChange={(e) =>
               setNewProfileInfo({
                 ...newProfileInfo,
@@ -178,7 +176,8 @@ export default function CreateProfileModal() {
             )}
           </Flex>
           <Input
-            name="street"
+            id="street"
+            marginTop="5px"
             onChange={(e) =>
               setNewProfileInfo({
                 ...newProfileInfo,
@@ -202,7 +201,8 @@ export default function CreateProfileModal() {
             )}
           </Flex>
           <Input
-            name="townCity"
+            id="townCity"
+            marginTop="5px"
             onChange={(e) =>
               setNewProfileInfo({
                 ...newProfileInfo,
@@ -226,7 +226,8 @@ export default function CreateProfileModal() {
             )}
           </Flex>
           <Input
-            name="county"
+            id="county"
+            marginTop="5px"
             onChange={(e) =>
               setNewProfileInfo({
                 ...newProfileInfo,
@@ -250,7 +251,8 @@ export default function CreateProfileModal() {
             )}
           </Flex>
           <Input
-            name="postcode"
+            id="postcode"
+            marginTop="5px"
             onChange={(e) =>
               setNewProfileInfo({
                 ...newProfileInfo,
@@ -261,7 +263,7 @@ export default function CreateProfileModal() {
         </Flex>
       </View>
 
-      <Button className="modal-button" onClick={(e) => createProfile(e)}>
+      <Button className="modal-button" onClick={(e) => createProfile()}>
         <AddIcon fontSize="small" className="icon" />
         Create
       </Button>
