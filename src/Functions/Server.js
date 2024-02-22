@@ -1,13 +1,9 @@
 import { generateClient } from "aws-amplify/api";
 import {
   getProfile,
-  listProfiles,
-  getPlayer as getPlayerQuery,
-  listPlayers as listPlayersQuery,
-  playersByProfileId as getPlayersByProfileIdQuery,
-  getTeam as getTeamQuery,
-  listTeams as listTeamsQuery,
-  teamPlayersByTeamId as getTeamPlayersByTeamIdQuery,
+  playersByProfileID,
+  teamsByProfileID, 
+  teamPlayersByTeamID,
 } from "../graphql/queries";
 import {
   createProfile as createProfileMutation,
@@ -25,7 +21,7 @@ import {
 } from "../graphql/mutations";
 import { fetchUserAttributes } from "aws-amplify/auth";
 
-export async function FetchCurrentUser(user) {
+export async function GetProfile(user) {
   const client = generateClient();
   const authenticationAttributes = fetchUserAttributes();
 
@@ -46,6 +42,8 @@ export async function FetchCurrentUser(user) {
       townCity: null,
       county: null,
       postcode: null,
+      players: [],
+      team: []
     };
   }
 
@@ -70,6 +68,8 @@ export async function CreateProfile(data) {
         townCity: data.townCity,
         county: data.county,
         postcode: data.postcode,
+        players: [],
+        team: []
       },
     },
   });
@@ -114,16 +114,6 @@ export async function DeleteProfile(id) {
   return deletedProfile.data.deleteProfile;
 }
 
-export async function GetAllProfiles() {
-  const client = generateClient();
-
-  const allProfiles = await client.graphql({
-    query: listProfiles,
-  });
-
-  return allProfiles.data.listProfiles;
-}
-
 export async function CreatePlayer(data) {
   const client = generateClient();
 
@@ -131,7 +121,7 @@ export async function CreatePlayer(data) {
     query: createPlayerMutation,
     variables: {
       input: {
-        profileId: data.profileId,
+        profileID: data.profileId,
         name: data.name,
         dob: data.dob,
         ageGroup: data.ageGroup,
@@ -152,7 +142,7 @@ export async function UpdatePlayer(data) {
     variables: {
       input: {
         id: data.id,
-        profileId: data.profileId,
+        profileID: data.profileId,
         name: data.name,
         dob: data.dob,
         ageGroup: data.ageGroup,
@@ -178,32 +168,11 @@ export async function DeletePlayer(id) {
   });
 }
 
-export async function GetAllPlayers() {
-  const client = generateClient();
-
-  const allPlayers = await client.graphql({
-    query: listPlayersQuery,
-  });
-
-  return allPlayers.data.listPlayers;
-}
-
-export async function GetPlayer(id) {
-  const client = generateClient();
-
-  const onePlayer = await client.graphql({
-    query: getPlayerQuery,
-    variables: { id: { id } },
-  });
-
-  return onePlayer.data.getPlayer;
-}
-
-export async function GetCurrentUsersPlayers(profileId) {
+export async function GetPlayersByProfileId(profileId) {
   const client = generateClient();
 
   const apiData = await client.graphql({
-    query: getPlayersByProfileIdQuery,
+    query: playersByProfileID,
     variables: { profileID: profileId },
   });
 
@@ -218,7 +187,7 @@ export async function CreateTeam(data) {
     variables: {
       input: {
         id: data.id,
-        profileId: data.profileId,
+        profileID: data.profileId,
         name: data.name,
         league: data.league,
         ageGroup: data.ageGroup,
@@ -241,7 +210,7 @@ export async function UpdateTeam(data) {
     variables: {
       input: {
         id: data.id,
-        profileId: data.profileId,
+        profileID: data.profileId,
         name: data.name,
         league: data.league,
         ageGroup: data.ageGroup,
@@ -271,50 +240,15 @@ export async function DeleteTeam(recordId) {
   return apidata.data.deleteTeam;
 }
 
-export async function GetTeam(recordId) {
-  const client = generateClient();
-
-  // Get a specific item
-  const apiData = await client.graphql({
-    query: getTeamQuery,
-    variables: { id: recordId },
-  });
-
-  return apiData.data.getTeam;
-}
-
-export async function GetAllTeams() {
-  const client = generateClient();
-
-  const apiData = await client.graphql({
-    query: listTeamsQuery,
-  });
-
-  return apiData.data.listTeams.items;
-}
-
 export async function GetTeamByProfileId(profileId) {
   const client = generateClient();
 
   const apiData = await client.graphql({
-    query: listTeamsQuery,
-    filter: { profileId: profileId },
+    query: teamsByProfileID,
+    filter: { profileID: profileId },
   });
 
-  let team = {
-    id: apiData.data.listTeams.items[0].id,
-    league: apiData.data.listTeams.items[0].league,
-    name: apiData.data.listTeams.items[0].name,
-    ageGroup: apiData.data.listTeams.items[0].ageGroup,
-    location: apiData.data.listTeams.items[0].location,
-    phoneNumber: apiData.data.listTeams.items[0].phoneNumber,
-    website: apiData.data.listTeams.items[0].website,
-    players: [],
-  };
-
-  team.players.push(...(await GetTeamPlayersByTeamId(team.id)));
-
-  return team;
+  return apiData.data.teamsByProfileID.items[0];
 }
 
 export async function CreateTeamPlayer(data) {
@@ -376,7 +310,7 @@ export async function GetTeamPlayersByTeamId(teamId) {
   const client = generateClient();
 
   const apiData = await client.graphql({
-    query: getTeamPlayersByTeamIdQuery,
+    query: teamPlayersByTeamID,
     variables: { teamID: teamId },
   });
 

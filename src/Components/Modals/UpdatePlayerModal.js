@@ -76,13 +76,13 @@ export default function UpdatePlayerModal(props) {
     const validationErrors = ValidatePlayerModal(playerInfo);
     if (validationErrors.length > 0) setErrors(validationErrors);
     else {
-      let updatedPlayers = currentUser.players.filter(
+      let updatedPlayers = currentUser.players.items.filter(
         (player) => player.id !== playerInfo.id
       );
       updatedPlayers.push(await UpdatePlayer(playerInfo));
       setCurrentUser({
         ...currentUser,
-        players: updatedPlayers.sort((player) => player.name),
+        players: { items: updatedPlayers.sort((player) => player.name) },
       });
       setModal({ component: <></>, title: null, isShown: false });
     }

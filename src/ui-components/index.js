@@ -6,6 +6,4 @@
 
 export { default as ProfileCreateForm } from "./ProfileCreateForm";
 export { default as ProfileUpdateForm } from "./ProfileUpdateForm";
-export { default as TeamCreateForm } from "./TeamCreateForm";
-export { default as TeamUpdateForm } from "./TeamUpdateForm";
 export { default as studioTheme } from "./studioTheme";

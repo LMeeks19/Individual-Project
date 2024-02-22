@@ -42,7 +42,12 @@ export default function UpdateProfileModal() {
     const validationErrors = ValidateProfileModal(updatedProfileInfo);
     if (validationErrors.length > 0) setErrors(validationErrors);
     else {
-      setCurrentUser(await UpdateProfile(updatedProfileInfo));
+      const updatedProfile = await UpdateProfile(updatedProfileInfo);
+      setCurrentUser({
+        ...updatedProfile,
+        players: currentUser.players,
+        team: currentUser.team,
+      });
       setModal({ component: <></>, title: null, isShown: false });
     }
   }
@@ -59,7 +64,7 @@ export default function UpdateProfileModal() {
   }, []);
 
   return (
-    <View className="content" as="form" onSubmit={(e) => updateProfile(e)}>
+    <View className="content">
       <Heading className="card-header" level={5}>
         Profile Information
       </Heading>
@@ -256,7 +261,7 @@ export default function UpdateProfileModal() {
         </Flex>
       </View>
 
-      <Button className="modal-button" type="submit">
+      <Button className="modal-button" onClick={() => updateProfile()}>
         <SaveIcon fontSize="small" className="icon" />
         Save
       </Button>

@@ -12,10 +12,7 @@ import {
   Text,
 } from "@aws-amplify/ui-react";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import {
-  currentUserState,
-  modalState,
-} from "../../Functions/GlobalState";
+import { currentUserState, modalState } from "../../Functions/GlobalState";
 import { CreatePlayer } from "../../Functions/Server";
 import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
@@ -54,7 +51,7 @@ export default function AddPlayerModal() {
     "U20",
     "U21",
   ];
-  
+
   const skillLevels = ["Beginner", "Intermediate", "Experienced"];
 
   function togglePosition(position) {
@@ -78,7 +75,12 @@ export default function AddPlayerModal() {
     if (validationErrors.length > 0) setErrors(validationErrors);
     else {
       const newPlayer = await CreatePlayer(newPlayerInfo);
-      setCurrentUser({...currentUser, players: newPlayer});
+      setCurrentUser({
+        ...currentUser,
+        players: {
+          items: [...currentUser.players.items, newPlayer],
+        },
+      });
       setModal({ component: <></>, title: null, isShown: false });
     }
   }

@@ -44,7 +44,7 @@ export default function Profile() {
   async function deleteTeam(id) {
     try {
       await DeleteTeam(id);
-      setCurrentUser({ ...currentUser, team: null });
+      setCurrentUser({ ...currentUser, team: [] });
     } catch (e) {}
   }
 
@@ -147,7 +147,7 @@ export default function Profile() {
               <Button
                 className="custom-button delete"
                 variation="primary"
-                onClick={() => deleteTeam(currentUser.team.id)}
+                onClick={() => deleteTeam(currentUser.team.items[0].id)}
               >
                 <Text display="flex">
                   <DeleteIcon fontSize="small" className="icon" />
@@ -168,10 +168,18 @@ export default function Profile() {
                 </Text>
               </Button>
             </Flex>
-            <TeamDetails team={currentUser.team} />
+            {currentUser.team.items.length > 0 ? (
+              <TeamDetails team={currentUser.team.items[0]} />
+            ) : (
+              <></>
+            )}
             <Heading level={4}>Roster</Heading>
             <Flex marginTop="20px" wrap="wrap">
-              <TeamRoster players={currentUser.team.players} />
+              {currentUser.team.items.length > 0 ? (
+                <TeamRoster players={currentUser.team.items[0].players.items} />
+              ) : (
+                <></>
+              )}
             </Flex>
           </Tabs.Panel>
         ) : (

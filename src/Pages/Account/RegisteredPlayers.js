@@ -20,22 +20,27 @@ export default function ViewRegisteredPlayers() {
   }
 
   function updateIsShown(registeredPlayerId) {
-    let updatedList = [...currentUser.players].map((item) => {
+    let updatedList = [...currentUser.players.items].map((item) => {
       if (item.id === registeredPlayerId)
         return { ...item, isShown: !item.isShown };
       else return item;
     });
 
-    setCurrentUser({ ...currentUser, players: updatedList });
+    setCurrentUser({
+      ...currentUser,
+      players: { ...currentUser.players, items: updatedList },
+    });
   }
 
   async function deletePlayer(playerId) {
     await DeletePlayer(playerId);
     setCurrentUser({
       ...currentUser,
-      players: currentUser.players.filter(
-        (player) => player.id !== playerId
-      ),
+      players: {
+        items: currentUser.players.items.filter(
+          (player) => player.id !== playerId
+        ),
+      },
     });
   }
 
@@ -45,7 +50,7 @@ export default function ViewRegisteredPlayers() {
 
   return (
     <View>
-      {currentUser.players.length === 0 ? (
+      {currentUser.players.items.length === 0 ? (
         <Card className="registered-player-card">
           <View className="registered-player-heading">
             <Heading textAlign="center" className="header" level={5}>
@@ -55,7 +60,7 @@ export default function ViewRegisteredPlayers() {
         </Card>
       ) : (
         <View>
-          {currentUser.players.map((registeredPlayer) => {
+          {currentUser.players.items.map((registeredPlayer) => {
             return (
               <Card
                 className={`registered-player-card ${
