@@ -24,12 +24,17 @@ export function ViewPersonalTable(props) {
   }
 
   return (
-    <Table marginTop="20px" marginBottom="20px" highlightOnHover={false}>
+    <Table
+      boxShadow="0 0 20px -4px #000"
+      marginTop="20px"
+      marginBottom="20px"
+      highlightOnHover={false}
+    >
       <TableBody>
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Name</TableCell>
           <TableCell className="account-table-cell">
-            {props.currentUser?.name ?? "Undefined"}
+            {props.currentUser?.name ?? ""}
           </TableCell>
         </TableRow>
         <TableRow className="account-table-row">
@@ -41,13 +46,13 @@ export function ViewPersonalTable(props) {
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Phone Number</TableCell>
           <TableCell className="account-table-cell">
-            {props.currentUser?.phoneNumber ?? "Undefined"}
+            {props.currentUser?.phoneNumber ?? ""}
           </TableCell>
         </TableRow>
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Account Type</TableCell>
           <TableCell className="account-table-cell">
-            {props.currentUser?.accountType ?? "Undefined"}
+            {props.currentUser?.accountType ?? ""}
           </TableCell>
         </TableRow>
       </TableBody>
@@ -58,34 +63,34 @@ export function ViewPersonalTable(props) {
 export function ViewAddressTable(props) {
   return (
     <Table
+      boxShadow="0 0 20px -4px #000"
       marginTop="20px"
       marginBottom="20px"
-      className="account-table"
       highlightOnHover={false}
     >
       <TableBody>
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Street</TableCell>
           <TableCell className="account-table-cell">
-            {props.currentUser?.street ?? "Undefined"}
+            {props.currentUser?.street ?? ""}
           </TableCell>
         </TableRow>
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Town/City</TableCell>
           <TableCell className="account-table-cell">
-            {props.currentUser?.townCity ?? "Undefined"}
+            {props.currentUser?.townCity ?? ""}
           </TableCell>
         </TableRow>
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">County</TableCell>
           <TableCell className="account-table-cell">
-            {props.currentUser?.county ?? "Undefined"}
+            {props.currentUser?.county ?? ""}
           </TableCell>
         </TableRow>
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Postcode</TableCell>
           <TableCell className="account-table-cell">
-            {props.currentUser?.postcode ?? "Undefined"}
+            {props.currentUser?.postcode ?? ""}
           </TableCell>
         </TableRow>
       </TableBody>
@@ -96,22 +101,22 @@ export function ViewAddressTable(props) {
 export function ViewSecurityTable(props) {
   return (
     <Table
+      boxShadow="0 0 20px -4px #000"
       marginTop="20px"
       marginBottom="20px"
-      className="account-table"
       highlightOnHover={false}
     >
       <TableBody>
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Username</TableCell>
           <TableCell className="account-table-cell">
-            {props.currentUser?.username ?? "Undefined"}
+            {props.currentUser?.username ?? ""}
           </TableCell>
         </TableRow>
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Email</TableCell>
           <TableCell className="account-table-cell">
-            {props.currentUser?.email ?? "Undefined"}
+            {props.currentUser?.email ?? ""}
           </TableCell>
         </TableRow>
         <TableRow className="account-table-row">
@@ -127,7 +132,13 @@ export function ViewSettingsTable() {
   const [theme, setTheme] = useRecoilState(themeState);
 
   return (
-    <Card backgroundColor="#008080" padding="20px" borderRadius="15px" marginTop="15px" boxShadow="0px 0px 20px -4px #000">
+    <Card
+      backgroundColor="#008080"
+      padding="20px"
+      borderRadius="15px"
+      marginTop="20px"
+      boxShadow="0px 0px 20px -4px #000"
+    >
       <ToggleButtonGroup
         value={theme}
         height="20px"
@@ -135,7 +146,6 @@ export function ViewSettingsTable() {
         onChange={(value) => setTheme(value)}
         isExclusive
         isSelectionRequired
-
       >
         <ToggleButton value="light" width="100%">
           <MdLightMode />

@@ -1,39 +1,39 @@
 import {
-  View,
-  Heading,
   Divider,
+  Input,
+  Heading,
+  View,
   Flex,
   Label,
-  Input,
-  SelectField,
   Button,
-  ToggleButton,
-  ToggleButtonGroup,
+  SelectField,
   Text,
 } from "@aws-amplify/ui-react";
+import SaveIcon from "@mui/icons-material/Save";
+import "./CreateTeamModal.css";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { currentUserState, modalState } from "../../Functions/GlobalState";
-import { CreatePlayer } from "../../Functions/Server";
+import { modalState, currentUserState } from "../../Functions/GlobalState";
 import { useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
-import "./AddPlayerModal.css";
-import { ValidatePlayerModal } from "../../Functions/Validatiion";
+import { CreateTeam } from "../../Functions/Server";
 import ErrorIcon from "@mui/icons-material/Error";
+import { ValidateTeamModal } from "../../Functions/Validatiion";
 
-export default function AddPlayerModal() {
-  const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
+export default function CreateTeamModal() {
   const setModal = useSetRecoilState(modalState);
+  const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
 
-  const [newPlayerInfo, setNewPlayerInfo] = useState({
+  const [teamInfo, setTeamInfo] = useState({
     profileId: currentUser.id,
     name: null,
-    dob: null,
+    league: null,
     ageGroup: null,
-    positions: [],
-    skillLevel: null,
+    location: null,
+    email: null,
+    phoneNumber: null,
+    website: null,
   });
 
-  const positions = ["GK", "LB", "CB", "RB", "LM", "CM", "RM", "ST"];
+  const [errors, setErrors] = useState([]);
 
   const ageGroups = [
     "U7",
@@ -52,34 +52,13 @@ export default function AddPlayerModal() {
     "U21",
   ];
 
-  const skillLevels = ["Beginner", "Intermediate", "Experienced"];
-
-  function togglePosition(position) {
-    if (!newPlayerInfo.positions.includes(position)) {
-      setNewPlayerInfo({
-        ...newPlayerInfo,
-        positions: position,
-      });
-    } else {
-      setNewPlayerInfo({
-        ...newPlayerInfo,
-        positions: newPlayerInfo.positions.filter((pos) => pos !== position),
-      });
-    }
-  }
-
-  const [errors, setErrors] = useState([]);
-
-  async function addPlayer() {
-    const validationErrors = ValidatePlayerModal(newPlayerInfo);
+  async function createTeam() {
+    const validationErrors = ValidateTeamModal(teamInfo);
     if (validationErrors.length > 0) setErrors(validationErrors);
     else {
-      const newPlayer = await CreatePlayer(newPlayerInfo);
       setCurrentUser({
         ...currentUser,
-        players: {
-          items: [...currentUser.players.items, newPlayer],
-        },
+        team: await CreateTeam(teamInfo),
       });
       setModal({ component: <></>, title: null, isShown: false });
     }
@@ -88,7 +67,7 @@ export default function AddPlayerModal() {
   return (
     <View className="content">
       <Heading className="card-header" level={5}>
-        Player Information
+        Team Information
       </Heading>
       <Divider />
 
@@ -96,7 +75,7 @@ export default function AddPlayerModal() {
         <Flex direction="column" marginBottom="10px" gap="0">
           <Flex justifyContent="space-between">
             <Label htmlFor="name" fontWeight="bold">
-              Player Name:
+              Team Name:
             </Label>
             {errors?.some((error) => error?.field === "name") ? (
               <Text className="error-message">
@@ -108,38 +87,34 @@ export default function AddPlayerModal() {
             )}
           </Flex>
           <Input
-            autoComplete="off"
+            autoComplete="name"
             marginTop="5px"
             id="name"
-            onChange={(e) =>
-              setNewPlayerInfo({ ...newPlayerInfo, name: e.target.value })
-            }
+            onChange={(e) => setTeamInfo({ ...teamInfo, name: e.target.value })}
           />
         </Flex>
         <Flex direction="column" marginBottom="10px" gap="0">
           <Flex justifyContent="space-between">
-            <Label htmlFor="dob" fontWeight="bold">
-              Date of Birth:
+            <Label htmlFor="league" fontWeight="bold">
+              League
             </Label>
-            {errors?.some((error) => error?.field === "dob") ? (
+            {errors?.some((error) => error?.field === "league") ? (
               <Text className="error-message">
                 <ErrorIcon fontSize="small" />
-                {errors?.find((error) => error?.field === "dob")?.message}
+                {errors?.find((error) => error?.field === "league")?.message}
               </Text>
             ) : (
               <></>
             )}
           </Flex>
           <Input
+            id="league"
             marginTop="5px"
-            id="dob"
-            type="date"
             onChange={(e) =>
-              setNewPlayerInfo({ ...newPlayerInfo, dob: e.target.value })
+              setTeamInfo({ ...teamInfo, league: e.target.value })
             }
           />
         </Flex>
-
         <Flex direction="column" marginBottom="10px" gap="0">
           <Flex justifyContent="space-between">
             <Label htmlFor="ageGroup" fontWeight="bold">
@@ -160,8 +135,8 @@ export default function AddPlayerModal() {
             padding="0"
             id="ageGroup"
             onChange={(e) =>
-              setNewPlayerInfo({
-                ...newPlayerInfo,
+              setTeamInfo({
+                ...teamInfo,
                 ageGroup: e.target.value,
               })
             }
@@ -176,54 +151,67 @@ export default function AddPlayerModal() {
             })}
           </SelectField>
         </Flex>
-
         <Flex direction="column" marginBottom="10px" gap="0">
           <Flex justifyContent="space-between">
-            <Label htmlFor="positions" fontWeight="bold">
-              Positions:
+            <Label htmlFor="location" fontWeight="bold">
+              Location:
             </Label>
-            {errors?.some((error) => error?.field === "positions") ? (
+            {errors?.some((error) => error?.field === "location") ? (
               <Text className="error-message">
                 <ErrorIcon fontSize="small" />
-                {errors?.find((error) => error?.field === "positions")?.message}
+                {errors?.find((error) => error?.field === "location")?.message}
               </Text>
             ) : (
               <></>
             )}
           </Flex>
-          <ToggleButtonGroup
+          <Input
+            id="location"
             marginTop="5px"
-            direction="row"
-            value={newPlayerInfo.positions}
-            onChange={(value) => togglePosition(value)}
-            className="positions-container"
-          >
-            {positions.map((position) => {
-              return (
-                <ToggleButton
-                  id="positions"
-                  className="positions"
-                  key={position}
-                  value={position}
-                  isFullWidth
-                >
-                  {position}
-                </ToggleButton>
-              );
-            })}
-          </ToggleButtonGroup>
+            onChange={(e) =>
+              setTeamInfo({
+                ...teamInfo,
+                location: e.target.value,
+              })
+            }
+          />
         </Flex>
 
         <Flex direction="column" marginBottom="10px" gap="0">
           <Flex justifyContent="space-between">
-            <Label htmlFor="skillLevel" fontWeight="bold">
-              Skill Level:
+            <Label htmlFor="email" fontWeight="bold">
+              Email:
             </Label>
-            {errors?.some((error) => error?.field === "skillLevel") ? (
+            {errors?.some((error) => error?.field === "email") ? (
+              <Text className="error-message">
+                <ErrorIcon fontSize="small" />
+                {errors?.find((error) => error?.field === "email")?.message}
+              </Text>
+            ) : (
+              <></>
+            )}
+          </Flex>
+          <Input
+            id="email"
+            marginTop="5px"
+            onChange={(e) =>
+              setTeamInfo({
+                ...teamInfo,
+                email: e.target.value,
+              })
+            }
+          />
+        </Flex>
+        <Flex direction="column" marginBottom="10px" gap="0">
+          <Flex justifyContent="space-between">
+            <Label htmlFor="phoneNumber" fontWeight="bold">
+              Phone Number:
+            </Label>
+            {errors?.some((error) => error?.field === "phoneNumber") ? (
               <Text className="error-message">
                 <ErrorIcon fontSize="small" />
                 {
-                  errors?.find((error) => error?.field === "skillLevel")
+                  errors?.find((error) => error?.field === "phoneNumber")
                     ?.message
                 }
               </Text>
@@ -231,33 +219,48 @@ export default function AddPlayerModal() {
               <></>
             )}
           </Flex>
-          <SelectField
+          <Input
+            id="phoneNumber"
             marginTop="5px"
-            labelHidden
-            id="skillLevel"
             onChange={(e) =>
-              setNewPlayerInfo({
-                ...newPlayerInfo,
-                skillLevel: e.target.value,
+              setTeamInfo({
+                ...teamInfo,
+                phoneNumber: e.target.value,
               })
             }
-          >
-            <option value="">Please Select...</option>
-            {skillLevels.map((skillLevel) => {
-              return (
-                <option key={skillLevel} value={skillLevel}>
-                  {skillLevel}
-                </option>
-              );
-            })}
-          </SelectField>
+          />
         </Flex>
-
-        <Button className="modal-button" onClick={(e) => addPlayer()}>
-          <AddIcon fontSize="small" className="icon" />
-          Add
-        </Button>
+        <Flex direction="column" marginBottom="10px" gap="0">
+          <Flex justifyContent="space-between">
+            <Label htmlFor="website" fontWeight="bold">
+              Website:
+            </Label>
+            {errors?.some((error) => error?.field === "website") ? (
+              <Text className="error-message">
+                <ErrorIcon fontSize="small" />
+                {errors?.find((error) => error?.field === "website")?.message}
+              </Text>
+            ) : (
+              <></>
+            )}
+          </Flex>
+          <Input
+            id="website"
+            marginTop="5px"
+            onChange={(e) =>
+              setTeamInfo({
+                ...teamInfo,
+                website: e.target.value,
+              })
+            }
+          />
+        </Flex>
       </View>
+
+      <Button className="modal-button" onClick={() => createTeam()}>
+        <SaveIcon fontSize="small" className="icon" />
+        Save
+      </Button>
     </View>
   );
 }

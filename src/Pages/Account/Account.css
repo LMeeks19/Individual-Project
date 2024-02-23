@@ -56,9 +56,8 @@
     transition: height 1s ease-in-out;
     padding: 0;
     height: 56px;
-
-    border-radius: 0;
-    border: 1px solid #fff;
+    border-radius: 15px;
+    box-shadow: 0 0 20px -4px #000;
 
     .registered-player-heading {
         padding: 15px;
@@ -110,4 +109,114 @@
 
 	width: 100%;
 }
+
+.details-card {
+    background-color: #008080;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0px 0px 20px -4px #000;
+    border-radius: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    min-width: 300px;
+  
+    .crest {
+      min-width: 20%;
+      padding: 0;
+    }
+  
+    .info-container {
+      width: 80%;
+      justify-content: space-evenly;
+      flex-wrap: wrap;
+  
+      .team-info,
+      .coach-info {
+        width: 40%;
+        background-color: inherit;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+  
+  
+        .header {
+          margin-bottom: 5px;
+          font-size: x-large;
+        }
+  
+        .info {
+          margin-top: 20px;
+          margin-bottom: 20px;
+          font-size: large;
+          align-self: flex-start;
+          padding-left: 20px;
+  
+          .text:not(:last-child) {
+            margin-bottom: 5px;
+          }
+        }
+      }
+    }
+  }
+  
+  .card {
+    background-color: #008080;
+    padding: 0;
+    overflow: hidden;
+    min-width: 300px;
+    box-shadow: 0px 0px 20px -4px #000;
+    border-radius: 15px;
+  
+    .avatar-container {
+      padding: 0;
+    }
+  
+    .details {
+      background-color: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+  
+      .header {
+        display: flex;
+        justify-content: space-between;
+  
+        .icons {
+          align-items: center;
+  
+          .icon {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+  
+  
+  @media screen and (max-width: 1600px) {
+    .details-card {
+  
+      .crest {
+        width: 100%;
+      }
+  
+      .info-container {
+        width: 100%;
+  
+        .team-info,
+        .coach-info {
+          width: 100%;
+        }
+  
+        .team-info {
+          padding-bottom: 0;
+        }
+  
+        .coach-info {
+          padding-top: 0;
+        }
+      }
+    }
+  }
 

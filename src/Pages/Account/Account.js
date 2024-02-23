@@ -6,6 +6,7 @@ import {
   View,
   Text,
   useAuthenticator,
+  Divider,
 } from "@aws-amplify/ui-react";
 import "./Account.css";
 import {
@@ -13,8 +14,8 @@ import {
   ViewAddressTable,
   ViewSecurityTable,
   ViewSettingsTable,
-} from "./ProfileTables";
-import ViewRegisteredPlayers from "./RegisteredPlayers";
+} from "./ProfileTab";
+import ViewRegisteredPlayers from "./PlayersTab";
 
 import { currentUserState, modalState } from "../../Functions/GlobalState";
 import { useRecoilState, useSetRecoilState } from "recoil";
@@ -27,23 +28,24 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import UpdateProfileModal from "../../Components/Modals/UpdateProfileModal";
 import CreateProfileModal from "../../Components/Modals/CreateProfileModal";
 import AddPlayerModal from "../../Components/Modals/AddPlayerModal";
-import { TeamDetails, TeamRoster } from "./TeamTables";
+import { TeamDetails, TeamRoster } from "./TeamTab";
 import UpdateTeamModal from "../../Components/Modals/UpdateTeamModal";
 import { DeleteTeam } from "../../Functions/Server";
+import CreateTeamModal from "../../Components/Modals/CreateTeamModal";
+import AddTeamPlayerModal from "../../Components/Modals/AddTeamPlayerModal";
 
 export default function Profile() {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const { signOut } = useAuthenticator();
-
   const setModal = useSetRecoilState(modalState);
 
   function openModal(component, title) {
     setModal({ component: component, title: title, isShown: true });
   }
 
-  async function deleteTeam(id) {
+  async function deleteTeam(team) {
     try {
-      await DeleteTeam(id);
+      await DeleteTeam(team);
       setCurrentUser({ ...currentUser, team: [] });
     } catch (e) {}
   }
@@ -55,7 +57,7 @@ export default function Profile() {
   return (
     <View className="page">
       <Flex className="heading" direction="row" justifyContent="space-between">
-        <Heading level={3}>ACCOUNT</Heading>
+        <Heading level={2}>ACCOUNT</Heading>
         <Button className="custom-button" variation="primary" onClick={signOut}>
           <Text display="flex">
             <LogoutIcon fontSize="small" className="icon" />
@@ -94,7 +96,7 @@ export default function Profile() {
 
         <Tabs.Panel value="1">
           <Flex marginBottom="20px" justifyContent="space-between">
-            <Heading level={2}>My Profile</Heading>
+            <Heading level={3}>My Profile</Heading>
             {!hasNoProfile(currentUser) ? (
               <Button
                 className="custom-button"
@@ -125,17 +127,20 @@ export default function Profile() {
           </Flex>
 
           <Heading level={4}>Personal</Heading>
+          <Divider marginTop="10px" />
           <ViewPersonalTable currentUser={currentUser} />
           <Heading level={4}>Address</Heading>
+          <Divider marginTop="10px" />
           <ViewAddressTable currentUser={currentUser} />
         </Tabs.Panel>
 
         <Tabs.Panel value="2">
-          <View marginBottom="20px">
-            <Heading level={2}>Security</Heading>
-          </View>
+          <Heading marginBottom="20px" level={3}>
+            Security
+          </Heading>
 
           <Heading level={4}>Login</Heading>
+          <Divider marginTop="10px" />
           <ViewSecurityTable currentUser={currentUser} />
         </Tabs.Panel>
 
@@ -143,44 +148,71 @@ export default function Profile() {
         currentUser.accountType === "ADMIN" ? (
           <Tabs.Panel value="3">
             <Flex marginBottom="20px" justifyContent="space-between">
-              <Heading level={2}>My Team</Heading>
-              <Button
-                className="custom-button delete"
-                variation="primary"
-                onClick={() => deleteTeam(currentUser.team.items[0].id)}
-              >
-                <Text display="flex">
-                  <DeleteIcon fontSize="small" className="icon" />
-                  Delete Team
-                </Text>
-              </Button>
+              <Heading level={3}>My Team</Heading>
+              {currentUser.team.id !== undefined ? (
+                <Button
+                  className="custom-button delete"
+                  variation="primary"
+                  onClick={() => deleteTeam(currentUser.team)}
+                >
+                  <Text display="flex">
+                    <DeleteIcon fontSize="small" className="icon" />
+                    Delete Team
+                  </Text>
+                </Button>
+              ) : (
+                <Button
+                  className="custom-button"
+                  variation="primary"
+                  onClick={() => openModal(<CreateTeamModal />, "Create Team")}
+                >
+                  <Text display="flex">
+                    <AddIcon fontSize="small" className="icon" />
+                    Create Team
+                  </Text>
+                </Button>
+              )}
             </Flex>
             <Flex justifyContent="space-between" alignItems="center">
               <Heading level={4}>Details</Heading>
-              <Button
-                className="custom-button"
-                variation="primary"
-                onClick={() => openModal(<UpdateTeamModal />, "Update Team")}
-              >
-                <Text display="flex">
-                  <EditIcon fontSize="small" className="icon" />
-                  Edit
-                </Text>
-              </Button>
-            </Flex>
-            {currentUser.team.items.length > 0 ? (
-              <TeamDetails team={currentUser.team.items[0]} />
-            ) : (
-              <></>
-            )}
-            <Heading level={4}>Roster</Heading>
-            <Flex marginTop="20px" wrap="wrap">
-              {currentUser.team.items.length > 0 ? (
-                <TeamRoster players={currentUser.team.items[0].players.items} />
+              {currentUser.team.id !== undefined ? (
+                <Button
+                  className="custom-button"
+                  variation="primary"
+                  onClick={() => openModal(<UpdateTeamModal />, "Update Team")}
+                >
+                  <Text display="flex">
+                    <EditIcon fontSize="small" className="icon" />
+                    Edit
+                  </Text>
+                </Button>
               ) : (
                 <></>
               )}
             </Flex>
+            <Divider marginTop="10px" />
+            <TeamDetails team={currentUser.team} />
+            <Flex justifyContent="space-between" alignItems="center">
+              <Heading level={4}>Roster</Heading>
+              {currentUser.team.id !== undefined ? (
+                <Button
+                  className="custom-button"
+                  variation="primary"
+                  onClick={() =>
+                    openModal(<AddTeamPlayerModal />, "Add Team Player")
+                  }
+                >
+                  <Text display="flex">
+                    <AddIcon fontSize="small" className="icon" />
+                    Add
+                  </Text>
+                </Button>
+              ) : (
+                <></>
+              )}
+            </Flex>
+            <Divider marginTop="10px" />
+            <TeamRoster players={currentUser.team.players} />
           </Tabs.Panel>
         ) : (
           <></>
@@ -189,12 +221,12 @@ export default function Profile() {
         {currentUser.accountType === "PARENT" ||
         currentUser.accountType === "ADMIN" ? (
           <Tabs.Panel value="4">
-            <Flex
-              className="heading"
-              direction="row"
-              justifyContent="space-between"
-            >
-              <Heading level={2}>Players</Heading>
+            <Heading marginBottom="20px" level={3}>
+              Players
+            </Heading>
+
+            <Flex justifyContent="space-between" alignItems="center">
+              <Heading level={4}>Registered Players</Heading>
               <Button
                 className="custom-button"
                 variation="primary"
@@ -206,6 +238,7 @@ export default function Profile() {
                 </Text>
               </Button>
             </Flex>
+            <Divider marginTop="10px" />
             <ViewRegisteredPlayers />
           </Tabs.Panel>
         ) : (
@@ -213,11 +246,12 @@ export default function Profile() {
         )}
 
         <Tabs.Panel value="5">
-          <View marginBottom="20px">
-            <Heading level={2}>Settings</Heading>
-          </View>
+          <Heading marginBottom="20px" level={3}>
+            Settings
+          </Heading>
 
           <Heading level={4}>Theme</Heading>
+          <Divider marginTop="10px" />
           <ViewSettingsTable />
         </Tabs.Panel>
       </Tabs.Container>

@@ -43,7 +43,6 @@ export const getTeam = /* GraphQL */ `
   query GetTeam($id: ID!) {
     getTeam(id: $id) {
       id
-      profileId
       name
       league
       ageGroup
@@ -144,42 +143,10 @@ export const getProfile = /* GraphQL */ `
       postcode
       phoneNumber
       players {
-        items {
-          id
-          name
-          dob
-          ageGroup
-          positions
-          skillLevel
-          profileID
-        }
         nextToken
         __typename
       }
       team {
-        items {
-          id
-          name
-          league
-          ageGroup
-          location
-          email
-          phoneNumber
-          website
-          profileID
-          players {
-            items {
-              id
-              name
-              age
-              kitNumber
-              positions
-              teamID
-            }
-            nextToken
-            __typename
-          }
-        }
         nextToken
         __typename
       }
@@ -189,6 +156,7 @@ export const getProfile = /* GraphQL */ `
     }
   }
 `;
+
 export const listProfiles = /* GraphQL */ `
   query ListProfiles(
     $filter: ModelProfileFilterInput
@@ -265,7 +233,6 @@ export const teamsByProfileID = /* GraphQL */ `
     ) {
       items {
         id
-        profileId
         name
         league
         ageGroup
@@ -277,6 +244,16 @@ export const teamsByProfileID = /* GraphQL */ `
         createdAt
         updatedAt
         __typename
+        players {
+          items {
+            id
+            teamID
+            name
+            age
+            kitNumber
+            positions
+          }
+        }
       }
       nextToken
       __typename

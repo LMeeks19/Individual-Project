@@ -80,5 +80,53 @@ export function ValidateProfileModal(inputs) {
 export function ValidateTeamModal(inputs) {
   let errors = [];
 
+  if (inputs.name === null || inputs.name === "")
+    errors.push({
+      field: "name",
+      message: "Field cannot be left blank",
+    });
+  if (inputs.league === null || inputs.league === "")
+    errors.push({
+      field: "league",
+      message: "Field cannot be left blank",
+    });
+  if (inputs.ageGroup === null || inputs.ageGroup === "")
+    errors.push({
+      field: "ageGroup",
+      message: "An option must be selected from the list",
+    });
+  if (inputs.location === null || inputs.location === "")
+    errors.push({
+      field: "location",
+      message: "Field cannot be left blank",
+    });
+
+  return errors;
+}
+
+export function ValidateTeamPlayerModal(inputs) {
+  let errors = [];
+
+  if (inputs.name === null || inputs.name === "")
+    errors.push({
+      field: "name",
+      message: "Field cannot be left blank",
+    });
+  if (inputs.age === null || inputs.age === "")
+    errors.push({
+      field: "age",
+      message: "Field cannot be left blank",
+    });
+  if (inputs.kitNumber === null || inputs.kitNumber === "")
+    errors.push({
+      field: "kitNumber",
+      message: "Field cannot be left blank",
+    });
+  if (inputs.positions.length === 0)
+    errors.push({
+      field: "positions",
+      message: "At least one of the following options must be selected",
+    });
+
   return errors;
 }

@@ -23,15 +23,15 @@ export default function UpdateTeamModal() {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
 
   const [teamInfo, setTeamInfo] = useState({
-    id: currentUser.team.items[0].id,
-    profileId: currentUser.team.items[0].profileId,
-    name: currentUser.team.items[0].name,
-    league: currentUser.team.items[0].league,
-    ageGroup: currentUser.team.items[0].ageGroup,
-    location: currentUser.team.items[0].location,
-    email: currentUser.team.items[0].email,
-    phoneNumber: currentUser.team.items[0].phoneNumber,
-    website: currentUser.team.items[0].website,
+    id: currentUser.team.id,
+    profileId: currentUser.team.profileId,
+    name: currentUser.team.name,
+    league: currentUser.team.league,
+    ageGroup: currentUser.team.ageGroup,
+    location: currentUser.team.location,
+    email: currentUser.team.email,
+    phoneNumber: currentUser.team.phoneNumber,
+    website: currentUser.team.website,
   });
 
   const [errors, setErrors] = useState([]);
@@ -59,7 +59,7 @@ export default function UpdateTeamModal() {
     else {
       setCurrentUser({
         ...currentUser,
-        team: { items: [await UpdateTeam(teamInfo)] },
+        team: await UpdateTeam(teamInfo),
       });
       setModal({ component: <></>, title: null, isShown: false });
     }

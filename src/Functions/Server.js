@@ -2,7 +2,7 @@ import { generateClient } from "aws-amplify/api";
 import {
   getProfile,
   playersByProfileID,
-  teamsByProfileID, 
+  teamsByProfileID,
   teamPlayersByTeamID,
 } from "../graphql/queries";
 import {
@@ -30,24 +30,21 @@ export async function GetProfile(user) {
     variables: { id: user.userId },
   });
 
-  if (apiData.data.getProfile === null) {
-    return {
-      id: user.userId,
-      username: user.username,
-      email: (await authenticationAttributes).email,
-      dob: null,
-      phoneNumber: null,
-      accountType: null,
-      street: null,
-      townCity: null,
-      county: null,
-      postcode: null,
-      players: [],
-      team: []
-    };
-  }
+  const data = apiData.data.getProfile;
 
-  return apiData.data.getProfile;
+  return {
+    id: data.id ?? user.userId,
+    name: data.name,
+    dob: data.dob,
+    username: data.username ?? user.username,
+    email: data.email ?? (await authenticationAttributes).email,
+    phoneNumber: data.phoneNumber,
+    accountType: data.accountType,
+    street: data.street,
+    townCity: data.townCity,
+    county: data.county,
+    postcode: data.postcode,
+  };
 }
 
 export async function CreateProfile(data) {
@@ -69,7 +66,7 @@ export async function CreateProfile(data) {
         county: data.county,
         postcode: data.postcode,
         players: [],
-        team: []
+        team: [],
       },
     },
   });
@@ -158,7 +155,7 @@ export async function UpdatePlayer(data) {
 export async function DeletePlayer(id) {
   const client = generateClient();
 
-  await client.graphql({
+  const apiData = await client.graphql({
     query: deletePlayerMutation,
     variables: {
       input: {
@@ -166,6 +163,8 @@ export async function DeletePlayer(id) {
       },
     },
   });
+
+  return apiData.data.deletePlayer.id;
 }
 
 export async function GetPlayersByProfileId(profileId) {
@@ -186,7 +185,6 @@ export async function CreateTeam(data) {
     query: createTeamMutation,
     variables: {
       input: {
-        id: data.id,
         profileID: data.profileId,
         name: data.name,
         league: data.league,
@@ -199,7 +197,20 @@ export async function CreateTeam(data) {
     },
   });
 
-  return apiData.data.createTeam;
+  let team = apiData.data.createTeam;
+
+  return {
+    id: team.id,
+    profileId: team.profileID,
+    name: team.name,
+    league: team.league,
+    ageGroup: team.ageGroup,
+    location: team.location,
+    email: team.email,
+    phoneNumber: team.phoneNumber,
+    website: team.website,
+    players: [],
+  };
 }
 
 export async function UpdateTeam(data) {
@@ -222,22 +233,35 @@ export async function UpdateTeam(data) {
     },
   });
 
-  return apiData.data.updateTeam;
+  let team = apiData.data.updateTeam;
+
+  return {
+    id: team.id,
+    profileId: team.profileID,
+    name: team.name,
+    league: team.league,
+    ageGroup: team.ageGroup,
+    location: team.location,
+    email: team.email,
+    phoneNumber: team.phoneNumber,
+    website: team.website,
+    players: team.players.items,
+  };
 }
 
-export async function DeleteTeam(recordId) {
+export async function DeleteTeam(team) {
   const client = generateClient();
 
-  const apidata = await client.graphql({
+  team.players.forEach((player) => DeleteTeamPlayer(player.id));
+
+  await client.graphql({
     query: deleteTeamMutation,
     variables: {
       input: {
-        id: recordId,
+        id: team.id,
       },
     },
   });
-
-  return apidata.data.deleteTeam;
 }
 
 export async function GetTeamByProfileId(profileId) {
@@ -245,10 +269,23 @@ export async function GetTeamByProfileId(profileId) {
 
   const apiData = await client.graphql({
     query: teamsByProfileID,
-    filter: { profileID: profileId },
+    variables: { profileID: profileId },
   });
 
-  return apiData.data.teamsByProfileID.items[0];
+  const team = apiData.data.teamsByProfileID.items[0];
+
+  return {
+    id: team?.id,
+    profileId: team?.profileID,
+    name: team?.name,
+    league: team?.league,
+    ageGroup: team?.ageGroup,
+    location: team?.location,
+    email: team?.email,
+    phoneNumber: team?.phoneNumber,
+    website: team?.website,
+    players: team?.players?.items,
+  };
 }
 
 export async function CreateTeamPlayer(data) {
@@ -303,7 +340,7 @@ export async function DeleteTeamPlayer(id) {
     },
   });
 
-  return apiData.data.deleteTeamPlayer;
+  return apiData.data.deleteTeamPlayer.id;
 }
 
 export async function GetTeamPlayersByTeamId(teamId) {
