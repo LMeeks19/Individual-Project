@@ -70,7 +70,6 @@ export const listTeams = /* GraphQL */ `
     listTeams(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        profileId
         name
         league
         ageGroup
@@ -150,13 +149,16 @@ export const getProfile = /* GraphQL */ `
         nextToken
         __typename
       }
+      posts {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
     }
   }
 `;
-
 export const listProfiles = /* GraphQL */ `
   query ListProfiles(
     $filter: ModelProfileFilterInput
@@ -176,6 +178,55 @@ export const listProfiles = /* GraphQL */ `
         county
         postcode
         phoneNumber
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getMatchPost = /* GraphQL */ `
+  query GetMatchPost($id: ID!) {
+    getMatchPost(id: $id) {
+      id
+      title
+      description
+      street
+      townCity
+      county
+      postcode
+      team
+      createdByProfileID
+      createdByName
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listMatchPosts = /* GraphQL */ `
+  query ListMatchPosts(
+    $filter: ModelMatchPostFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMatchPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        description
+        street
+        townCity
+        county
+        postcode
+        team
+        createdByProfileID
+        createdByName
+        interestedUsers
+        isClosed
+        selectedOpponentProfileID
         createdAt
         updatedAt
         __typename
@@ -241,9 +292,6 @@ export const teamsByProfileID = /* GraphQL */ `
         phoneNumber
         website
         profileID
-        createdAt
-        updatedAt
-        __typename
         players {
           items {
             id
@@ -254,6 +302,9 @@ export const teamsByProfileID = /* GraphQL */ `
             positions
           }
         }
+        createdAt
+        updatedAt
+        __typename
       }
       nextToken
       __typename
@@ -283,6 +334,41 @@ export const playersByProfileID = /* GraphQL */ `
         positions
         skillLevel
         profileID
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const matchPostsByCreatedByProfileID = /* GraphQL */ `
+  query MatchPostsByCreatedByProfileID(
+    $createdByProfileID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelMatchPostFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    matchPostsByCreatedByProfileID(
+      createdByProfileID: $createdByProfileID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        description
+        street
+        townCity
+        county
+        postcode
+        team
+        createdByProfileID
+        createdByName
         createdAt
         updatedAt
         __typename

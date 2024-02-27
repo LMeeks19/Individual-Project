@@ -31,6 +31,17 @@ export const theme = {
               backgroundColor: { value: "#008080" },
             },
           },
+          table: {
+            row: {
+              hover: {
+                backgroundColor: { value: "rgba(255, 255, 255, 0.2)" },
+              },
+
+              striped: {
+                backgroundColor: { value: "#303030" },
+              },
+            },
+          },
         },
       },
     },
@@ -62,6 +73,17 @@ export const theme = {
             _focus: {
               borderColor: { value: "#000" },
               backgroundColor: { value: "#008080" },
+            },
+          },
+          table: {
+            row: {
+              hover: {
+                backgroundColor: { value: "rgba(0, 0, 0, 0.2)" },
+              },
+
+              striped: {
+                backgroundColor: { value: "rgb(219, 217, 217)" },
+              },
             },
           },
         },

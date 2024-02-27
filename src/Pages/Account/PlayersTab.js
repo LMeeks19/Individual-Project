@@ -9,7 +9,8 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { DeletePlayer } from "../../Functions/Server";
-import UpdatePlayerModal from "../../Components/Modals/UpdatePlayerModal";
+import UpdatePlayerModal from "../../Modals/AccountModals/UpdatePlayerModal";
+import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
 
 export default function ViewRegisteredPlayers() {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
@@ -40,7 +41,7 @@ export default function ViewRegisteredPlayers() {
     });
   }
 
-  function openUpdatePlayerModal(component, title) {
+  function openModal(component, title) {
     setModal({ component: component, title: title, isShown: true });
   }
 
@@ -81,7 +82,7 @@ export default function ViewRegisteredPlayers() {
                       <EditIcon
                         className="icon-button"
                         onClick={() =>
-                          openUpdatePlayerModal(
+                          openModal(
                             <UpdatePlayerModal player={registeredPlayer} />,
                             "Update Player"
                           )
@@ -91,7 +92,16 @@ export default function ViewRegisteredPlayers() {
                     <Text>
                       <DeleteIcon
                         className="icon-button delete"
-                        onClick={() => deletePlayer(registeredPlayer.id)}
+                        onClick={() =>
+                          openModal(
+                            <ConfirmDeleteModal
+                              deleteFunction={() =>
+                                deletePlayer(registeredPlayer.id)
+                              }
+                            />,
+                            "Confirm Delete Player"
+                          )
+                        }
                       />
                     </Text>
                     <Text>

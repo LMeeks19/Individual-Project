@@ -15,7 +15,7 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { currentUserState, modalState } from "../../Functions/GlobalState";
 import { UpdatePlayer } from "../../Functions/Server";
 import { useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
+import SaveIcon from "@mui/icons-material/Save";
 import ErrorIcon from "@mui/icons-material/Error";
 
 import { ValidatePlayerModal } from "../../Functions/Validatiion";
@@ -261,7 +261,7 @@ export default function UpdatePlayerModal(props) {
         </Flex>
 
         <Button className="modal-button" onClick={(e) => updatePlayer()}>
-          <AddIcon fontSize="small" className="icon" />
+          <SaveIcon fontSize="small" className="icon" />
           Save
         </Button>
       </View>

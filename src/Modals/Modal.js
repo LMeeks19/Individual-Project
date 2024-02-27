@@ -1,7 +1,7 @@
 import { Card, View, Heading } from "@aws-amplify/ui-react";
 import CloseIcon from "@mui/icons-material/Close";
 import { useRecoilState } from "recoil";
-import { modalState } from "../../Functions/GlobalState";
+import { modalState } from "../Functions/GlobalState";
 import "./Modal.css";
 
 export default function Modal() {

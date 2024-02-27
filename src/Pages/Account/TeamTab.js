@@ -14,7 +14,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { DeleteTeamPlayer } from "../../Functions/Server";
 import { currentUserState, modalState } from "../../Functions/GlobalState";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import UpdateTeamPlayerModal from "../../Components/Modals/UpdateTeamPlayerModal";
+import UpdateTeamPlayerModal from "../../Modals/AccountModals/UpdateTeamPlayerModal";
+import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
 
 export function TeamDetails(props) {
   return (
@@ -118,7 +119,7 @@ export function TeamRoster(props) {
                         className="icon"
                         onClick={() =>
                           openModal(
-                            <UpdateTeamPlayerModal player={player} />,
+                            <UpdateTeamPlayerModal teamPlayer={player} />,
                             "Update Team Player"
                           )
                         }
@@ -126,7 +127,7 @@ export function TeamRoster(props) {
                       <DeleteIcon
                         className="icon"
                         htmlColor="red"
-                        onClick={() => deleteTeamPlayer(player.id)}
+                        onClick={() => openModal(<ConfirmDeleteModal deleteFunction={() => deleteTeamPlayer(player.id)} />, "Confirm Delete Team Player")}
                       />
                     </Flex>
                   </Heading>

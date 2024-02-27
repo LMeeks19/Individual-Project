@@ -9,7 +9,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { GetProfile, GetPlayersByProfileId, GetTeamByProfileId } from "../Functions/Server";
 import "./Page.css";
 import WarningMessage from "../Components/Warning-Message";
-import Modal from "../Components/Modals/Modal";
+import Modal from "../Modals/Modal";
 
 export default function Page() {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);

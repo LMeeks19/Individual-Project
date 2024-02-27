@@ -25,14 +25,15 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import UpdateProfileModal from "../../Components/Modals/UpdateProfileModal";
-import CreateProfileModal from "../../Components/Modals/CreateProfileModal";
-import AddPlayerModal from "../../Components/Modals/AddPlayerModal";
+import UpdateProfileModal from "../../Modals/AccountModals/UpdateProfileModal";
+import CreateProfileModal from "../../Modals/AccountModals/CreateProfileModal";
+import AddPlayerModal from "../../Modals/AccountModals/AddPlayerModal";
 import { TeamDetails, TeamRoster } from "./TeamTab";
-import UpdateTeamModal from "../../Components/Modals/UpdateTeamModal";
+import UpdateTeamModal from "../../Modals/AccountModals/UpdateTeamModal";
 import { DeleteTeam } from "../../Functions/Server";
-import CreateTeamModal from "../../Components/Modals/CreateTeamModal";
-import AddTeamPlayerModal from "../../Components/Modals/AddTeamPlayerModal";
+import CreateTeamModal from "../../Modals/AccountModals/CreateTeamModal";
+import AddTeamPlayerModal from "../../Modals/AccountModals/AddTeamPlayerModal";
+import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
 
 export default function Profile() {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
@@ -153,7 +154,14 @@ export default function Profile() {
                 <Button
                   className="custom-button delete"
                   variation="primary"
-                  onClick={() => deleteTeam(currentUser.team)}
+                  onClick={() =>
+                    openModal(
+                      <ConfirmDeleteModal
+                        deleteFunction={() => deleteTeam(currentUser.team)}
+                      />,
+                      "Confirm Delete Team"
+                    )
+                  }
                 >
                   <Text display="flex">
                     <DeleteIcon fontSize="small" className="icon" />
@@ -199,7 +207,10 @@ export default function Profile() {
                   className="custom-button"
                   variation="primary"
                   onClick={() =>
-                    openModal(<AddTeamPlayerModal />, "Add Team Player")
+                    openModal(
+                      <AddTeamPlayerModal team={currentUser.team} />,
+                      "Add Team Player"
+                    )
                   }
                 >
                   <Text display="flex">

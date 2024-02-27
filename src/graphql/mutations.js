@@ -96,14 +96,6 @@ export const updateTeam = /* GraphQL */ `
       website
       profileID
       players {
-        items {
-          id
-          name
-          age
-          kitNumber
-          positions
-          teamID
-        }
         nextToken
         __typename
       }
@@ -220,6 +212,10 @@ export const createProfile = /* GraphQL */ `
         nextToken
         __typename
       }
+      posts {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -248,6 +244,10 @@ export const updateProfile = /* GraphQL */ `
         __typename
       }
       team {
+        nextToken
+        __typename
+      }
+      posts {
         nextToken
         __typename
       }
@@ -282,6 +282,76 @@ export const deleteProfile = /* GraphQL */ `
         nextToken
         __typename
       }
+      posts {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createMatchPost = /* GraphQL */ `
+  mutation CreateMatchPost(
+    $input: CreateMatchPostInput!
+    $condition: ModelMatchPostConditionInput
+  ) {
+    createMatchPost(input: $input, condition: $condition) {
+      id
+      title
+      description
+      street
+      townCity
+      county
+      postcode
+      team
+      createdByProfileID
+      createdByName
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateMatchPost = /* GraphQL */ `
+  mutation UpdateMatchPost(
+    $input: UpdateMatchPostInput!
+    $condition: ModelMatchPostConditionInput
+  ) {
+    updateMatchPost(input: $input, condition: $condition) {
+      id
+      title
+      description
+      street
+      townCity
+      county
+      postcode
+      team
+      createdByProfileID
+      createdByName
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteMatchPost = /* GraphQL */ `
+  mutation DeleteMatchPost(
+    $input: DeleteMatchPostInput!
+    $condition: ModelMatchPostConditionInput
+  ) {
+    deleteMatchPost(input: $input, condition: $condition) {
+      id
+      title
+      description
+      street
+      townCity
+      county
+      postcode
+      team
+      createdByProfileID
+      createdByName
       createdAt
       updatedAt
       __typename

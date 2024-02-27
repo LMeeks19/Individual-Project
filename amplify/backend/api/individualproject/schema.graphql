@@ -48,5 +48,22 @@ type Profile @model @auth(rules: [{allow: public}]) {
   phoneNumber: String!
   players: [Player] @hasMany(indexName: "byProfile", fields: ["id"])
   team: [Team] @hasMany(indexName: "byProfile", fields: ["id"])
+  posts: [MatchPost] @hasMany(indexName: "byProfile", fields: ["id"])
+}
+
+type MatchPost @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  title: String!
+  description: String!
+  street: String!
+  townCity: String!
+  county: String!
+  postcode: String!
+  team: String!
+  createdByProfileID: ID! @index(name: "byProfile")
+  createdByName: String!
+  interestedUsers: [String]
+  isClosed: Boolean
+  selectedOpponentProfileID: ID
 }
 

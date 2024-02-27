@@ -188,6 +188,10 @@ export const onCreateProfile = /* GraphQL */ `
         nextToken
         __typename
       }
+      posts {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -213,6 +217,10 @@ export const onUpdateProfile = /* GraphQL */ `
         __typename
       }
       team {
+        nextToken
+        __typename
+      }
+      posts {
         nextToken
         __typename
       }
@@ -244,6 +252,73 @@ export const onDeleteProfile = /* GraphQL */ `
         nextToken
         __typename
       }
+      posts {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateMatchPost = /* GraphQL */ `
+  subscription OnCreateMatchPost(
+    $filter: ModelSubscriptionMatchPostFilterInput
+  ) {
+    onCreateMatchPost(filter: $filter) {
+      id
+      title
+      description
+      street
+      townCity
+      county
+      postcode
+      team
+      createdByProfileID
+      createdByName
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateMatchPost = /* GraphQL */ `
+  subscription OnUpdateMatchPost(
+    $filter: ModelSubscriptionMatchPostFilterInput
+  ) {
+    onUpdateMatchPost(filter: $filter) {
+      id
+      title
+      description
+      street
+      townCity
+      county
+      postcode
+      team
+      createdByProfileID
+      createdByName
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteMatchPost = /* GraphQL */ `
+  subscription OnDeleteMatchPost(
+    $filter: ModelSubscriptionMatchPostFilterInput
+  ) {
+    onDeleteMatchPost(filter: $filter) {
+      id
+      title
+      description
+      street
+      townCity
+      county
+      postcode
+      team
+      createdByProfileID
+      createdByName
       createdAt
       updatedAt
       __typename

@@ -35,6 +35,11 @@ export const currentUserState = atom({
   },
 });
 
+export const matchPostsState = atom({
+  key: "matchPostsState",
+  default: []
+});
+
 export const warningIsShownState = atom({
   key: "warningIsShownState",
   default: false,

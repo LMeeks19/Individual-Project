@@ -4,6 +4,7 @@ import {
   playersByProfileID,
   teamsByProfileID,
   teamPlayersByTeamID,
+  listMatchPosts,
 } from "../graphql/queries";
 import {
   createProfile as createProfileMutation,
@@ -18,6 +19,7 @@ import {
   createTeamPlayer as createTeamPlayerMutation,
   updateTeamPlayer as updateTeamPlayerMutation,
   deleteTeamPlayer as deleteTeamPlayerMutation,
+  deleteMatchPost as deleteMatchPostMutation,
 } from "../graphql/mutations";
 import { fetchUserAttributes } from "aws-amplify/auth";
 
@@ -352,4 +354,29 @@ export async function GetTeamPlayersByTeamId(teamId) {
   });
 
   return apiData.data.teamPlayersByTeamID.items;
+}
+
+export async function GetMatchPosts(county) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: listMatchPosts,
+  });
+
+  return apiData.data.listMatchPosts.items;
+}
+
+export async function DeleteMatchPost(id) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: deleteMatchPostMutation,
+    variables: {
+      input: {
+        id: id,
+      },
+    },
+  });
+
+  return apiData.data.deleteMatchPost.id;
 }
