@@ -55,11 +55,7 @@
 .icon {
     cursor: pointer;
 
-    &.register-interest {
-        color: green;
-    }
-
-    &.delete, &.unregister-interest {
+    &.delete {
         color: red;
     }
 }

@@ -308,6 +308,9 @@ export const createMatchPost = /* GraphQL */ `
       team
       createdByProfileID
       createdByName
+      interestedUsers
+      isClosed
+      selectedOpponentPorfileID
       createdAt
       updatedAt
       __typename
@@ -330,6 +333,9 @@ export const updateMatchPost = /* GraphQL */ `
       team
       createdByProfileID
       createdByName
+      interestedUsers
+      isClosed
+      selectedOpponentProfileID
       createdAt
       updatedAt
       __typename
@@ -352,6 +358,9 @@ export const deleteMatchPost = /* GraphQL */ `
       team
       createdByProfileID
       createdByName
+      interestedUsers
+      isClosed
+      selectedOpponentPorfileID
       createdAt
       updatedAt
       __typename

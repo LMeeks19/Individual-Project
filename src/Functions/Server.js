@@ -19,6 +19,8 @@ import {
   createTeamPlayer as createTeamPlayerMutation,
   updateTeamPlayer as updateTeamPlayerMutation,
   deleteTeamPlayer as deleteTeamPlayerMutation,
+  createMatchPost as createMatchPostMutation,
+  updateMatchPost as updateMatchPostMutation,
   deleteMatchPost as deleteMatchPostMutation,
 } from "../graphql/mutations";
 import { fetchUserAttributes } from "aws-amplify/auth";
@@ -356,7 +358,7 @@ export async function GetTeamPlayersByTeamId(teamId) {
   return apiData.data.teamPlayersByTeamID.items;
 }
 
-export async function GetMatchPosts(county) {
+export async function GetMatchPosts() {
   const client = generateClient();
 
   const apiData = await client.graphql({
@@ -380,3 +382,56 @@ export async function DeleteMatchPost(id) {
 
   return apiData.data.deleteMatchPost.id;
 }
+
+export async function UpdateMatchPost(data) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: updateMatchPostMutation,
+    variables: {
+      input: {
+        id: data.id,
+        title: data.title,
+        description: data.description,
+        street: data.street,
+        townCity: data.townCity,
+        postcode: data.postcode,
+        team: data.team,
+        createdByProfileID: data.createdByProfileID,
+        createdByName: data.createdByName,
+        interestedUsers: data.interestedUsers,
+        isClosed: data.isClosed,
+        selectedOpponentProfileID: data.selectedOpponentProfileID,
+      },
+    },
+  });
+
+  return apiData.data.updateMatchPost;
+}
+
+export async function CreateMatchPost(data) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: createMatchPostMutation,
+    variables: {
+      input: {
+        id: data.id,
+        title: data.title,
+        description: data.description,
+        street: data.street,
+        townCity: data.townCity,
+        postcode: data.postcode,
+        team: data.team,
+        createdByProfileID: data.createdByProfileID,
+        createdByName: data.createdByName,
+        interestedUsers: data.interestedUsers,
+        isClosed: data.isClosed,
+        selectedOpponentProfileID: data.selectedOpponentProfileID,
+      },
+    },
+  });
+
+  return apiData.data.createMatchPost;
+}
+

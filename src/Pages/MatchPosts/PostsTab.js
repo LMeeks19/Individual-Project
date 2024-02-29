@@ -17,10 +17,13 @@ import { useSetRecoilState, useRecoilState } from "recoil";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import DoneIcon from "@mui/icons-material/Done";
-import CloseIcon from "@mui/icons-material/Close";
 import ReplayIcon from "@mui/icons-material/Replay";
+import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
+import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
+import { UpdateMatchPost } from "../../Functions/Server";
 import "./MatchPosts.css";
+
+// TODO: View, Create, Update Modals
 
 export default function PostsTab(props) {
   const [page, setPage] = useState(0);
@@ -48,6 +51,29 @@ export default function PostsTab(props) {
 
   function openModal(component, title) {
     setModal({ component: component, title: title, isShown: true });
+  }
+
+  async function toggleInterestedUsers(post, userId) {
+    let updatedPosts = posts.map((curPost) => {
+      if (curPost.id === post.id) {
+        if (curPost.interestedUsers.includes(userId)) {
+          return {
+            ...curPost,
+            interestedUsers: curPost.interestedUsers.filter(
+              (id) => id !== userId
+            ),
+          };
+        } else {
+          return {
+            ...curPost,
+            interestedUsers: [...curPost.interestedUsers, userId],
+          };
+        }
+      }
+      return curPost;
+    });
+    await UpdateMatchPost(updatedPosts.find((p) => p.id === post.id))
+    setPosts(updatedPosts);
   }
 
   return (
@@ -81,11 +107,7 @@ export default function PostsTab(props) {
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((post) => {
               return (
-                <TableRow
-                  className="pointer"
-                  key={post.id}
-                  onClick={() => console.log(post.id)}
-                >
+                <TableRow className="pointer" key={post.id}>
                   <td>
                     <Text>{post.title}</Text>
                   </td>
@@ -154,21 +176,29 @@ export default function PostsTab(props) {
                             {!post.interestedUsers.includes(
                               props.currentUser.id
                             ) ? (
-                              <Flex
-                                gap="4px"
-                                className="icon register-interest"
-                              >
-                                <Tooltip title="Register Post Interest" arrow>
-                                  <DoneIcon />
+                              <Flex gap="4px" className="icon">
+                                <Tooltip title="Register Interest" arrow>
+                                  <ThumbUpOffAltIcon
+                                    onClick={() =>
+                                      toggleInterestedUsers(
+                                        post,
+                                        props.currentUser.id
+                                      )
+                                    }
+                                  />
                                 </Tooltip>
                               </Flex>
                             ) : (
-                              <Flex
-                                gap="4px"
-                                className="icon unregister-interest"
-                              >
-                                <Tooltip title="Unregister Post Interest" arrow>
-                                  <CloseIcon />
+                              <Flex gap="4px" className="icon">
+                                <Tooltip title="Unregister Interest" arrow>
+                                  <ThumbUpAltIcon
+                                    onClick={() =>
+                                      toggleInterestedUsers(
+                                        post,
+                                        props.currentUser.id
+                                      )
+                                    }
+                                  />
                                 </Tooltip>
                               </Flex>
                             )}
@@ -183,12 +213,18 @@ export default function PostsTab(props) {
                               <VisibilityIcon />
                             </Tooltip>
                           </Flex>
-                          <Divider orientation="vertical" />
-                          <Flex gap="4px" className="icon">
-                            <Tooltip title="Reactivate Post" arrow>
-                              <ReplayIcon />
-                            </Tooltip>
-                          </Flex>
+                          {post.createdByProfileID === props.currentUser.id ? (
+                            <>
+                              <Divider orientation="vertical" />
+                              <Flex gap="4px" className="icon">
+                                <Tooltip title="Reactivate Post" arrow>
+                                  <ReplayIcon />
+                                </Tooltip>
+                              </Flex>
+                            </>
+                          ) : (
+                            <></>
+                          )}
                         </Flex>
                       </Text>
                     )}
