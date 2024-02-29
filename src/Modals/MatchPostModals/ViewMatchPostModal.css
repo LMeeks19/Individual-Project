@@ -1,0 +1,13 @@
+.content {
+    padding: 40px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.error-message {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: red;
+    font-weight: bold;
+}

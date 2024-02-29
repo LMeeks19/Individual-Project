@@ -130,3 +130,9 @@ export function ValidateTeamPlayerModal(inputs) {
 
   return errors;
 }
+
+export function ValidateMatchPostModal(inputs) {
+  let errors = [];
+
+  return errors;
+}

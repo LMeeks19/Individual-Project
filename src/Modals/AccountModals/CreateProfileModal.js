@@ -156,7 +156,7 @@ export default function CreateProfileModal() {
               })
             }
           >
-            <option value={null}>Please Select...</option>
+            <option value="">Please Select...</option>
             <option value="PARENT">PARENT</option>
             <option value="COACH">COACH</option>
           </SelectField>

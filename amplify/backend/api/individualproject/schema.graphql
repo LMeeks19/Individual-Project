@@ -55,15 +55,21 @@ type MatchPost @model @auth(rules: [{allow: public}]) {
   id: ID!
   title: String!
   description: String!
+  createdByProfileID: ID! @index(name: "byProfile")
+  createdByName: String!
+  team: String!
+  gameType: String!
+  ageGroup: String!
+  teamSize: String!
+  substitutionLimit: Boolean!
+  cards: Boolean!
+  halfLength: Int!
+  kickOff: String!
   street: String!
   townCity: String!
   county: String!
   postcode: String!
-  team: String!
-  createdByProfileID: ID! @index(name: "byProfile")
-  createdByName: String!
-  interestedUsers: [String]
-  isClosed: Boolean
-  selectedOpponentProfileID: ID
+  interestedUsers: [String]!
+  isActive: Boolean!
 }
 

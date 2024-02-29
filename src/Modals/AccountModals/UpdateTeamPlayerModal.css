@@ -1,6 +1,5 @@
 .content {
     padding: 40px;
-    height: calc((100% - 70.8px));
     overflow-y: auto;
     overflow-x: hidden;
 

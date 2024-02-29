@@ -14,11 +14,11 @@
         border-color: transparent;
 
         &.cancel {
-            background-color: red;
+            background-color: #008080;
         }
 
         &.delete {
-            background-color: #008080;
+            background-color: red;
         }
 
         &.cancel:hover, &.delete:hover {

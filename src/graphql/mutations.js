@@ -301,16 +301,22 @@ export const createMatchPost = /* GraphQL */ `
       id
       title
       description
+      createdByProfileID
+      createdByName
+      team
+      gameType
+      ageGroup
+      teamSize
+      substitutionLimit
+      cards
+      halfLength
+      kickOff
       street
       townCity
       county
       postcode
-      team
-      createdByProfileID
-      createdByName
       interestedUsers
-      isClosed
-      selectedOpponentPorfileID
+      isActive
       createdAt
       updatedAt
       __typename
@@ -326,16 +332,22 @@ export const updateMatchPost = /* GraphQL */ `
       id
       title
       description
+      createdByProfileID
+      createdByName
+      team
+      gameType
+      ageGroup
+      teamSize
+      substitutionLimit
+      cards
+      halfLength
+      kickOff
       street
       townCity
       county
       postcode
-      team
-      createdByProfileID
-      createdByName
       interestedUsers
-      isClosed
-      selectedOpponentProfileID
+      isActive
       createdAt
       updatedAt
       __typename
@@ -351,16 +363,22 @@ export const deleteMatchPost = /* GraphQL */ `
       id
       title
       description
+      createdByProfileID
+      createdByName
+      team
+      gameType
+      ageGroup
+      teamSize
+      substitutionLimit
+      cards
+      halfLength
+      kickOff
       street
       townCity
       county
       postcode
-      team
-      createdByProfileID
-      createdByName
       interestedUsers
-      isClosed
-      selectedOpponentPorfileID
+      isActive
       createdAt
       updatedAt
       __typename

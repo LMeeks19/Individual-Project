@@ -193,13 +193,22 @@ export const getMatchPost = /* GraphQL */ `
       id
       title
       description
+      createdByProfileID
+      createdByName
+      team
+      gameType
+      ageGroup
+      teamSize
+      substitutionLimit
+      cards
+      halfLength
+      kickOff
       street
       townCity
       county
       postcode
-      team
-      createdByProfileID
-      createdByName
+      interestedUsers
+      isActive
       createdAt
       updatedAt
       __typename
@@ -217,16 +226,22 @@ export const listMatchPosts = /* GraphQL */ `
         id
         title
         description
+        createdByProfileID
+        createdByName
+        team
+        gameType
+        ageGroup
+        teamSize
+        substitutionLimit
+        cards
+        halfLength
+        kickOff
         street
         townCity
         county
         postcode
-        team
-        createdByProfileID
-        createdByName
         interestedUsers
-        isClosed
-        selectedOpponentProfileID
+        isActive
         createdAt
         updatedAt
         __typename
@@ -295,7 +310,6 @@ export const teamsByProfileID = /* GraphQL */ `
         players {
           items {
             id
-            teamID
             name
             age
             kitNumber
@@ -362,13 +376,22 @@ export const matchPostsByCreatedByProfileID = /* GraphQL */ `
         id
         title
         description
+        createdByProfileID
+        createdByName
+        team
+        gameType
+        ageGroup
+        teamSize
+        substitutionLimit
+        cards
+        halfLength
+        kickOff
         street
         townCity
         county
         postcode
-        team
-        createdByProfileID
-        createdByName
+        interestedUsers
+        isActive
         createdAt
         updatedAt
         __typename

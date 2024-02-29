@@ -7,21 +7,10 @@
 .table {
     margin-top: 40px;
     box-shadow: 0 0 20px -4px #000;
-    table-layout: fixed;
     border-radius: 15px;
+    table-layout: fixed;
     border-collapse: collapse !important;
-
-
-    tr {
-        th {
-            background-color: #008080;
-            width: 12.5%;
-            padding: 15px;
-            color: white;
-            font-size: large;
-            font-weight: bold;
-        }
-    }
+    width: 100%;
 
     tr th:first-child {
         border-top-left-radius: 15px;
@@ -32,15 +21,53 @@
     }
 
     tr {
-        td {
-            width: 12.5%;
-            padding: 15px;
+        th {
+            background-color: #008080;
+            color: white;
+            font-size: large;
+            font-weight: bold;
             overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            text-align: center;
-            font-weight: 500;
         }
+
+        td,
+        th {
+            text-align: center;
+            padding-left: 20px !important;
+            padding: 10px;
+
+
+            &.title {
+                width: 30%;
+            }
+
+            &.created-on {
+                width: 20%;
+            }
+
+            &.actions {
+                width: 15% !important;
+                position: relative;
+                z-index: 2;
+            }
+
+            &.description {
+                width: 35% !important;
+            }
+
+            .amplify-text {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+
+        th:first-child,
+        td:first-child,
+        th:nth-child(2),
+        td:nth-child(2) {
+            text-align: left !important;
+        }
+
     }
 
     tr:last-child td:first-child {
@@ -54,6 +81,9 @@
 
 .icon {
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
 
     &.delete {
         color: red;

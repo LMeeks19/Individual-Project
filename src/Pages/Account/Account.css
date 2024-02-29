@@ -1,222 +1,221 @@
 .heading {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .custom-button {
-    background-color: #008080;
-    margin-top: auto;
-    margin-bottom: auto;
+  background-color: #008080;
+  margin-top: auto;
+  margin-bottom: auto;
 
-    .amplify-text {
-        color: #fff;
-    }
+  .amplify-text {
+    color: #fff;
+  }
 
-    &.delete {
-        background-color: red !important;
-    }
+  &.delete {
+    background-color: red !important;
+  }
 }
 
 .custom-button:focus {
-    opacity: 50%;
+  opacity: 50%;
 }
 
 .account-tab:hover,
 .account-tab[aria-selected='true'] {
-    color: #008080;
-    border-color: #008080;
+  color: #008080;
+  border-color: #008080;
 }
 
 .account-table-row {
-    text-align: center;
+  text-align: center;
 }
 
 .account-table-row:nth-child(odd) {
-    background-color: #008080 !important;
+  background-color: #008080 !important;
 }
 
 .account-table-cell {
-    width: 50%;
+  width: 50%;
 }
 
 .link {
-    margin-top: auto;
-    margin-bottom: auto;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .icon {
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-right: 5px;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 5px;
 }
 
 .registered-player-card {
-    margin-top: 20px;
-    margin-bottom: 30px;
-    overflow: hidden;
-    transition: height 1s ease-in-out;
-    padding: 0;
-    height: 56px;
-    border-radius: 15px;
-    box-shadow: 0 0 20px -4px #000;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  overflow: hidden;
+  transition: height 1s ease-in-out;
+  padding: 0;
+  height: 56px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px -4px #000;
 
-    .registered-player-heading {
-        padding: 15px;
+  .registered-player-heading {
+    padding: 15px;
+    background-color: #008080;
+    color: #f9f1f1;
+
+    .header {
+      color: #f9f1f1;
+      margin-top: auto;
+      margin-bottom: auto;
+    }
+
+    .icon-button {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      color: #f9f1f1;
+
+      &.delete {
+        color: red !important;
+      }
+    }
+  }
+
+  .info {
+    padding: 15px;
+
+    .text {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      font-size: large;
+
+      .position-badge {
         background-color: #008080;
-        color: #f9f1f1;
-
-        .header {
-            color: #f9f1f1;
-            margin-top: auto;
-            margin-bottom: auto;
-        }
-
-        .icon-button {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            color: #f9f1f1;
-
-            &.delete {
-                color: red !important;
-            }
-        }
+      }
     }
+  }
 
-    .info {
-        padding: 15px;
-
-        .text {
-            padding-top: 10px;
-            padding-bottom: 10px;
-            display: flex;
-            align-items: center;
-            font-size: large;
-
-            .position-badge {
-                background-color: #008080;
-            }
-        }
-    }
-
-    &.show {
-        height: 335px;
-    }
+  &.show {
+    height: 335px;
+  }
 }
 
 .card-container {
-	display: flex;
-	justify-content: center;
+  display: flex;
+  justify-content: center;
 
-	width: 100%;
+  width: 100%;
 }
 
 .details-card {
-    background-color: #008080;
+  background-color: #008080;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0px 0px 20px -4px #000;
+  border-radius: 15px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  .crest {
+    min-width: 20%;
     padding: 0;
-    overflow: hidden;
-    box-shadow: 0px 0px 20px -4px #000;
-    border-radius: 15px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    min-width: 300px;
-  
-    .crest {
-      min-width: 20%;
-      padding: 0;
-    }
-  
-    .info-container {
-      width: 80%;
-      justify-content: space-evenly;
-      flex-wrap: wrap;
-  
-      .team-info,
-      .coach-info {
-        width: 40%;
-        background-color: inherit;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-  
-  
-        .header {
-          margin-bottom: 5px;
-          font-size: x-large;
-        }
-  
-        .info {
-          margin-top: 20px;
-          margin-bottom: 20px;
-          font-size: large;
-          align-self: flex-start;
-          padding-left: 20px;
-  
-          .text:not(:last-child) {
-            margin-bottom: 5px;
-          }
-        }
-      }
-    }
-  }
-  
-  .card {
-    background-color: #008080;
-    padding: 0;
-    overflow: hidden;
-    min-width: 300px;
-    box-shadow: 0px 0px 20px -4px #000;
-    border-radius: 15px;
-  
-    .avatar-container {
-      padding: 0;
-    }
-  
-    .details {
-      background-color: inherit;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-  
-      .header {
-        display: flex;
-        justify-content: space-between;
-  
-        .icons {
-          align-items: center;
-  
-          .icon {
-            cursor: pointer;
-          }
-        }
-      }
-    }
-  }
-  
-  
-  @media screen and (max-width: 1600px) {
-    .details-card {
-  
-      .crest {
-        width: 100%;
-      }
-  
-      .info-container {
-        width: 100%;
-  
-        .team-info,
-        .coach-info {
-          width: 100%;
-        }
-  
-        .team-info {
-          padding-bottom: 0;
-        }
-  
-        .coach-info {
-          padding-top: 0;
-        }
-      }
-    }
   }
 
+  .info-container {
+    width: 80%;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+
+    .team-info,
+    .coach-info {
+      width: 40%;
+      background-color: inherit;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+
+      .header {
+        margin-bottom: 5px;
+        font-size: x-large;
+      }
+
+      .info {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        font-size: large;
+        align-self: flex-start;
+        padding-left: 20px;
+
+        .text:not(:last-child) {
+          margin-bottom: 5px;
+        }
+      }
+    }
+  }
+}
+
+.card {
+  background-color: #008080;
+  padding: 0;
+  overflow: hidden;
+  min-width: 300px;
+  box-shadow: 0px 0px 20px -4px #000;
+  border-radius: 15px;
+
+  .avatar-container {
+    padding: 0;
+  }
+
+  .details {
+    background-color: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+
+      .icons {
+        align-items: center;
+
+        .icon {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+
+@media screen and (max-width: 1600px) {
+  .details-card {
+    min-width: 275px;
+
+    .crest {
+      width: 100%;
+    }
+
+    .info-container {
+      width: 100%;
+
+      .team-info,
+      .coach-info {
+        width: 100%;
+      }
+
+      .team-info {
+        padding-bottom: 0;
+      }
+
+      .coach-info {
+        padding-top: 0;
+      }
+    }
+  }
+}

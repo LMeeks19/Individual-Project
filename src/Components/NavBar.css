@@ -52,6 +52,7 @@
           color: #fff;
           margin-top: auto;
           margin-bottom: auto;
+          text-wrap: nowrap;
         }
 
         .icon {

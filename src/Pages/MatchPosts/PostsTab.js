@@ -10,7 +10,7 @@ import {
 import { TablePagination, Tooltip } from "@mui/material";
 import { modalState, matchPostsState } from "../../Functions/GlobalState";
 import { useState } from "react";
-import { format } from "date-fns";
+import { formatRelative } from "date-fns";
 import { DeleteMatchPost } from "../../Functions/Server";
 import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
 import { useSetRecoilState, useRecoilState } from "recoil";
@@ -21,6 +21,8 @@ import ReplayIcon from "@mui/icons-material/Replay";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import { UpdateMatchPost } from "../../Functions/Server";
+import ViewMatchPostModal from "../../Modals/MatchPostModals/ViewMatchPostModal";
+import UpdateMatchPostModal from "../../Modals/MatchPostModals/UpdateMatchPostModal";
 import "./MatchPosts.css";
 
 // TODO: View, Create, Update Modals
@@ -41,7 +43,8 @@ export default function PostsTab(props) {
   };
 
   function formatDate(date) {
-    return format(new Date(date), "d/MM/yyyy H:mm:ss");
+    let formattedDate = formatRelative(new Date(date), new Date(), {});
+    return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
   }
 
   async function deleteMatchPost(matchPostId) {
@@ -72,35 +75,31 @@ export default function PostsTab(props) {
       }
       return curPost;
     });
-    await UpdateMatchPost(updatedPosts.find((p) => p.id === post.id))
+    await UpdateMatchPost(updatedPosts.find((p) => p.id === post.id));
     setPosts(updatedPosts);
   }
 
   return (
     <Table className="table" variation="striped">
-      <TableHead>
+      <TableHead width="100%">
         <TableRow>
-          <th>Title</th>
-          <th>Description</th>
-          <th>Location</th>
-          <th>Postcode</th>
-          <th>Team</th>
-          <th>Created By</th>
-          <th>Created On</th>
-          <th>Actions</th>
+          <th className="title">Title</th>
+          <th className="description">Description</th>
+          <th className="created-on">Created On</th>
+          <th className="actions">Actions</th>
         </TableRow>
       </TableHead>
 
       {props.posts.length === 0 ? (
-        <TableBody>
+        <TableBody width="100%">
           <TableRow>
-            <td colSpan="8">
-              <Text>No Posts</Text>
+            <td colSpan="4">
+              <Text textAlign="center">No Posts</Text>
             </td>
           </TableRow>
         </TableBody>
       ) : (
-        <TableBody>
+        <TableBody width="100%">
           {props.posts
             .sort((a, b) => a.title.localeCompare(b.title))
             .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
@@ -108,48 +107,48 @@ export default function PostsTab(props) {
             .map((post) => {
               return (
                 <TableRow className="pointer" key={post.id}>
-                  <td>
+                  <td className="title">
                     <Text>{post.title}</Text>
                   </td>
-                  <td>
+                  <td className="description">
                     <Text>{post.description}</Text>
                   </td>
-                  <td>
-                    <Text>
-                      {post.street}, {post.townCity}, {post.county}
-                    </Text>
-                  </td>
-                  <td>
-                    <Text>{post.postcode}</Text>
-                  </td>
-                  <td>
-                    <Text>{post.team}</Text>
-                  </td>
-                  <td>
-                    <Text>{post.createdByName}</Text>
-                  </td>
-                  <td>
+                  <td className="created-on">
                     <Text>{formatDate(post.createdAt)}</Text>
                   </td>
-                  <td>
+                  <td className="actions">
                     {!post.isClosed ? (
                       <Text as="div">
                         {post.createdByProfileID === props.currentUser.id ? (
                           <Flex justifyContent="center">
                             <Flex gap="4px" className="icon">
-                              <Tooltip title="View Post Details" arrow>
-                                <VisibilityIcon />
+                              <Tooltip title="View Match Post Details" arrow>
+                                <VisibilityIcon
+                                  onClick={() =>
+                                    openModal(
+                                      <ViewMatchPostModal post={post} />,
+                                      "View Match Post Details"
+                                    )
+                                  }
+                                />
                               </Tooltip>
                             </Flex>
                             <Divider orientation="vertical" />
                             <Flex gap="4px" className="icon">
-                              <Tooltip title="Edit Post Details" arrow>
-                                <EditIcon />
+                              <Tooltip title="Update Match Post Details" arrow>
+                                <EditIcon
+                                  onClick={() =>
+                                    openModal(
+                                      <UpdateMatchPostModal post={post} />,
+                                      "Update Match Post Details"
+                                    )
+                                  }
+                                />
                               </Tooltip>
                             </Flex>
                             <Divider orientation="vertical" />
                             <Flex gap="4px" className="icon delete">
-                              <Tooltip title="Delete Post" arrow>
+                              <Tooltip title="Delete Match Post" arrow>
                                 <DeleteIcon
                                   onClick={() =>
                                     openModal(
@@ -158,7 +157,7 @@ export default function PostsTab(props) {
                                           deleteMatchPost(post.id)
                                         }
                                       />,
-                                      "Confirm Delete Player"
+                                      "Confirm Match Post Delete"
                                     )
                                   }
                                 />
@@ -168,8 +167,15 @@ export default function PostsTab(props) {
                         ) : (
                           <Flex justifyContent="center">
                             <Flex gap="4px" className="icon">
-                              <Tooltip title="View Post Details" arrow>
-                                <VisibilityIcon />
+                              <Tooltip title="View Match Post Details" arrow>
+                                <VisibilityIcon
+                                  onClick={() =>
+                                    openModal(
+                                      <ViewMatchPostModal post={post} />,
+                                      "View Match Post Details"
+                                    )
+                                  }
+                                />
                               </Tooltip>
                             </Flex>
                             <Divider orientation="vertical" />
@@ -209,8 +215,15 @@ export default function PostsTab(props) {
                       <Text as="div">
                         <Flex justifyContent="center">
                           <Flex gap="4px" className="icon">
-                            <Tooltip title="View Post Details" arrow>
-                              <VisibilityIcon />
+                            <Tooltip title="View Match Post Details" arrow>
+                              <VisibilityIcon
+                                onClick={() =>
+                                  openModal(
+                                    <ViewMatchPostModal post={post} />,
+                                    "View Match Post Details"
+                                  )
+                                }
+                              />
                             </Tooltip>
                           </Flex>
                           {post.createdByProfileID === props.currentUser.id ? (
