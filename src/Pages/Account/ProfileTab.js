@@ -40,7 +40,7 @@ export function ViewPersonalTable(props) {
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Date of Birth</TableCell>
           <TableCell className="account-table-cell">
-            {formatDate(props.currentUser.dob)}
+            {props.currentUser.dob}
           </TableCell>
         </TableRow>
         <TableRow className="account-table-row">

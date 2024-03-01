@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, GridProps, SelectFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SelectFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -23,26 +23,23 @@ export declare type ValidationResponse = {
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type TeamPlayerCreateFormInputValues = {
     name?: string;
-    age?: string;
+    age?: number;
     kitNumber?: number;
-    positions?: string;
-    teamID?: string;
+    positions?: string[];
 };
 export declare type TeamPlayerCreateFormValidationValues = {
     name?: ValidationFunction<string>;
-    age?: ValidationFunction<string>;
+    age?: ValidationFunction<number>;
     kitNumber?: ValidationFunction<number>;
     positions?: ValidationFunction<string>;
-    teamID?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type TeamPlayerCreateFormOverridesProps = {
     TeamPlayerCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
     name?: PrimitiveOverrideProps<TextFieldProps>;
-    age?: PrimitiveOverrideProps<SelectFieldProps>;
+    age?: PrimitiveOverrideProps<TextFieldProps>;
     kitNumber?: PrimitiveOverrideProps<TextFieldProps>;
     positions?: PrimitiveOverrideProps<SelectFieldProps>;
-    teamID?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type TeamPlayerCreateFormProps = React.PropsWithChildren<{
     overrides?: TeamPlayerCreateFormOverridesProps | undefined | null;

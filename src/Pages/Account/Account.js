@@ -27,12 +27,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import UpdateProfileModal from "../../Modals/AccountModals/UpdateProfileModal";
 import CreateProfileModal from "../../Modals/AccountModals/CreateProfileModal";
-import AddPlayerModal from "../../Modals/AccountModals/AddPlayerModal";
+import CreatePlayerModal from "../../Modals/AccountModals/CreatePlayerModal";
 import { TeamDetails, TeamRoster } from "./TeamTab";
 import UpdateTeamModal from "../../Modals/AccountModals/UpdateTeamModal";
 import { DeleteTeam } from "../../Functions/Server";
 import CreateTeamModal from "../../Modals/AccountModals/CreateTeamModal";
-import AddTeamPlayerModal from "../../Modals/AccountModals/AddTeamPlayerModal";
+import CreateTeamPlayerModal from "../../Modals/AccountModals/CreateTeamPlayerModal";
 import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
 
 export default function Profile() {
@@ -52,7 +52,7 @@ export default function Profile() {
   }
 
   function hasNoProfile(object) {
-    return Object.values(object).some((v) => v === null);
+    return Object.values(object).some((v) => v === undefined);
   }
 
   return (
@@ -154,6 +154,7 @@ export default function Profile() {
                 <Button
                   className="custom-button delete"
                   variation="primary"
+                  disabled={currentUser.team.players.length > 0}
                   onClick={() =>
                     openModal(
                       <ConfirmDeleteModal
@@ -208,7 +209,7 @@ export default function Profile() {
                   variation="primary"
                   onClick={() =>
                     openModal(
-                      <AddTeamPlayerModal team={currentUser.team} />,
+                      <CreateTeamPlayerModal team={currentUser.team} />,
                       "Add Team Player"
                     )
                   }
@@ -241,7 +242,7 @@ export default function Profile() {
               <Button
                 className="custom-button"
                 variation="primary"
-                onClick={() => openModal(<AddPlayerModal />, "Add Player")}
+                onClick={() => openModal(<CreatePlayerModal />, "Add Player")}
               >
                 <Text display="flex">
                   <AddIcon className="icon" />

@@ -6,13 +6,7 @@
 
 /* eslint-disable */
 import * as React from "react";
-import {
-  Button,
-  Flex,
-  Grid,
-  SelectField,
-  TextField,
-} from "@aws-amplify/ui-react";
+import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
 import { getProfile } from "../graphql/queries";
@@ -31,46 +25,35 @@ export default function ProfileUpdateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    username: "",
     name: "",
     dob: "",
-    email: "",
-    accountType: "",
+    phoneNumber: "",
     street: "",
     townCity: "",
     county: "",
     postcode: "",
-    phoneNumber: "",
   };
-  const [username, setUsername] = React.useState(initialValues.username);
   const [name, setName] = React.useState(initialValues.name);
   const [dob, setDob] = React.useState(initialValues.dob);
-  const [email, setEmail] = React.useState(initialValues.email);
-  const [accountType, setAccountType] = React.useState(
-    initialValues.accountType
+  const [phoneNumber, setPhoneNumber] = React.useState(
+    initialValues.phoneNumber
   );
   const [street, setStreet] = React.useState(initialValues.street);
   const [townCity, setTownCity] = React.useState(initialValues.townCity);
   const [county, setCounty] = React.useState(initialValues.county);
   const [postcode, setPostcode] = React.useState(initialValues.postcode);
-  const [phoneNumber, setPhoneNumber] = React.useState(
-    initialValues.phoneNumber
-  );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = profileRecord
       ? { ...initialValues, ...profileRecord }
       : initialValues;
-    setUsername(cleanValues.username);
     setName(cleanValues.name);
     setDob(cleanValues.dob);
-    setEmail(cleanValues.email);
-    setAccountType(cleanValues.accountType);
+    setPhoneNumber(cleanValues.phoneNumber);
     setStreet(cleanValues.street);
     setTownCity(cleanValues.townCity);
     setCounty(cleanValues.county);
     setPostcode(cleanValues.postcode);
-    setPhoneNumber(cleanValues.phoneNumber);
     setErrors({});
   };
   const [profileRecord, setProfileRecord] = React.useState(profileModelProp);
@@ -90,16 +73,13 @@ export default function ProfileUpdateForm(props) {
   }, [idProp, profileModelProp]);
   React.useEffect(resetStateValues, [profileRecord]);
   const validations = {
-    username: [{ type: "Required" }],
     name: [{ type: "Required" }],
     dob: [{ type: "Required" }],
-    email: [{ type: "Required" }, { type: "Email" }],
-    accountType: [{ type: "Required" }],
+    phoneNumber: [{ type: "Required" }, { type: "Phone" }],
     street: [{ type: "Required" }],
     townCity: [{ type: "Required" }],
     county: [{ type: "Required" }],
     postcode: [{ type: "Required" }],
-    phoneNumber: [{ type: "Required" }, { type: "Phone" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -127,16 +107,13 @@ export default function ProfileUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          username,
           name,
           dob,
-          email,
-          accountType,
+          phoneNumber,
           street,
           townCity,
           county,
           postcode,
-          phoneNumber,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -189,39 +166,6 @@ export default function ProfileUpdateForm(props) {
       {...rest}
     >
       <TextField
-        label="Username"
-        isRequired={true}
-        isReadOnly={false}
-        value={username}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              username: value,
-              name,
-              dob,
-              email,
-              accountType,
-              street,
-              townCity,
-              county,
-              postcode,
-              phoneNumber,
-            };
-            const result = onChange(modelFields);
-            value = result?.username ?? value;
-          }
-          if (errors.username?.hasError) {
-            runValidationTasks("username", value);
-          }
-          setUsername(value);
-        }}
-        onBlur={() => runValidationTasks("username", username)}
-        errorMessage={errors.username?.errorMessage}
-        hasError={errors.username?.hasError}
-        {...getOverrideProps(overrides, "username")}
-      ></TextField>
-      <TextField
         label="Name"
         isRequired={true}
         isReadOnly={false}
@@ -230,16 +174,13 @@ export default function ProfileUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              username,
               name: value,
               dob,
-              email,
-              accountType,
+              phoneNumber,
               street,
               townCity,
               county,
               postcode,
-              phoneNumber,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -264,16 +205,13 @@ export default function ProfileUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              username,
               name,
               dob: value,
-              email,
-              accountType,
+              phoneNumber,
               street,
               townCity,
               county,
               postcode,
-              phoneNumber,
             };
             const result = onChange(modelFields);
             value = result?.dob ?? value;
@@ -289,82 +227,36 @@ export default function ProfileUpdateForm(props) {
         {...getOverrideProps(overrides, "dob")}
       ></TextField>
       <TextField
-        label="Email"
+        label="Phone number"
         isRequired={true}
         isReadOnly={false}
-        value={email}
+        type="tel"
+        value={phoneNumber}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              username,
               name,
               dob,
-              email: value,
-              accountType,
+              phoneNumber: value,
               street,
               townCity,
               county,
               postcode,
-              phoneNumber,
             };
             const result = onChange(modelFields);
-            value = result?.email ?? value;
+            value = result?.phoneNumber ?? value;
           }
-          if (errors.email?.hasError) {
-            runValidationTasks("email", value);
+          if (errors.phoneNumber?.hasError) {
+            runValidationTasks("phoneNumber", value);
           }
-          setEmail(value);
+          setPhoneNumber(value);
         }}
-        onBlur={() => runValidationTasks("email", email)}
-        errorMessage={errors.email?.errorMessage}
-        hasError={errors.email?.hasError}
-        {...getOverrideProps(overrides, "email")}
+        onBlur={() => runValidationTasks("phoneNumber", phoneNumber)}
+        errorMessage={errors.phoneNumber?.errorMessage}
+        hasError={errors.phoneNumber?.hasError}
+        {...getOverrideProps(overrides, "phoneNumber")}
       ></TextField>
-      <SelectField
-        label="Account type"
-        placeholder="Please select an option"
-        isDisabled={false}
-        value={accountType}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              username,
-              name,
-              dob,
-              email,
-              accountType: value,
-              street,
-              townCity,
-              county,
-              postcode,
-              phoneNumber,
-            };
-            const result = onChange(modelFields);
-            value = result?.accountType ?? value;
-          }
-          if (errors.accountType?.hasError) {
-            runValidationTasks("accountType", value);
-          }
-          setAccountType(value);
-        }}
-        onBlur={() => runValidationTasks("accountType", accountType)}
-        errorMessage={errors.accountType?.errorMessage}
-        hasError={errors.accountType?.hasError}
-        {...getOverrideProps(overrides, "accountType")}
-      >
-        <option
-          children="Coach"
-          value="COACH"
-          {...getOverrideProps(overrides, "accountTypeoption0")}
-        ></option>
-        <option
-          children="Parent"
-          value="PARENT"
-          {...getOverrideProps(overrides, "accountTypeoption1")}
-        ></option>
-      </SelectField>
       <TextField
         label="Street"
         isRequired={true}
@@ -374,16 +266,13 @@ export default function ProfileUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              username,
               name,
               dob,
-              email,
-              accountType,
+              phoneNumber,
               street: value,
               townCity,
               county,
               postcode,
-              phoneNumber,
             };
             const result = onChange(modelFields);
             value = result?.street ?? value;
@@ -407,16 +296,13 @@ export default function ProfileUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              username,
               name,
               dob,
-              email,
-              accountType,
+              phoneNumber,
               street,
               townCity: value,
               county,
               postcode,
-              phoneNumber,
             };
             const result = onChange(modelFields);
             value = result?.townCity ?? value;
@@ -440,16 +326,13 @@ export default function ProfileUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              username,
               name,
               dob,
-              email,
-              accountType,
+              phoneNumber,
               street,
               townCity,
               county: value,
               postcode,
-              phoneNumber,
             };
             const result = onChange(modelFields);
             value = result?.county ?? value;
@@ -473,16 +356,13 @@ export default function ProfileUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              username,
               name,
               dob,
-              email,
-              accountType,
+              phoneNumber,
               street,
               townCity,
               county,
               postcode: value,
-              phoneNumber,
             };
             const result = onChange(modelFields);
             value = result?.postcode ?? value;
@@ -496,40 +376,6 @@ export default function ProfileUpdateForm(props) {
         errorMessage={errors.postcode?.errorMessage}
         hasError={errors.postcode?.hasError}
         {...getOverrideProps(overrides, "postcode")}
-      ></TextField>
-      <TextField
-        label="Phone number"
-        isRequired={true}
-        isReadOnly={false}
-        type="tel"
-        value={phoneNumber}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              username,
-              name,
-              dob,
-              email,
-              accountType,
-              street,
-              townCity,
-              county,
-              postcode,
-              phoneNumber: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.phoneNumber ?? value;
-          }
-          if (errors.phoneNumber?.hasError) {
-            runValidationTasks("phoneNumber", value);
-          }
-          setPhoneNumber(value);
-        }}
-        onBlur={() => runValidationTasks("phoneNumber", phoneNumber)}
-        errorMessage={errors.phoneNumber?.errorMessage}
-        hasError={errors.phoneNumber?.hasError}
-        {...getOverrideProps(overrides, "phoneNumber")}
       ></TextField>
       <Flex
         justifyContent="space-between"

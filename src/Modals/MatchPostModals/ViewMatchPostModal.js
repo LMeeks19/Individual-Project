@@ -1,5 +1,6 @@
 import { Divider, Flex, Heading, Text, View } from "@aws-amplify/ui-react";
 import { format } from "date-fns";
+import "./ViewMatchPostModal.css";
 
 export default function ViewMatchPostModal(props) {
   function formatDate(date) {
@@ -34,7 +35,7 @@ export default function ViewMatchPostModal(props) {
           </Heading>
           <Divider />
           <Text>
-            <b>Team:</b> {props.post.team}
+            <b>Team:</b> {props.post.teamName}
           </Text>
           <Text>
             <b>Game Type:</b> {props.post.gameType}
@@ -43,7 +44,7 @@ export default function ViewMatchPostModal(props) {
             <b>Age Group:</b> {props.post.ageGroup}
           </Text>
           <Text>
-            <b>Team Size:</b> {props.post.teamSize}
+            <b>Team Size:</b> {props.post.teamSize} a side
           </Text>
           <Text>
             <b>Limit Substitutions:</b> {props.post.substitutionLimit ? 'Yes' : 'No'}
@@ -52,7 +53,7 @@ export default function ViewMatchPostModal(props) {
             <b>Cards:</b> {props.post.cards ? 'Yes' : 'No'}
           </Text>
           <Text>
-            <b>Half Length:</b> {props.post.halfLength}
+            <b>Half Length:</b> {props.post.halfLength} minutes 
           </Text>
           <Text>
             <b>Kick Off:</b> {formatDate(props.post.kickOff)}

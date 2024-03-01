@@ -7,17 +7,178 @@
 /* eslint-disable */
 import * as React from "react";
 import {
+  Badge,
   Button,
+  Divider,
   Flex,
   Grid,
+  Icon,
+  ScrollView,
   SelectField,
+  Text,
   TextField,
+  useTheme,
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
 import { getPlayer } from "../graphql/queries";
 import { updatePlayer } from "../graphql/mutations";
 const client = generateClient();
+function ArrayField({
+  items = [],
+  onChange,
+  label,
+  inputFieldRef,
+  children,
+  hasError,
+  setFieldValue,
+  currentFieldValue,
+  defaultFieldValue,
+  lengthLimit,
+  getBadgeText,
+  runValidationTasks,
+  errorMessage,
+}) {
+  const labelElement = <Text>{label}</Text>;
+  const {
+    tokens: {
+      components: {
+        fieldmessages: { error: errorStyles },
+      },
+    },
+  } = useTheme();
+  const [selectedBadgeIndex, setSelectedBadgeIndex] = React.useState();
+  const [isEditing, setIsEditing] = React.useState();
+  React.useEffect(() => {
+    if (isEditing) {
+      inputFieldRef?.current?.focus();
+    }
+  }, [isEditing]);
+  const removeItem = async (removeIndex) => {
+    const newItems = items.filter((value, index) => index !== removeIndex);
+    await onChange(newItems);
+    setSelectedBadgeIndex(undefined);
+  };
+  const addItem = async () => {
+    const { hasError } = runValidationTasks();
+    if (
+      currentFieldValue !== undefined &&
+      currentFieldValue !== null &&
+      currentFieldValue !== "" &&
+      !hasError
+    ) {
+      const newItems = [...items];
+      if (selectedBadgeIndex !== undefined) {
+        newItems[selectedBadgeIndex] = currentFieldValue;
+        setSelectedBadgeIndex(undefined);
+      } else {
+        newItems.push(currentFieldValue);
+      }
+      await onChange(newItems);
+      setIsEditing(false);
+    }
+  };
+  const arraySection = (
+    <React.Fragment>
+      {!!items?.length && (
+        <ScrollView height="inherit" width="inherit" maxHeight={"7rem"}>
+          {items.map((value, index) => {
+            return (
+              <Badge
+                key={index}
+                style={{
+                  cursor: "pointer",
+                  alignItems: "center",
+                  marginRight: 3,
+                  marginTop: 3,
+                  backgroundColor:
+                    index === selectedBadgeIndex ? "#B8CEF9" : "",
+                }}
+                onClick={() => {
+                  setSelectedBadgeIndex(index);
+                  setFieldValue(items[index]);
+                  setIsEditing(true);
+                }}
+              >
+                {getBadgeText ? getBadgeText(value) : value.toString()}
+                <Icon
+                  style={{
+                    cursor: "pointer",
+                    paddingLeft: 3,
+                    width: 20,
+                    height: 20,
+                  }}
+                  viewBox={{ width: 20, height: 20 }}
+                  paths={[
+                    {
+                      d: "M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z",
+                      stroke: "black",
+                    },
+                  ]}
+                  ariaLabel="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    removeItem(index);
+                  }}
+                />
+              </Badge>
+            );
+          })}
+        </ScrollView>
+      )}
+      <Divider orientation="horizontal" marginTop={5} />
+    </React.Fragment>
+  );
+  if (lengthLimit !== undefined && items.length >= lengthLimit && !isEditing) {
+    return (
+      <React.Fragment>
+        {labelElement}
+        {arraySection}
+      </React.Fragment>
+    );
+  }
+  return (
+    <React.Fragment>
+      {labelElement}
+      {isEditing && children}
+      {!isEditing ? (
+        <>
+          <Button
+            onClick={() => {
+              setIsEditing(true);
+            }}
+          >
+            Add item
+          </Button>
+          {errorMessage && hasError && (
+            <Text color={errorStyles.color} fontSize={errorStyles.fontSize}>
+              {errorMessage}
+            </Text>
+          )}
+        </>
+      ) : (
+        <Flex justifyContent="flex-end">
+          {(currentFieldValue || isEditing) && (
+            <Button
+              children="Cancel"
+              type="button"
+              size="small"
+              onClick={() => {
+                setFieldValue(defaultFieldValue);
+                setIsEditing(false);
+                setSelectedBadgeIndex(undefined);
+              }}
+            ></Button>
+          )}
+          <Button size="small" variation="link" onClick={addItem}>
+            {selectedBadgeIndex !== undefined ? "Save" : "Add"}
+          </Button>
+        </Flex>
+      )}
+      {arraySection}
+    </React.Fragment>
+  );
+}
 export default function PlayerUpdateForm(props) {
   const {
     id: idProp,
@@ -34,14 +195,14 @@ export default function PlayerUpdateForm(props) {
     name: "",
     dob: "",
     ageGroup: "",
-    positions: "",
     skillLevel: "",
+    positions: [],
   };
   const [name, setName] = React.useState(initialValues.name);
   const [dob, setDob] = React.useState(initialValues.dob);
   const [ageGroup, setAgeGroup] = React.useState(initialValues.ageGroup);
-  const [positions, setPositions] = React.useState(initialValues.positions);
   const [skillLevel, setSkillLevel] = React.useState(initialValues.skillLevel);
+  const [positions, setPositions] = React.useState(initialValues.positions);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = playerRecord
@@ -50,8 +211,9 @@ export default function PlayerUpdateForm(props) {
     setName(cleanValues.name);
     setDob(cleanValues.dob);
     setAgeGroup(cleanValues.ageGroup);
-    setPositions(cleanValues.positions);
     setSkillLevel(cleanValues.skillLevel);
+    setPositions(cleanValues.positions ?? []);
+    setCurrentPositionsValue("");
     setErrors({});
   };
   const [playerRecord, setPlayerRecord] = React.useState(playerModelProp);
@@ -70,12 +232,29 @@ export default function PlayerUpdateForm(props) {
     queryData();
   }, [idProp, playerModelProp]);
   React.useEffect(resetStateValues, [playerRecord]);
+  const [currentPositionsValue, setCurrentPositionsValue] = React.useState("");
+  const positionsRef = React.createRef();
+  const getDisplayValue = {
+    positions: (r) => {
+      const enumDisplayValueMap = {
+        GK: "GK",
+        LB: "LB",
+        CB: "CB",
+        RB: "RB",
+        LM: "LM",
+        CM: "CM",
+        RM: "RM",
+        ST: "ST",
+      };
+      return enumDisplayValueMap[r];
+    },
+  };
   const validations = {
     name: [{ type: "Required" }],
     dob: [{ type: "Required" }],
     ageGroup: [{ type: "Required" }],
-    positions: [{ type: "Required" }],
     skillLevel: [{ type: "Required" }],
+    positions: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -106,8 +285,8 @@ export default function PlayerUpdateForm(props) {
           name,
           dob,
           ageGroup,
-          positions,
           skillLevel,
+          positions,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -171,8 +350,8 @@ export default function PlayerUpdateForm(props) {
               name: value,
               dob,
               ageGroup,
-              positions,
               skillLevel,
+              positions,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -200,8 +379,8 @@ export default function PlayerUpdateForm(props) {
               name,
               dob: value,
               ageGroup,
-              positions,
               skillLevel,
+              positions,
             };
             const result = onChange(modelFields);
             value = result?.dob ?? value;
@@ -228,8 +407,8 @@ export default function PlayerUpdateForm(props) {
               name,
               dob,
               ageGroup: value,
-              positions,
               skillLevel,
+              positions,
             };
             const result = onChange(modelFields);
             value = result?.ageGroup ?? value;
@@ -243,74 +422,81 @@ export default function PlayerUpdateForm(props) {
         errorMessage={errors.ageGroup?.errorMessage}
         hasError={errors.ageGroup?.hasError}
         {...getOverrideProps(overrides, "ageGroup")}
-      ></SelectField>
-      <SelectField
-        label="Positions"
-        placeholder="Please select an option"
-        isDisabled={false}
-        value={positions}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name,
-              dob,
-              ageGroup,
-              positions: value,
-              skillLevel,
-            };
-            const result = onChange(modelFields);
-            value = result?.positions ?? value;
-          }
-          if (errors.positions?.hasError) {
-            runValidationTasks("positions", value);
-          }
-          setPositions(value);
-        }}
-        onBlur={() => runValidationTasks("positions", positions)}
-        errorMessage={errors.positions?.errorMessage}
-        hasError={errors.positions?.hasError}
-        {...getOverrideProps(overrides, "positions")}
       >
         <option
-          children="Gk"
-          value="GK"
-          {...getOverrideProps(overrides, "positionsoption0")}
+          children="U7"
+          value="U7"
+          {...getOverrideProps(overrides, "ageGroupoption0")}
         ></option>
         <option
-          children="Lb"
-          value="LB"
-          {...getOverrideProps(overrides, "positionsoption1")}
+          children="U8"
+          value="U8"
+          {...getOverrideProps(overrides, "ageGroupoption1")}
         ></option>
         <option
-          children="Cb"
-          value="CB"
-          {...getOverrideProps(overrides, "positionsoption2")}
+          children="U9"
+          value="U9"
+          {...getOverrideProps(overrides, "ageGroupoption2")}
         ></option>
         <option
-          children="Rb"
-          value="RB"
-          {...getOverrideProps(overrides, "positionsoption3")}
+          children="U10"
+          value="U10"
+          {...getOverrideProps(overrides, "ageGroupoption3")}
         ></option>
         <option
-          children="Lm"
-          value="LM"
-          {...getOverrideProps(overrides, "positionsoption4")}
+          children="U11"
+          value="U11"
+          {...getOverrideProps(overrides, "ageGroupoption4")}
         ></option>
         <option
-          children="Cm"
-          value="CM"
-          {...getOverrideProps(overrides, "positionsoption5")}
+          children="U12"
+          value="U12"
+          {...getOverrideProps(overrides, "ageGroupoption5")}
         ></option>
         <option
-          children="Rm"
-          value="RM"
-          {...getOverrideProps(overrides, "positionsoption6")}
+          children="U13"
+          value="U13"
+          {...getOverrideProps(overrides, "ageGroupoption6")}
         ></option>
         <option
-          children="St"
-          value="ST"
-          {...getOverrideProps(overrides, "positionsoption7")}
+          children="U14"
+          value="U14"
+          {...getOverrideProps(overrides, "ageGroupoption7")}
+        ></option>
+        <option
+          children="U15"
+          value="U15"
+          {...getOverrideProps(overrides, "ageGroupoption8")}
+        ></option>
+        <option
+          children="U16"
+          value="U16"
+          {...getOverrideProps(overrides, "ageGroupoption9")}
+        ></option>
+        <option
+          children="U17"
+          value="U17"
+          {...getOverrideProps(overrides, "ageGroupoption10")}
+        ></option>
+        <option
+          children="U18"
+          value="U18"
+          {...getOverrideProps(overrides, "ageGroupoption11")}
+        ></option>
+        <option
+          children="U19"
+          value="U19"
+          {...getOverrideProps(overrides, "ageGroupoption12")}
+        ></option>
+        <option
+          children="U20"
+          value="U20"
+          {...getOverrideProps(overrides, "ageGroupoption13")}
+        ></option>
+        <option
+          children="U21"
+          value="U21"
+          {...getOverrideProps(overrides, "ageGroupoption14")}
         ></option>
       </SelectField>
       <SelectField
@@ -325,8 +511,8 @@ export default function PlayerUpdateForm(props) {
               name,
               dob,
               ageGroup,
-              positions,
               skillLevel: value,
+              positions,
             };
             const result = onChange(modelFields);
             value = result?.skillLevel ?? value;
@@ -357,6 +543,97 @@ export default function PlayerUpdateForm(props) {
           {...getOverrideProps(overrides, "skillLeveloption2")}
         ></option>
       </SelectField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              name,
+              dob,
+              ageGroup,
+              skillLevel,
+              positions: values,
+            };
+            const result = onChange(modelFields);
+            values = result?.positions ?? values;
+          }
+          setPositions(values);
+          setCurrentPositionsValue("");
+        }}
+        currentFieldValue={currentPositionsValue}
+        label={"Positions"}
+        items={positions}
+        hasError={errors?.positions?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks("positions", currentPositionsValue)
+        }
+        errorMessage={errors?.positions?.errorMessage}
+        getBadgeText={getDisplayValue.positions}
+        setFieldValue={setCurrentPositionsValue}
+        inputFieldRef={positionsRef}
+        defaultFieldValue={""}
+      >
+        <SelectField
+          label="Positions"
+          placeholder="Please select an option"
+          isDisabled={false}
+          value={currentPositionsValue}
+          onChange={(e) => {
+            let { value } = e.target;
+            if (errors.positions?.hasError) {
+              runValidationTasks("positions", value);
+            }
+            setCurrentPositionsValue(value);
+          }}
+          onBlur={() => runValidationTasks("positions", currentPositionsValue)}
+          errorMessage={errors.positions?.errorMessage}
+          hasError={errors.positions?.hasError}
+          ref={positionsRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "positions")}
+        >
+          <option
+            children="GK"
+            value="GK"
+            {...getOverrideProps(overrides, "positionsoption0")}
+          ></option>
+          <option
+            children="LB"
+            value="LB"
+            {...getOverrideProps(overrides, "positionsoption1")}
+          ></option>
+          <option
+            children="CB"
+            value="CB"
+            {...getOverrideProps(overrides, "positionsoption2")}
+          ></option>
+          <option
+            children="RB"
+            value="RB"
+            {...getOverrideProps(overrides, "positionsoption3")}
+          ></option>
+          <option
+            children="LM"
+            value="LM"
+            {...getOverrideProps(overrides, "positionsoption4")}
+          ></option>
+          <option
+            children="CM"
+            value="CM"
+            {...getOverrideProps(overrides, "positionsoption5")}
+          ></option>
+          <option
+            children="RM"
+            value="RM"
+            {...getOverrideProps(overrides, "positionsoption6")}
+          ></option>
+          <option
+            children="ST"
+            value="ST"
+            {...getOverrideProps(overrides, "positionsoption7")}
+          ></option>
+        </SelectField>
+      </ArrayField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

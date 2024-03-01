@@ -20,6 +20,10 @@
   opacity: 50%;
 }
 
+.custom-button:disabled {
+  opacity: 25%
+}
+
 .account-tab:hover,
 .account-tab[aria-selected='true'] {
   color: #008080;

@@ -25,15 +25,15 @@ export declare type PlayerUpdateFormInputValues = {
     name?: string;
     dob?: string;
     ageGroup?: string;
-    positions?: string;
     skillLevel?: string;
+    positions?: string[];
 };
 export declare type PlayerUpdateFormValidationValues = {
     name?: ValidationFunction<string>;
     dob?: ValidationFunction<string>;
     ageGroup?: ValidationFunction<string>;
-    positions?: ValidationFunction<string>;
     skillLevel?: ValidationFunction<string>;
+    positions?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type PlayerUpdateFormOverridesProps = {
@@ -41,8 +41,8 @@ export declare type PlayerUpdateFormOverridesProps = {
     name?: PrimitiveOverrideProps<TextFieldProps>;
     dob?: PrimitiveOverrideProps<TextFieldProps>;
     ageGroup?: PrimitiveOverrideProps<SelectFieldProps>;
-    positions?: PrimitiveOverrideProps<SelectFieldProps>;
     skillLevel?: PrimitiveOverrideProps<SelectFieldProps>;
+    positions?: PrimitiveOverrideProps<SelectFieldProps>;
 } & EscapeHatchProps;
 export declare type PlayerUpdateFormProps = React.PropsWithChildren<{
     overrides?: PlayerUpdateFormOverridesProps | undefined | null;

@@ -33,11 +33,6 @@ enum Positions {
   ST
 }
 
-enum AccountType {
-  COACH
-  PARENT
-}
-
 enum GameType {
   FRIENDLY
   LEAGUE
@@ -47,9 +42,9 @@ enum GameType {
 type TeamPlayer @model @auth(rules: [{allow: public}]) {
   id: ID!
   name: String!
-  age: AgeGroup!
-  kitNumber: Int
-  positions: Positions!
+  age: Int!
+  kitNumber: Int!
+  positions: [Positions!]!
   teamID: ID! @index(name: "byTeam")
 }
 
@@ -64,14 +59,15 @@ type Team @model @auth(rules: [{allow: public}]) {
   website: AWSURL!
   profileID: ID! @index(name: "byProfile")
   players: [TeamPlayer] @hasMany(indexName: "byTeam", fields: ["id"])
+  associatedMatchPosts: [MatchPost] @hasMany(indexName: "byTeam", fields: ["id"])
 }
 
 type Player @model @auth(rules: [{allow: public}]) {
   id: ID!
   name: String!
   dob: AWSDate!
-  ageGroup: String!
-  positions: Positions!
+  ageGroup: AgeGroup!
+  positions: [Positions!]!
   skillLevel: SkillLevel!
   profileID: ID! @index(name: "byProfile")
 }
@@ -82,14 +78,14 @@ type Profile @model @auth(rules: [{allow: public}]) {
   name: String!
   dob: AWSDate!
   email: AWSEmail!
-  accountType: AccountType!
+  accountType: String!
   street: String!
   townCity: String!
   county: String!
   postcode: String!
   phoneNumber: AWSPhone!
-  players: [MatchPost] @hasMany(indexName: "byProfile", fields: ["id"])
-  team: [MatchPost] @hasMany(indexName: "byProfile", fields: ["id"])
+  players: [Player] @hasMany(indexName: "byProfile", fields: ["id"])
+  team: [Team] @hasMany(indexName: "byProfile", fields: ["id"])
   posts: [MatchPost] @hasMany(indexName: "byProfile", fields: ["id"])
   interestedPosts: [MatchPost] @manyToMany(relationName: "ProfileMatchPost")
 }
@@ -111,6 +107,8 @@ type MatchPost @model @auth(rules: [{allow: public}]) {
   county: String!
   postcode: String!
   isActive: Boolean!
-  team: Team @hasOne
+  teamID: ID! @index(name: "byTeam")
+  teamName: String!
   interestedUsers: [Profile] @manyToMany(relationName: "ProfileMatchPost")
 }
+ 

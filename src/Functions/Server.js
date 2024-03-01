@@ -37,67 +37,18 @@ export async function GetProfile(user) {
   const data = apiData.data.getProfile;
 
   return {
-    id: data.id ?? user.userId,
-    name: data.name,
-    dob: data.dob,
-    username: data.username ?? user.username,
-    email: data.email ?? (await authenticationAttributes).email,
-    phoneNumber: data.phoneNumber,
-    accountType: data.accountType,
-    street: data.street,
-    townCity: data.townCity,
-    county: data.county,
-    postcode: data.postcode,
+    id: data === null ? user.userId : data.id,
+    name: data?.name,
+    dob: data?.dob,
+    username: data === null ? user.username : data.username,
+    email: data === null ? (await authenticationAttributes).email : data.email,
+    phoneNumber: data?.phoneNumber,
+    accountType: data?.accountType,
+    street: data?.street,
+    townCity: data?.townCity,
+    county: data?.county,
+    postcode: data?.postcode,
   };
-}
-
-export async function CreateProfile(data) {
-  const client = generateClient();
-
-  const createdProfile = await client.graphql({
-    query: createProfileMutation,
-    variables: {
-      input: {
-        id: data.id,
-        name: data.name,
-        dob: data.dob,
-        username: data.username,
-        email: data.email,
-        phoneNumber: data.phoneNumber,
-        accountType: data.accountType,
-        street: data.street,
-        townCity: data.townCity,
-        county: data.county,
-        postcode: data.postcode,
-        players: [],
-        team: [],
-      },
-    },
-  });
-
-  return createdProfile.data.createProfile;
-}
-
-export async function UpdateProfile(data) {
-  const client = generateClient();
-
-  const updatedProfile = await client.graphql({
-    query: updateProfileMutation,
-    variables: {
-      input: {
-        id: data.id,
-        name: data.name,
-        dob: data.dob,
-        street: data.street,
-        townCity: data.townCity,
-        county: data.county,
-        postcode: data.postcode,
-        phoneNumber: data.phoneNumber,
-      },
-    },
-  });
-
-  return updatedProfile.data.updateProfile;
 }
 
 export async function DeleteProfile(id) {
@@ -113,47 +64,6 @@ export async function DeleteProfile(id) {
   });
 
   return deletedProfile.data.deleteProfile;
-}
-
-export async function CreatePlayer(data) {
-  const client = generateClient();
-
-  const newPlayer = await client.graphql({
-    query: createPlayerMutation,
-    variables: {
-      input: {
-        profileID: data.profileId,
-        name: data.name,
-        dob: data.dob,
-        ageGroup: data.ageGroup,
-        positions: data.positions,
-        skillLevel: data.skillLevel,
-      },
-    },
-  });
-
-  return newPlayer.data.createPlayer;
-}
-
-export async function UpdatePlayer(data) {
-  const client = generateClient();
-
-  const updatedPlayer = await client.graphql({
-    query: updatePlayerMutation,
-    variables: {
-      input: {
-        id: data.id,
-        profileID: data.profileId,
-        name: data.name,
-        dob: data.dob,
-        ageGroup: data.ageGroup,
-        positions: data.positions,
-        skillLevel: data.skillLevel,
-      },
-    },
-  });
-
-  return updatedPlayer.data.updatePlayer;
 }
 
 export async function DeletePlayer(id) {
@@ -180,77 +90,6 @@ export async function GetPlayersByProfileId(profileId) {
   });
 
   return apiData.data.playersByProfileID.items;
-}
-
-export async function CreateTeam(data) {
-  const client = generateClient();
-
-  const apiData = await client.graphql({
-    query: createTeamMutation,
-    variables: {
-      input: {
-        profileID: data.profileId,
-        name: data.name,
-        league: data.league,
-        ageGroup: data.ageGroup,
-        location: data.location,
-        email: data.email,
-        phoneNumber: data.phoneNumber,
-        website: data.website,
-      },
-    },
-  });
-
-  let team = apiData.data.createTeam;
-
-  return {
-    id: team.id,
-    profileId: team.profileID,
-    name: team.name,
-    league: team.league,
-    ageGroup: team.ageGroup,
-    location: team.location,
-    email: team.email,
-    phoneNumber: team.phoneNumber,
-    website: team.website,
-    players: [],
-  };
-}
-
-export async function UpdateTeam(data) {
-  const client = generateClient();
-
-  const apiData = await client.graphql({
-    query: updateTeamMutation,
-    variables: {
-      input: {
-        id: data.id,
-        profileID: data.profileId,
-        name: data.name,
-        league: data.league,
-        ageGroup: data.ageGroup,
-        location: data.location,
-        email: data.email,
-        phoneNumber: data.phoneNumber,
-        website: data.website,
-      },
-    },
-  });
-
-  let team = apiData.data.updateTeam;
-
-  return {
-    id: team.id,
-    profileId: team.profileID,
-    name: team.name,
-    league: team.league,
-    ageGroup: team.ageGroup,
-    location: team.location,
-    email: team.email,
-    phoneNumber: team.phoneNumber,
-    website: team.website,
-    players: team.players.items,
-  };
 }
 
 export async function DeleteTeam(team) {
@@ -292,46 +131,6 @@ export async function GetTeamByProfileId(profileId) {
   };
 }
 
-export async function CreateTeamPlayer(data) {
-  const client = generateClient();
-
-  const apiData = await client.graphql({
-    query: createTeamPlayerMutation,
-    variables: {
-      input: {
-        id: data.id,
-        teamID: data.teamId,
-        name: data.name,
-        age: data.age,
-        kitNumber: data.kitNumber,
-        positions: data.positions,
-      },
-    },
-  });
-
-  return apiData.data.createTeamPlayer;
-}
-
-export async function UpdateTeamPlayer(data) {
-  const client = generateClient();
-
-  const apiData = await client.graphql({
-    query: updateTeamPlayerMutation,
-    variables: {
-      input: {
-        id: data.id,
-        teamID: data.teamId,
-        name: data.name,
-        age: data.age,
-        kitNumber: data.kitNumber,
-        positions: data.positions,
-      },
-    },
-  });
-
-  return apiData.data.updateTeamPlayer;
-}
-
 export async function DeleteTeamPlayer(id) {
   const client = generateClient();
 
@@ -365,7 +164,10 @@ export async function GetMatchPosts() {
     query: listMatchPosts,
   });
 
-  return apiData.data.listMatchPosts.items;
+  let data = apiData.data.listMatchPosts.items;
+
+  data.forEach((post) => (post.interestedUsers = post.interestedUsers.items));
+  return data;
 }
 
 export async function DeleteMatchPost(id) {
@@ -382,70 +184,3 @@ export async function DeleteMatchPost(id) {
 
   return apiData.data.deleteMatchPost.id;
 }
-
-export async function UpdateMatchPost(data) {
-  const client = generateClient();
-
-  const apiData = await client.graphql({
-    query: updateMatchPostMutation,
-    variables: {
-      input: {
-        id: data.id,
-        title: data.title,
-        description: data.description,
-        createdByProfileID: data.createdByProfileID,
-        createdByName: data.createdByName,
-        team: data.team,
-        gameType: data.gameType,
-        ageGroup: data.ageGroup,
-        teamSize: data.teamSize,
-        substitutionLimit: data.substitutionLimit,
-        cards: data.cards,
-        halfLength: data.halfLength,
-        kickOff: new Date(data.kickOff),
-        street: data.street,
-        townCity: data.townCity,
-        county: data.county,
-        postcode: data.postcode,
-        interestedUsers: data.interestedUsers,
-        isActive: data.isActive,
-      },
-    },
-  });
-
-  return apiData.data.updateMatchPost;
-}
-
-export async function CreateMatchPost(data) {
-  const client = generateClient();
-
-  const apiData = await client.graphql({
-    query: createMatchPostMutation,
-    variables: {
-      input: {
-        id: data.id,
-        title: data.title,
-        description: data.description,
-        createdByProfileID: data.createdByProfileID,
-        createdByName: data.createdByName,
-        team: data.team,
-        gameType: data.gameType,
-        ageGroup: data.ageGroup,
-        teamSize: data.teamSize,
-        substitutionLimit: data.substitutionLimit,
-        cards: data.cards,
-        halfLength: data.halfLength,
-        kickOff: new Date(data.kickOff),
-        street: data.street,
-        townCity: data.townCity,
-        county: data.county,
-        postcode: data.postcode,
-        interestedUsers: data.interestedUsers,
-        isActive: data.isActive,
-      },
-    },
-  });
-
-  return apiData.data.createMatchPost;
-}
-

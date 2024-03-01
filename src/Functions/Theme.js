@@ -16,6 +16,7 @@ export const theme = {
         components: {
           button: {
             primary: {
+              backgroundColor: { value: "#008080" },
               _hover: {
                 borderColor: { value: "#fff" },
               },
@@ -30,6 +31,10 @@ export const theme = {
               borderColor: { value: "#fff" },
               backgroundColor: { value: "#008080" },
             },
+          },
+          badge: {
+            color: { value: "#f9f1f1" },
+            backgroundColor: { value: "#008080" },
           },
           table: {
             row: {
@@ -60,8 +65,9 @@ export const theme = {
         components: {
           button: {
             primary: {
+              backgroundColor: { value: "#008080" },
               _hover: {
-                borderColor: { value: "#000" },
+                borderColor: { value: "#fff" },
               },
             },
           },
@@ -74,6 +80,10 @@ export const theme = {
               borderColor: { value: "#000" },
               backgroundColor: { value: "#008080" },
             },
+          },
+          badge: {
+            color: { value: "#f9f1f1" },
+            backgroundColor: { value: "#008080" },
           },
           table: {
             row: {

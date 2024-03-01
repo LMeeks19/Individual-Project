@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, GridProps, SelectFieldProps, SwitchFieldProps, TextAreaFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SelectFieldProps, SwitchFieldProps, TextAreaFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -24,7 +24,6 @@ export declare type ValidationFunction<T> = (value: T, validationResponse: Valid
 export declare type MatchPostUpdateFormInputValues = {
     title?: string;
     description?: string;
-    createdByProfileID?: string;
     gameType?: string;
     ageGroup?: string;
     teamSize?: number;
@@ -36,14 +35,11 @@ export declare type MatchPostUpdateFormInputValues = {
     townCity?: string;
     county?: string;
     postcode?: string;
-    isActive?: boolean;
-    team?: any;
-    interestedUsers?: any[];
+    teamName?: string;
 };
 export declare type MatchPostUpdateFormValidationValues = {
     title?: ValidationFunction<string>;
     description?: ValidationFunction<string>;
-    createdByProfileID?: ValidationFunction<string>;
     gameType?: ValidationFunction<string>;
     ageGroup?: ValidationFunction<string>;
     teamSize?: ValidationFunction<number>;
@@ -55,16 +51,13 @@ export declare type MatchPostUpdateFormValidationValues = {
     townCity?: ValidationFunction<string>;
     county?: ValidationFunction<string>;
     postcode?: ValidationFunction<string>;
-    isActive?: ValidationFunction<boolean>;
-    team?: ValidationFunction<any>;
-    interestedUsers?: ValidationFunction<any>;
+    teamName?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type MatchPostUpdateFormOverridesProps = {
     MatchPostUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
     title?: PrimitiveOverrideProps<TextFieldProps>;
     description?: PrimitiveOverrideProps<TextAreaFieldProps>;
-    createdByProfileID?: PrimitiveOverrideProps<AutocompleteProps>;
     gameType?: PrimitiveOverrideProps<SelectFieldProps>;
     ageGroup?: PrimitiveOverrideProps<SelectFieldProps>;
     teamSize?: PrimitiveOverrideProps<TextFieldProps>;
@@ -76,9 +69,7 @@ export declare type MatchPostUpdateFormOverridesProps = {
     townCity?: PrimitiveOverrideProps<TextFieldProps>;
     county?: PrimitiveOverrideProps<TextFieldProps>;
     postcode?: PrimitiveOverrideProps<TextFieldProps>;
-    isActive?: PrimitiveOverrideProps<SwitchFieldProps>;
-    team?: PrimitiveOverrideProps<AutocompleteProps>;
-    interestedUsers?: PrimitiveOverrideProps<AutocompleteProps>;
+    teamName?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type MatchPostUpdateFormProps = React.PropsWithChildren<{
     overrides?: MatchPostUpdateFormOverridesProps | undefined | null;

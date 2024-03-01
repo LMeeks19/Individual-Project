@@ -29,56 +29,48 @@ export default function ProfileCreateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    username: "",
     name: "",
     dob: "",
-    email: "",
     accountType: "",
+    phoneNumber: "",
     street: "",
     townCity: "",
     county: "",
     postcode: "",
-    phoneNumber: "",
   };
-  const [username, setUsername] = React.useState(initialValues.username);
   const [name, setName] = React.useState(initialValues.name);
   const [dob, setDob] = React.useState(initialValues.dob);
-  const [email, setEmail] = React.useState(initialValues.email);
   const [accountType, setAccountType] = React.useState(
     initialValues.accountType
+  );
+  const [phoneNumber, setPhoneNumber] = React.useState(
+    initialValues.phoneNumber
   );
   const [street, setStreet] = React.useState(initialValues.street);
   const [townCity, setTownCity] = React.useState(initialValues.townCity);
   const [county, setCounty] = React.useState(initialValues.county);
   const [postcode, setPostcode] = React.useState(initialValues.postcode);
-  const [phoneNumber, setPhoneNumber] = React.useState(
-    initialValues.phoneNumber
-  );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setUsername(initialValues.username);
     setName(initialValues.name);
     setDob(initialValues.dob);
-    setEmail(initialValues.email);
     setAccountType(initialValues.accountType);
+    setPhoneNumber(initialValues.phoneNumber);
     setStreet(initialValues.street);
     setTownCity(initialValues.townCity);
     setCounty(initialValues.county);
     setPostcode(initialValues.postcode);
-    setPhoneNumber(initialValues.phoneNumber);
     setErrors({});
   };
   const validations = {
-    username: [{ type: "Required" }],
     name: [{ type: "Required" }],
     dob: [{ type: "Required" }],
-    email: [{ type: "Required" }, { type: "Email" }],
     accountType: [{ type: "Required" }],
+    phoneNumber: [{ type: "Required" }, { type: "Phone" }],
     street: [{ type: "Required" }],
     townCity: [{ type: "Required" }],
     county: [{ type: "Required" }],
     postcode: [{ type: "Required" }],
-    phoneNumber: [{ type: "Required" }, { type: "Phone" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -106,16 +98,14 @@ export default function ProfileCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          username,
           name,
           dob,
-          email,
           accountType,
+          phoneNumber,
           street,
           townCity,
           county,
           postcode,
-          phoneNumber,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -170,39 +160,6 @@ export default function ProfileCreateForm(props) {
       {...rest}
     >
       <TextField
-        label="Username"
-        isRequired={true}
-        isReadOnly={false}
-        value={username}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              username: value,
-              name,
-              dob,
-              email,
-              accountType,
-              street,
-              townCity,
-              county,
-              postcode,
-              phoneNumber,
-            };
-            const result = onChange(modelFields);
-            value = result?.username ?? value;
-          }
-          if (errors.username?.hasError) {
-            runValidationTasks("username", value);
-          }
-          setUsername(value);
-        }}
-        onBlur={() => runValidationTasks("username", username)}
-        errorMessage={errors.username?.errorMessage}
-        hasError={errors.username?.hasError}
-        {...getOverrideProps(overrides, "username")}
-      ></TextField>
-      <TextField
         label="Name"
         isRequired={true}
         isReadOnly={false}
@@ -211,16 +168,14 @@ export default function ProfileCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              username,
               name: value,
               dob,
-              email,
               accountType,
+              phoneNumber,
               street,
               townCity,
               county,
               postcode,
-              phoneNumber,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -245,16 +200,14 @@ export default function ProfileCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              username,
               name,
               dob: value,
-              email,
               accountType,
+              phoneNumber,
               street,
               townCity,
               county,
               postcode,
-              phoneNumber,
             };
             const result = onChange(modelFields);
             value = result?.dob ?? value;
@@ -269,41 +222,8 @@ export default function ProfileCreateForm(props) {
         hasError={errors.dob?.hasError}
         {...getOverrideProps(overrides, "dob")}
       ></TextField>
-      <TextField
-        label="Email"
-        isRequired={true}
-        isReadOnly={false}
-        value={email}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              username,
-              name,
-              dob,
-              email: value,
-              accountType,
-              street,
-              townCity,
-              county,
-              postcode,
-              phoneNumber,
-            };
-            const result = onChange(modelFields);
-            value = result?.email ?? value;
-          }
-          if (errors.email?.hasError) {
-            runValidationTasks("email", value);
-          }
-          setEmail(value);
-        }}
-        onBlur={() => runValidationTasks("email", email)}
-        errorMessage={errors.email?.errorMessage}
-        hasError={errors.email?.hasError}
-        {...getOverrideProps(overrides, "email")}
-      ></TextField>
       <SelectField
-        label="Account type"
+        label="Account Type"
         placeholder="Please select an option"
         isDisabled={false}
         value={accountType}
@@ -311,16 +231,14 @@ export default function ProfileCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              username,
               name,
               dob,
-              email,
               accountType: value,
+              phoneNumber,
               street,
               townCity,
               county,
               postcode,
-              phoneNumber,
             };
             const result = onChange(modelFields);
             value = result?.accountType ?? value;
@@ -336,16 +254,48 @@ export default function ProfileCreateForm(props) {
         {...getOverrideProps(overrides, "accountType")}
       >
         <option
-          children="Coach"
+          children="COACH"
           value="COACH"
           {...getOverrideProps(overrides, "accountTypeoption0")}
         ></option>
         <option
-          children="Parent"
+          children="PARENT"
           value="PARENT"
           {...getOverrideProps(overrides, "accountTypeoption1")}
         ></option>
       </SelectField>
+      <TextField
+        label="Phone Number"
+        isRequired={true}
+        isReadOnly={false}
+        type="tel"
+        value={phoneNumber}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              dob,
+              accountType,
+              phoneNumber: value,
+              street,
+              townCity,
+              county,
+              postcode,
+            };
+            const result = onChange(modelFields);
+            value = result?.phoneNumber ?? value;
+          }
+          if (errors.phoneNumber?.hasError) {
+            runValidationTasks("phoneNumber", value);
+          }
+          setPhoneNumber(value);
+        }}
+        onBlur={() => runValidationTasks("phoneNumber", phoneNumber)}
+        errorMessage={errors.phoneNumber?.errorMessage}
+        hasError={errors.phoneNumber?.hasError}
+        {...getOverrideProps(overrides, "phoneNumber")}
+      ></TextField>
       <TextField
         label="Street"
         isRequired={true}
@@ -355,16 +305,14 @@ export default function ProfileCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              username,
               name,
               dob,
-              email,
               accountType,
+              phoneNumber,
               street: value,
               townCity,
               county,
               postcode,
-              phoneNumber,
             };
             const result = onChange(modelFields);
             value = result?.street ?? value;
@@ -388,16 +336,14 @@ export default function ProfileCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              username,
               name,
               dob,
-              email,
               accountType,
+              phoneNumber,
               street,
               townCity: value,
               county,
               postcode,
-              phoneNumber,
             };
             const result = onChange(modelFields);
             value = result?.townCity ?? value;
@@ -421,16 +367,14 @@ export default function ProfileCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              username,
               name,
               dob,
-              email,
               accountType,
+              phoneNumber,
               street,
               townCity,
               county: value,
               postcode,
-              phoneNumber,
             };
             const result = onChange(modelFields);
             value = result?.county ?? value;
@@ -454,16 +398,14 @@ export default function ProfileCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              username,
               name,
               dob,
-              email,
               accountType,
+              phoneNumber,
               street,
               townCity,
               county,
               postcode: value,
-              phoneNumber,
             };
             const result = onChange(modelFields);
             value = result?.postcode ?? value;
@@ -477,40 +419,6 @@ export default function ProfileCreateForm(props) {
         errorMessage={errors.postcode?.errorMessage}
         hasError={errors.postcode?.hasError}
         {...getOverrideProps(overrides, "postcode")}
-      ></TextField>
-      <TextField
-        label="Phone number"
-        isRequired={true}
-        isReadOnly={false}
-        type="tel"
-        value={phoneNumber}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              username,
-              name,
-              dob,
-              email,
-              accountType,
-              street,
-              townCity,
-              county,
-              postcode,
-              phoneNumber: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.phoneNumber ?? value;
-          }
-          if (errors.phoneNumber?.hasError) {
-            runValidationTasks("phoneNumber", value);
-          }
-          setPhoneNumber(value);
-        }}
-        onBlur={() => runValidationTasks("phoneNumber", phoneNumber)}
-        errorMessage={errors.phoneNumber?.errorMessage}
-        hasError={errors.phoneNumber?.hasError}
-        {...getOverrideProps(overrides, "phoneNumber")}
       ></TextField>
       <Flex
         justifyContent="space-between"

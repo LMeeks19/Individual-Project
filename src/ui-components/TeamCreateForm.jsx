@@ -62,9 +62,9 @@ export default function TeamCreateForm(props) {
     league: [{ type: "Required" }],
     ageGroup: [{ type: "Required" }],
     location: [{ type: "Required" }],
-    email: [{ type: "Required" }, { type: "Email" }],
-    phoneNumber: [{ type: "Required" }, { type: "Phone" }],
-    website: [{ type: "Required" }, { type: "URL" }],
+    email: [{ type: "Email" }],
+    phoneNumber: [{ type: "Phone" }],
+    website: [{ type: "URL" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -350,7 +350,7 @@ export default function TeamCreateForm(props) {
       ></TextField>
       <TextField
         label="Email"
-        isRequired={true}
+        isRequired={false}
         isReadOnly={false}
         value={email}
         onChange={(e) => {
@@ -380,7 +380,7 @@ export default function TeamCreateForm(props) {
       ></TextField>
       <TextField
         label="Phone number"
-        isRequired={true}
+        isRequired={false}
         isReadOnly={false}
         type="tel"
         value={phoneNumber}
@@ -411,7 +411,7 @@ export default function TeamCreateForm(props) {
       ></TextField>
       <TextField
         label="Website"
-        isRequired={true}
+        isRequired={false}
         isReadOnly={false}
         value={website}
         onChange={(e) => {

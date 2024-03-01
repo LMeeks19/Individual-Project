@@ -1,35 +1,25 @@
 import { View, Heading, Divider } from "@aws-amplify/ui-react";
-import { TeamUpdateForm } from "../../ui-components";
+import { TeamPlayerCreateForm } from "../../ui-components";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { currentUserState, modalState } from "../../Functions/GlobalState";
 
-export default function UpdateTeamModal() {
+export default function CreateTeamPlayerModal(props) {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const setModal = useSetRecoilState(modalState);
-
   return (
     <View overflow="auto" padding="40px">
       <Heading level={5} marginBottom="10px">
-        Team Information
+        Player Information
       </Heading>
       <Divider marginBottom="20px" />
-      <TeamUpdateForm
+      <TeamPlayerCreateForm
         padding="0"
-        team={{
-          id: currentUser.team.id,
-          profileId: currentUser.team.profileId,
-          name: currentUser.team.name,
-          league: currentUser.team.league,
-          ageGroup: currentUser.team.ageGroup,
-          location: currentUser.team.location,
-          email: currentUser.team.email,
-          phoneNumber: currentUser.team.phoneNumber,
-          website: currentUser.team.website,
+        onSubmit={(fields) => {
+          fields.teamID = currentUser.team.id;
+          return fields;
         }}
         onSuccess={(data) => {
-          data.players = currentUser.team.players;
-          data.id = currentUser.team.id;
-          setCurrentUser({ ...currentUser, team: data });
+          setCurrentUser({ ...currentUser, team: { ...currentUser.team, players: [...currentUser.team.players, data] } });
           setModal({ component: null, title: null, isShown: false });
         }}
         onError={(error) => {

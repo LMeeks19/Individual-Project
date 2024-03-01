@@ -77,19 +77,19 @@
     tr:last-child td:last-child {
         border-bottom-right-radius: 15px;
     }
-}
 
-.icon {
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    gap: 5px;
-
-    &.delete {
-        color: red;
+    .icon {
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+    
+        &.delete {
+            color: red;
+        }
     }
-}
-
-.icon:hover {
-    opacity: 50%;
+    
+    .icon:hover {
+        opacity: 50%;
+    }
 }
