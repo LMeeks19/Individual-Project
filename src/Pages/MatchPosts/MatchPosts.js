@@ -65,7 +65,7 @@ export default function MatchPosts() {
             currentUser={currentUser}
             posts={posts.filter(
               (post) =>
-                post.createdByProfileID !== currentUser.id && !post.isClosed
+                post.createdByProfileID !== currentUser.id && post.isActive
             )}
           />
         </Tabs.Panel>
@@ -75,7 +75,7 @@ export default function MatchPosts() {
             currentUser={currentUser}
             posts={posts.filter(
               (post) =>
-                post.createdByProfileID === currentUser.id && !post.isClosed
+                post.createdByProfileID === currentUser.id && post.isActive
             )}
           />
         </Tabs.Panel>
@@ -84,7 +84,7 @@ export default function MatchPosts() {
             currentUser={currentUser}
             posts={posts.filter(
               (post) =>
-                post.interestedUsers.includes(currentUser.id) && !post.isClosed
+                post.interestedUsers.includes(currentUser.id) && post.isActive
             )}
           />
         </Tabs.Panel>
@@ -93,7 +93,7 @@ export default function MatchPosts() {
             currentUser={currentUser}
             posts={posts.filter(
               (post) =>
-                post.isClosed &&
+                !post.isActive &&
                 (post.createdByProfileID === currentUser.id ||
                   post.selectedOpponentProfileID)
             )}

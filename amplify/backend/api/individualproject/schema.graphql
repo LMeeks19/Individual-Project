@@ -1,25 +1,67 @@
-# This "input" configures a global authorization rule to enable public access to
-# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
-input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONLY!
+enum AgeGroup {
+  U7
+  U8
+  U9
+  U10
+  U11
+  U12
+  U13
+  U14
+  U15
+  U16
+  U17
+  U18
+  U19
+  U20
+  U21
+}
+
+enum SkillLevel {
+  BEGINNER
+  INTERMEDIATE
+  EXPERIENCED
+}
+
+enum Positions {
+  GK
+  LB
+  CB
+  RB
+  LM
+  CM
+  RM
+  ST
+}
+
+enum AccountType {
+  COACH
+  PARENT
+}
+
+enum GameType {
+  FRIENDLY
+  LEAGUE
+  CUP
+}
 
 type TeamPlayer @model @auth(rules: [{allow: public}]) {
   id: ID!
   name: String!
-  age: Int!
+  age: AgeGroup!
   kitNumber: Int
-  positions: [String!]!
+  positions: Positions!
   teamID: ID! @index(name: "byTeam")
 }
 
 type Team @model @auth(rules: [{allow: public}]) {
   id: ID!
-  name: String
-  league: String
-  ageGroup: String
-  location: String
-  email: String
-  phoneNumber: String
-  website: String
+  name: String!
+  league: String!
+  ageGroup: AgeGroup!
+  location: String!
+  email: AWSEmail!
+  phoneNumber: AWSPhone!
+  website: AWSURL!
   profileID: ID! @index(name: "byProfile")
   players: [TeamPlayer] @hasMany(indexName: "byTeam", fields: ["id"])
 }
@@ -27,10 +69,10 @@ type Team @model @auth(rules: [{allow: public}]) {
 type Player @model @auth(rules: [{allow: public}]) {
   id: ID!
   name: String!
-  dob: String!
+  dob: AWSDate!
   ageGroup: String!
-  positions: [String!]
-  skillLevel: String!
+  positions: Positions!
+  skillLevel: SkillLevel!
   profileID: ID! @index(name: "byProfile")
 }
 
@@ -38,17 +80,18 @@ type Profile @model @auth(rules: [{allow: public}]) {
   id: ID!
   username: String!
   name: String!
-  dob: String!
-  email: String!
-  accountType: String!
+  dob: AWSDate!
+  email: AWSEmail!
+  accountType: AccountType!
   street: String!
   townCity: String!
   county: String!
   postcode: String!
-  phoneNumber: String!
-  players: [Player] @hasMany(indexName: "byProfile", fields: ["id"])
-  team: [Team] @hasMany(indexName: "byProfile", fields: ["id"])
+  phoneNumber: AWSPhone!
+  players: [MatchPost] @hasMany(indexName: "byProfile", fields: ["id"])
+  team: [MatchPost] @hasMany(indexName: "byProfile", fields: ["id"])
   posts: [MatchPost] @hasMany(indexName: "byProfile", fields: ["id"])
+  interestedPosts: [MatchPost] @manyToMany(relationName: "ProfileMatchPost")
 }
 
 type MatchPost @model @auth(rules: [{allow: public}]) {
@@ -56,20 +99,18 @@ type MatchPost @model @auth(rules: [{allow: public}]) {
   title: String!
   description: String!
   createdByProfileID: ID! @index(name: "byProfile")
-  createdByName: String!
-  team: String!
-  gameType: String!
-  ageGroup: String!
-  teamSize: String!
+  gameType: GameType!
+  ageGroup: AgeGroup!
+  teamSize: Int!
   substitutionLimit: Boolean!
   cards: Boolean!
   halfLength: Int!
-  kickOff: String!
+  kickOff: AWSDateTime!
   street: String!
   townCity: String!
   county: String!
   postcode: String!
-  interestedUsers: [String]!
   isActive: Boolean!
+  team: Team @hasOne
+  interestedUsers: [Profile] @manyToMany(relationName: "ProfileMatchPost")
 }
-

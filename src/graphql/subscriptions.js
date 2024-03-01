@@ -65,6 +65,17 @@ export const onCreateTeam = /* GraphQL */ `
       website
       profileID
       players {
+        items {
+          id
+          name
+          age
+          kitNumber
+          positions
+          teamID
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
@@ -87,6 +98,17 @@ export const onUpdateTeam = /* GraphQL */ `
       website
       profileID
       players {
+        items {
+          id
+          name
+          age
+          kitNumber
+          positions
+          teamID
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
@@ -109,6 +131,17 @@ export const onDeleteTeam = /* GraphQL */ `
       website
       profileID
       players {
+        items {
+          id
+          name
+          age
+          kitNumber
+          positions
+          teamID
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
@@ -181,14 +214,92 @@ export const onCreateProfile = /* GraphQL */ `
       postcode
       phoneNumber
       players {
+        items {
+          id
+          title
+          description
+          createdByProfileID
+          gameType
+          ageGroup
+          teamSize
+          substitutionLimit
+          cards
+          halfLength
+          kickOff
+          street
+          townCity
+          county
+          postcode
+          isActive
+          createdAt
+          updatedAt
+          matchPostTeamId
+          __typename
+        }
         nextToken
         __typename
       }
       team {
+        items {
+          id
+          title
+          description
+          createdByProfileID
+          gameType
+          ageGroup
+          teamSize
+          substitutionLimit
+          cards
+          halfLength
+          kickOff
+          street
+          townCity
+          county
+          postcode
+          isActive
+          createdAt
+          updatedAt
+          matchPostTeamId
+          __typename
+        }
         nextToken
         __typename
       }
       posts {
+        items {
+          id
+          title
+          description
+          createdByProfileID
+          gameType
+          ageGroup
+          teamSize
+          substitutionLimit
+          cards
+          halfLength
+          kickOff
+          street
+          townCity
+          county
+          postcode
+          isActive
+          createdAt
+          updatedAt
+          matchPostTeamId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      interestedPosts {
+        items {
+          id
+          profileId
+          matchPostId
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
@@ -213,14 +324,92 @@ export const onUpdateProfile = /* GraphQL */ `
       postcode
       phoneNumber
       players {
+        items {
+          id
+          title
+          description
+          createdByProfileID
+          gameType
+          ageGroup
+          teamSize
+          substitutionLimit
+          cards
+          halfLength
+          kickOff
+          street
+          townCity
+          county
+          postcode
+          isActive
+          createdAt
+          updatedAt
+          matchPostTeamId
+          __typename
+        }
         nextToken
         __typename
       }
       team {
+        items {
+          id
+          title
+          description
+          createdByProfileID
+          gameType
+          ageGroup
+          teamSize
+          substitutionLimit
+          cards
+          halfLength
+          kickOff
+          street
+          townCity
+          county
+          postcode
+          isActive
+          createdAt
+          updatedAt
+          matchPostTeamId
+          __typename
+        }
         nextToken
         __typename
       }
       posts {
+        items {
+          id
+          title
+          description
+          createdByProfileID
+          gameType
+          ageGroup
+          teamSize
+          substitutionLimit
+          cards
+          halfLength
+          kickOff
+          street
+          townCity
+          county
+          postcode
+          isActive
+          createdAt
+          updatedAt
+          matchPostTeamId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      interestedPosts {
+        items {
+          id
+          profileId
+          matchPostId
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
@@ -245,14 +434,92 @@ export const onDeleteProfile = /* GraphQL */ `
       postcode
       phoneNumber
       players {
+        items {
+          id
+          title
+          description
+          createdByProfileID
+          gameType
+          ageGroup
+          teamSize
+          substitutionLimit
+          cards
+          halfLength
+          kickOff
+          street
+          townCity
+          county
+          postcode
+          isActive
+          createdAt
+          updatedAt
+          matchPostTeamId
+          __typename
+        }
         nextToken
         __typename
       }
       team {
+        items {
+          id
+          title
+          description
+          createdByProfileID
+          gameType
+          ageGroup
+          teamSize
+          substitutionLimit
+          cards
+          halfLength
+          kickOff
+          street
+          townCity
+          county
+          postcode
+          isActive
+          createdAt
+          updatedAt
+          matchPostTeamId
+          __typename
+        }
         nextToken
         __typename
       }
       posts {
+        items {
+          id
+          title
+          description
+          createdByProfileID
+          gameType
+          ageGroup
+          teamSize
+          substitutionLimit
+          cards
+          halfLength
+          kickOff
+          street
+          townCity
+          county
+          postcode
+          isActive
+          createdAt
+          updatedAt
+          matchPostTeamId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      interestedPosts {
+        items {
+          id
+          profileId
+          matchPostId
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
@@ -271,8 +538,6 @@ export const onCreateMatchPost = /* GraphQL */ `
       title
       description
       createdByProfileID
-      createdByName
-      team
       gameType
       ageGroup
       teamSize
@@ -284,10 +549,40 @@ export const onCreateMatchPost = /* GraphQL */ `
       townCity
       county
       postcode
-      interestedUsers
       isActive
+      team {
+        id
+        name
+        league
+        ageGroup
+        location
+        email
+        phoneNumber
+        website
+        profileID
+        players {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      interestedUsers {
+        items {
+          id
+          profileId
+          matchPostId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
+      matchPostTeamId
       __typename
     }
   }
@@ -301,8 +596,6 @@ export const onUpdateMatchPost = /* GraphQL */ `
       title
       description
       createdByProfileID
-      createdByName
-      team
       gameType
       ageGroup
       teamSize
@@ -314,10 +607,40 @@ export const onUpdateMatchPost = /* GraphQL */ `
       townCity
       county
       postcode
-      interestedUsers
       isActive
+      team {
+        id
+        name
+        league
+        ageGroup
+        location
+        email
+        phoneNumber
+        website
+        profileID
+        players {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      interestedUsers {
+        items {
+          id
+          profileId
+          matchPostId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
+      matchPostTeamId
       __typename
     }
   }
@@ -331,8 +654,6 @@ export const onDeleteMatchPost = /* GraphQL */ `
       title
       description
       createdByProfileID
-      createdByName
-      team
       gameType
       ageGroup
       teamSize
@@ -344,8 +665,296 @@ export const onDeleteMatchPost = /* GraphQL */ `
       townCity
       county
       postcode
-      interestedUsers
       isActive
+      team {
+        id
+        name
+        league
+        ageGroup
+        location
+        email
+        phoneNumber
+        website
+        profileID
+        players {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      interestedUsers {
+        items {
+          id
+          profileId
+          matchPostId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      matchPostTeamId
+      __typename
+    }
+  }
+`;
+export const onCreateProfileMatchPost = /* GraphQL */ `
+  subscription OnCreateProfileMatchPost(
+    $filter: ModelSubscriptionProfileMatchPostFilterInput
+  ) {
+    onCreateProfileMatchPost(filter: $filter) {
+      id
+      profileId
+      matchPostId
+      profile {
+        id
+        username
+        name
+        dob
+        email
+        accountType
+        street
+        townCity
+        county
+        postcode
+        phoneNumber
+        players {
+          nextToken
+          __typename
+        }
+        team {
+          nextToken
+          __typename
+        }
+        posts {
+          nextToken
+          __typename
+        }
+        interestedPosts {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      matchPost {
+        id
+        title
+        description
+        createdByProfileID
+        gameType
+        ageGroup
+        teamSize
+        substitutionLimit
+        cards
+        halfLength
+        kickOff
+        street
+        townCity
+        county
+        postcode
+        isActive
+        team {
+          id
+          name
+          league
+          ageGroup
+          location
+          email
+          phoneNumber
+          website
+          profileID
+          createdAt
+          updatedAt
+          __typename
+        }
+        interestedUsers {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        matchPostTeamId
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateProfileMatchPost = /* GraphQL */ `
+  subscription OnUpdateProfileMatchPost(
+    $filter: ModelSubscriptionProfileMatchPostFilterInput
+  ) {
+    onUpdateProfileMatchPost(filter: $filter) {
+      id
+      profileId
+      matchPostId
+      profile {
+        id
+        username
+        name
+        dob
+        email
+        accountType
+        street
+        townCity
+        county
+        postcode
+        phoneNumber
+        players {
+          nextToken
+          __typename
+        }
+        team {
+          nextToken
+          __typename
+        }
+        posts {
+          nextToken
+          __typename
+        }
+        interestedPosts {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      matchPost {
+        id
+        title
+        description
+        createdByProfileID
+        gameType
+        ageGroup
+        teamSize
+        substitutionLimit
+        cards
+        halfLength
+        kickOff
+        street
+        townCity
+        county
+        postcode
+        isActive
+        team {
+          id
+          name
+          league
+          ageGroup
+          location
+          email
+          phoneNumber
+          website
+          profileID
+          createdAt
+          updatedAt
+          __typename
+        }
+        interestedUsers {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        matchPostTeamId
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteProfileMatchPost = /* GraphQL */ `
+  subscription OnDeleteProfileMatchPost(
+    $filter: ModelSubscriptionProfileMatchPostFilterInput
+  ) {
+    onDeleteProfileMatchPost(filter: $filter) {
+      id
+      profileId
+      matchPostId
+      profile {
+        id
+        username
+        name
+        dob
+        email
+        accountType
+        street
+        townCity
+        county
+        postcode
+        phoneNumber
+        players {
+          nextToken
+          __typename
+        }
+        team {
+          nextToken
+          __typename
+        }
+        posts {
+          nextToken
+          __typename
+        }
+        interestedPosts {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      matchPost {
+        id
+        title
+        description
+        createdByProfileID
+        gameType
+        ageGroup
+        teamSize
+        substitutionLimit
+        cards
+        halfLength
+        kickOff
+        street
+        townCity
+        county
+        postcode
+        isActive
+        team {
+          id
+          name
+          league
+          ageGroup
+          location
+          email
+          phoneNumber
+          website
+          profileID
+          createdAt
+          updatedAt
+          __typename
+        }
+        interestedUsers {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        matchPostTeamId
+        __typename
+      }
       createdAt
       updatedAt
       __typename

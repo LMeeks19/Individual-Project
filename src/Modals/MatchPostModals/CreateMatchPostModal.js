@@ -39,7 +39,7 @@ export default function CreateMatchPostModal() {
     ageGroup: null,
     teamSize: null,
     substitutionLimit: false,
-    cards: false,
+    cards: true,
     halfLength: null,
     kickOff: null,
     street: null,
@@ -132,6 +132,8 @@ export default function CreateMatchPostModal() {
           </Flex>
           <TextAreaField
             id="description"
+            resize="vertical"
+            overflow="hidden"
             onChange={(e) =>
               setNewMatchPostInfo({
                 ...newMatchPostInfo,
@@ -176,7 +178,7 @@ export default function CreateMatchPostModal() {
           <Flex justifyContent="space-between">
             <Flex alignItems="center" gap="0">
               <Label htmlFor="cards" fontWeight="bold">
-                Cards:
+                Allow Cards:
               </Label>
               <SwitchField
                 id="cards"

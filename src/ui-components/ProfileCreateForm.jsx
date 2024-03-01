@@ -6,7 +6,13 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
+import {
+  Button,
+  Flex,
+  Grid,
+  SelectField,
+  TextField,
+} from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
 import { createProfile } from "../graphql/mutations";
@@ -66,13 +72,13 @@ export default function ProfileCreateForm(props) {
     username: [{ type: "Required" }],
     name: [{ type: "Required" }],
     dob: [{ type: "Required" }],
-    email: [{ type: "Required" }],
+    email: [{ type: "Required" }, { type: "Email" }],
     accountType: [{ type: "Required" }],
     street: [{ type: "Required" }],
     townCity: [{ type: "Required" }],
     county: [{ type: "Required" }],
     postcode: [{ type: "Required" }],
-    phoneNumber: [{ type: "Required" }],
+    phoneNumber: [{ type: "Required" }, { type: "Phone" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -233,6 +239,7 @@ export default function ProfileCreateForm(props) {
         label="Dob"
         isRequired={true}
         isReadOnly={false}
+        type="date"
         value={dob}
         onChange={(e) => {
           let { value } = e.target;
@@ -295,10 +302,10 @@ export default function ProfileCreateForm(props) {
         hasError={errors.email?.hasError}
         {...getOverrideProps(overrides, "email")}
       ></TextField>
-      <TextField
+      <SelectField
         label="Account type"
-        isRequired={true}
-        isReadOnly={false}
+        placeholder="Please select an option"
+        isDisabled={false}
         value={accountType}
         onChange={(e) => {
           let { value } = e.target;
@@ -327,7 +334,18 @@ export default function ProfileCreateForm(props) {
         errorMessage={errors.accountType?.errorMessage}
         hasError={errors.accountType?.hasError}
         {...getOverrideProps(overrides, "accountType")}
-      ></TextField>
+      >
+        <option
+          children="Coach"
+          value="COACH"
+          {...getOverrideProps(overrides, "accountTypeoption0")}
+        ></option>
+        <option
+          children="Parent"
+          value="PARENT"
+          {...getOverrideProps(overrides, "accountTypeoption1")}
+        ></option>
+      </SelectField>
       <TextField
         label="Street"
         isRequired={true}
@@ -464,6 +482,7 @@ export default function ProfileCreateForm(props) {
         label="Phone number"
         isRequired={true}
         isReadOnly={false}
+        type="tel"
         value={phoneNumber}
         onChange={(e) => {
           let { value } = e.target;

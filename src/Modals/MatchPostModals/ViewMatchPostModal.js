@@ -3,7 +3,7 @@ import { format } from "date-fns";
 
 export default function ViewMatchPostModal(props) {
   function formatDate(date) {
-    return format(new Date(date), "do MMMM yyyy H:mm:ss");
+    return format(new Date(date), "do MMMM yyyy H:mm a");
   }
 
   return (
@@ -55,7 +55,7 @@ export default function ViewMatchPostModal(props) {
             <b>Half Length:</b> {props.post.halfLength}
           </Text>
           <Text>
-            <b>Kick Off:</b> {props.post.kickOff}
+            <b>Kick Off:</b> {formatDate(props.post.kickOff)}
           </Text>
           <Text>
             <b>Venue:</b> {props.post.street}, {props.post.townCity}, {props.post.county}, {props.post.postcode}

@@ -134,5 +134,61 @@ export function ValidateTeamPlayerModal(inputs) {
 export function ValidateMatchPostModal(inputs) {
   let errors = [];
 
+  if (inputs.title === null || inputs.title === "")
+    errors.push({
+      field: "title",
+      message: "Field cannot be left blank",
+    });
+  if (inputs.description === null || inputs.description === "")
+    errors.push({
+      field: "description",
+      message: "Field cannot be left blank",
+    });
+  if (inputs.gameType === null || inputs.gameType === "")
+    errors.push({
+      field: "gameType",
+      message: "An option must be selected from the list",
+    });
+  if (inputs.ageGroup === null || inputs.ageGroup === "")
+    errors.push({
+      field: "ageGroup",
+      message: "An option must be selected from the list",
+    });
+  if (inputs.teamSize === null || inputs.teamSize === "")
+    errors.push({
+      field: "teamSize",
+      message: "An option must be selected from the list",
+    });
+  if (inputs.halfLength === null || inputs.halfLength === "")
+    errors.push({
+      field: "halfLength",
+      message: "Field cannot be left blank",
+    });
+  if (inputs.kickOff === null || inputs.kickOff === "")
+    errors.push({
+      field: "kickOff",
+      message: "Field cannot be left blank",
+    });
+  if (inputs.street === null || inputs.street === "")
+    errors.push({
+      field: "street",
+      message: "Field cannot be left blank",
+    });
+  if (inputs.townCity === null || inputs.townCity === "")
+    errors.push({
+      field: "townCity",
+      message: "Field cannot be left blank",
+    });
+  if (inputs.county === null || inputs.county === "")
+    errors.push({
+      field: "county",
+      message: "Field cannot be left blank",
+    });
+  if (inputs.postcode === null || inputs.postcode === "")
+    errors.push({
+      field: "postcode",
+      message: "Field cannot be left blank",
+    });
+
   return errors;
 }

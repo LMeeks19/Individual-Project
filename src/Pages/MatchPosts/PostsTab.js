@@ -117,7 +117,7 @@ export default function PostsTab(props) {
                     <Text>{formatDate(post.createdAt)}</Text>
                   </td>
                   <td className="actions">
-                    {!post.isClosed ? (
+                    {post.isActive ? (
                       <Text as="div">
                         {post.createdByProfileID === props.currentUser.id ? (
                           <Flex justifyContent="center">
