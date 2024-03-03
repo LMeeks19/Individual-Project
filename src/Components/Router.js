@@ -3,7 +3,7 @@ import MatchPosts from "../Pages/MatchPosts/MatchPosts";
 import PlayersPost from "../Pages/PlayersPost";
 import Schedule from "../Pages/Schedule";
 import Account from "../Pages/Account/Account";
-import Messages from "../Pages/Messages";
+import Messages from "../Pages//Chats/Chats";
 
 import { Routes, Route } from "react-router-dom";
 
