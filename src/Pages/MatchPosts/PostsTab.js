@@ -20,7 +20,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import ReplayIcon from "@mui/icons-material/Replay";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
-import { UpdateMatchPost } from "../../Functions/Server";
+// import { UpdateMatchPost } from "../../Functions/Server";
 import ViewMatchPostModal from "../../Modals/MatchPostModals/ViewMatchPostModal";
 import UpdateMatchPostModal from "../../Modals/MatchPostModals/UpdateMatchPostModal";
 import "./MatchPosts.css";
@@ -75,7 +75,7 @@ export default function PostsTab(props) {
       }
       return curPost;
     });
-    await UpdateMatchPost(updatedPosts.find((p) => p.id === post.id));
+    // await UpdateMatchPost(updatedPosts.find((p) => p.id === post.id));
     setPosts(updatedPosts);
   }
 

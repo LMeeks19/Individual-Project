@@ -22,10 +22,8 @@ export const components = {
         </View>
       );
     },
-    FormFields() {
-      
-    },
-     Footer() {
+    FormFields() {},
+    Footer() {
       const { toForgotPassword } = useAuthenticator();
 
       return (
@@ -62,11 +60,7 @@ export const components = {
 
       return (
         <View textAlign="center">
-          <Button
-            fontWeight="large"
-            onClick={toSignIn}
-            variation="link"
-          >
+          <Button fontWeight="large" onClick={toSignIn} variation="link">
             Back to Sign In
           </Button>
         </View>

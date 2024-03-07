@@ -19,7 +19,6 @@ export default function CreateProfileModal() {
           updatedFields.id = currentUser.id;
           updatedFields.username = currentUser.username;
           updatedFields.email = currentUser.email;
-          console.log(currentUser);
           return updatedFields;
         }}
         onSuccess={(data) => {

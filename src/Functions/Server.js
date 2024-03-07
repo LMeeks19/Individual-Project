@@ -5,23 +5,15 @@ import {
   teamsByProfileID,
   teamPlayersByTeamID,
   listMatchPosts,
+  listChats,
 } from "../graphql/queries";
 import {
-  createProfile as createProfileMutation,
-  updateProfile as updateProfileMutation,
   deleteProfile as deleteProfileMutation,
-  createPlayer as createPlayerMutation,
-  updatePlayer as updatePlayerMutation,
   deletePlayer as deletePlayerMutation,
-  createTeam as createTeamMutation,
-  updateTeam as updateTeamMutation,
   deleteTeam as deleteTeamMutation,
-  createTeamPlayer as createTeamPlayerMutation,
-  updateTeamPlayer as updateTeamPlayerMutation,
   deleteTeamPlayer as deleteTeamPlayerMutation,
-  createMatchPost as createMatchPostMutation,
-  updateMatchPost as updateMatchPostMutation,
   deleteMatchPost as deleteMatchPostMutation,
+  createChatMessage as createChatMessageMutation
 } from "../graphql/mutations";
 import { fetchUserAttributes } from "aws-amplify/auth";
 
@@ -183,4 +175,39 @@ export async function DeleteMatchPost(id) {
   });
 
   return apiData.data.deleteMatchPost.id;
+}
+
+export async function GetChatsByProfileId(id) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: listChats,
+    variables: { filter: { userIDs: { contains: id } } },
+  });
+
+  let chats = apiData.data.listChats.items;
+
+  chats.forEach((chat) => {
+    chat.users = chat.users.items.map((user) => user.profile);
+    chat.messages = chat.messages.items;
+  });
+  console.log(chats);
+  return chats;
+}
+
+export async function CreateChatMessage(chatId, senderId, message) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: createChatMessageMutation,
+    variables: {
+      input: {
+        chatID: chatId,
+        senderUserID: senderId,
+        message: message,
+      },
+    },
+  });
+
+  return apiData.data.createChatMessage;
 }

@@ -391,6 +391,18 @@ export const createProfile = /* GraphQL */ `
         nextToken
         __typename
       }
+      chats {
+        items {
+          id
+          profileId
+          chatId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -487,6 +499,18 @@ export const updateProfile = /* GraphQL */ `
         nextToken
         __typename
       }
+      chats {
+        items {
+          id
+          profileId
+          chatId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -576,6 +600,18 @@ export const deleteProfile = /* GraphQL */ `
           id
           profileId
           matchPostId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      chats {
+        items {
+          id
+          profileId
+          chatId
           createdAt
           updatedAt
           __typename
@@ -715,6 +751,178 @@ export const deleteMatchPost = /* GraphQL */ `
     }
   }
 `;
+export const createChat = /* GraphQL */ `
+  mutation CreateChat(
+    $input: CreateChatInput!
+    $condition: ModelChatConditionInput
+  ) {
+    createChat(input: $input, condition: $condition) {
+      id
+      name
+      users {
+        items {
+          profile {
+            id 
+            name 
+            email
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      messages {
+        items {
+          id
+          chatID
+          senderUserID
+          message
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      userIDs
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateChat = /* GraphQL */ `
+  mutation UpdateChat(
+    $input: UpdateChatInput!
+    $condition: ModelChatConditionInput
+  ) {
+    updateChat(input: $input, condition: $condition) {
+      id
+      name
+      users {
+        items {
+          profile {
+            id 
+            name 
+            email
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      messages {
+        items {
+          id
+          chatID
+          senderUserID
+          message
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      userIDs
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteChat = /* GraphQL */ `
+  mutation DeleteChat(
+    $input: DeleteChatInput!
+    $condition: ModelChatConditionInput
+  ) {
+    deleteChat(input: $input, condition: $condition) {
+      id
+      name
+      users {
+        items {
+          id
+          profileId
+          chatId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      messages {
+        items {
+          id
+          chatID
+          senderUserID
+          message
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      userIDs
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createChatMessage = /* GraphQL */ `
+  mutation CreateChatMessage(
+    $input: CreateChatMessageInput!
+    $condition: ModelChatMessageConditionInput
+  ) {
+    createChatMessage(input: $input, condition: $condition) {
+      id
+      chatID
+      senderUserID
+      message
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateChatMessage = /* GraphQL */ `
+  mutation UpdateChatMessage(
+    $input: UpdateChatMessageInput!
+    $condition: ModelChatMessageConditionInput
+  ) {
+    updateChatMessage(input: $input, condition: $condition) {
+      id
+      chatID
+      senderUserID
+      message
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteChatMessage = /* GraphQL */ `
+  mutation DeleteChatMessage(
+    $input: DeleteChatMessageInput!
+    $condition: ModelChatMessageConditionInput
+  ) {
+    deleteChatMessage(input: $input, condition: $condition) {
+      id
+      chatID
+      senderUserID
+      message
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createProfileMatchPost = /* GraphQL */ `
   mutation CreateProfileMatchPost(
     $input: CreateProfileMatchPostInput!
@@ -749,6 +957,10 @@ export const createProfileMatchPost = /* GraphQL */ `
           __typename
         }
         interestedPosts {
+          nextToken
+          __typename
+        }
+        chats {
           nextToken
           __typename
         }
@@ -826,6 +1038,10 @@ export const updateProfileMatchPost = /* GraphQL */ `
           nextToken
           __typename
         }
+        chats {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -900,6 +1116,10 @@ export const deleteProfileMatchPost = /* GraphQL */ `
           nextToken
           __typename
         }
+        chats {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -927,6 +1147,207 @@ export const deleteProfileMatchPost = /* GraphQL */ `
           nextToken
           __typename
         }
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createProfileChat = /* GraphQL */ `
+  mutation CreateProfileChat(
+    $input: CreateProfileChatInput!
+    $condition: ModelProfileChatConditionInput
+  ) {
+    createProfileChat(input: $input, condition: $condition) {
+      id
+      profileId
+      chatId
+      profile {
+        id
+        username
+        name
+        dob
+        email
+        accountType
+        street
+        townCity
+        county
+        postcode
+        phoneNumber
+        players {
+          nextToken
+          __typename
+        }
+        team {
+          nextToken
+          __typename
+        }
+        posts {
+          nextToken
+          __typename
+        }
+        interestedPosts {
+          nextToken
+          __typename
+        }
+        chats {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      chat {
+        id
+        name
+        users {
+          nextToken
+          __typename
+        }
+        messages {
+          nextToken
+          __typename
+        }
+        userIDs
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateProfileChat = /* GraphQL */ `
+  mutation UpdateProfileChat(
+    $input: UpdateProfileChatInput!
+    $condition: ModelProfileChatConditionInput
+  ) {
+    updateProfileChat(input: $input, condition: $condition) {
+      id
+      profileId
+      chatId
+      profile {
+        id
+        username
+        name
+        dob
+        email
+        accountType
+        street
+        townCity
+        county
+        postcode
+        phoneNumber
+        players {
+          nextToken
+          __typename
+        }
+        team {
+          nextToken
+          __typename
+        }
+        posts {
+          nextToken
+          __typename
+        }
+        interestedPosts {
+          nextToken
+          __typename
+        }
+        chats {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      chat {
+        id
+        name
+        users {
+          nextToken
+          __typename
+        }
+        messages {
+          nextToken
+          __typename
+        }
+        userIDs
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteProfileChat = /* GraphQL */ `
+  mutation DeleteProfileChat(
+    $input: DeleteProfileChatInput!
+    $condition: ModelProfileChatConditionInput
+  ) {
+    deleteProfileChat(input: $input, condition: $condition) {
+      id
+      profileId
+      chatId
+      profile {
+        id
+        username
+        name
+        dob
+        email
+        accountType
+        street
+        townCity
+        county
+        postcode
+        phoneNumber
+        players {
+          nextToken
+          __typename
+        }
+        team {
+          nextToken
+          __typename
+        }
+        posts {
+          nextToken
+          __typename
+        }
+        interestedPosts {
+          nextToken
+          __typename
+        }
+        chats {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      chat {
+        id
+        name
+        users {
+          nextToken
+          __typename
+        }
+        messages {
+          nextToken
+          __typename
+        }
+        userIDs
         createdAt
         updatedAt
         __typename

@@ -367,6 +367,18 @@ export const onCreateProfile = /* GraphQL */ `
         nextToken
         __typename
       }
+      chats {
+        items {
+          id
+          profileId
+          chatId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -460,6 +472,18 @@ export const onUpdateProfile = /* GraphQL */ `
         nextToken
         __typename
       }
+      chats {
+        items {
+          id
+          profileId
+          chatId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -546,6 +570,18 @@ export const onDeleteProfile = /* GraphQL */ `
           id
           profileId
           matchPostId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      chats {
+        items {
+          id
+          profileId
+          chatId
           createdAt
           updatedAt
           __typename
@@ -682,6 +718,162 @@ export const onDeleteMatchPost = /* GraphQL */ `
     }
   }
 `;
+export const onCreateChat = /* GraphQL */ `
+  subscription OnCreateChat($filter: ModelSubscriptionChatFilterInput) {
+    onCreateChat(filter: $filter) {
+      id
+      name
+      users {
+        items {
+          id
+          profileId
+          chatId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      messages {
+        items {
+          id
+          chatID
+          senderUserID
+          message
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      userIDs
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateChat = /* GraphQL */ `
+  subscription OnUpdateChat($filter: ModelSubscriptionChatFilterInput) {
+    onUpdateChat(filter: $filter) {
+      id
+      name
+      users {
+        items {
+          id
+          profileId
+          chatId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      messages {
+        items {
+          id
+          chatID
+          senderUserID
+          message
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      userIDs
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteChat = /* GraphQL */ `
+  subscription OnDeleteChat($filter: ModelSubscriptionChatFilterInput) {
+    onDeleteChat(filter: $filter) {
+      id
+      name
+      users {
+        items {
+          id
+          profileId
+          chatId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      messages {
+        items {
+          id
+          chatID
+          senderUserID
+          message
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      userIDs
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateChatMessage = /* GraphQL */ `
+  subscription OnCreateChatMessage(
+    $filter: ModelSubscriptionChatMessageFilterInput
+  ) {
+    onCreateChatMessage(filter: $filter) {
+      id
+      chatID
+      senderUserID
+      message
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateChatMessage = /* GraphQL */ `
+  subscription OnUpdateChatMessage(
+    $filter: ModelSubscriptionChatMessageFilterInput
+  ) {
+    onUpdateChatMessage(filter: $filter) {
+      id
+      chatID
+      senderUserID
+      message
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteChatMessage = /* GraphQL */ `
+  subscription OnDeleteChatMessage(
+    $filter: ModelSubscriptionChatMessageFilterInput
+  ) {
+    onDeleteChatMessage(filter: $filter) {
+      id
+      chatID
+      senderUserID
+      message
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateProfileMatchPost = /* GraphQL */ `
   subscription OnCreateProfileMatchPost(
     $filter: ModelSubscriptionProfileMatchPostFilterInput
@@ -715,6 +907,10 @@ export const onCreateProfileMatchPost = /* GraphQL */ `
           __typename
         }
         interestedPosts {
+          nextToken
+          __typename
+        }
+        chats {
           nextToken
           __typename
         }
@@ -791,6 +987,10 @@ export const onUpdateProfileMatchPost = /* GraphQL */ `
           nextToken
           __typename
         }
+        chats {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -864,6 +1064,10 @@ export const onDeleteProfileMatchPost = /* GraphQL */ `
           nextToken
           __typename
         }
+        chats {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -891,6 +1095,204 @@ export const onDeleteProfileMatchPost = /* GraphQL */ `
           nextToken
           __typename
         }
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateProfileChat = /* GraphQL */ `
+  subscription OnCreateProfileChat(
+    $filter: ModelSubscriptionProfileChatFilterInput
+  ) {
+    onCreateProfileChat(filter: $filter) {
+      id
+      profileId
+      chatId
+      profile {
+        id
+        username
+        name
+        dob
+        email
+        accountType
+        street
+        townCity
+        county
+        postcode
+        phoneNumber
+        players {
+          nextToken
+          __typename
+        }
+        team {
+          nextToken
+          __typename
+        }
+        posts {
+          nextToken
+          __typename
+        }
+        interestedPosts {
+          nextToken
+          __typename
+        }
+        chats {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      chat {
+        id
+        name
+        users {
+          nextToken
+          __typename
+        }
+        messages {
+          nextToken
+          __typename
+        }
+        userIDs
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateProfileChat = /* GraphQL */ `
+  subscription OnUpdateProfileChat(
+    $filter: ModelSubscriptionProfileChatFilterInput
+  ) {
+    onUpdateProfileChat(filter: $filter) {
+      id
+      profileId
+      chatId
+      profile {
+        id
+        username
+        name
+        dob
+        email
+        accountType
+        street
+        townCity
+        county
+        postcode
+        phoneNumber
+        players {
+          nextToken
+          __typename
+        }
+        team {
+          nextToken
+          __typename
+        }
+        posts {
+          nextToken
+          __typename
+        }
+        interestedPosts {
+          nextToken
+          __typename
+        }
+        chats {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      chat {
+        id
+        name
+        users {
+          nextToken
+          __typename
+        }
+        messages {
+          nextToken
+          __typename
+        }
+        userIDs
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteProfileChat = /* GraphQL */ `
+  subscription OnDeleteProfileChat(
+    $filter: ModelSubscriptionProfileChatFilterInput
+  ) {
+    onDeleteProfileChat(filter: $filter) {
+      id
+      profileId
+      chatId
+      profile {
+        id
+        username
+        name
+        dob
+        email
+        accountType
+        street
+        townCity
+        county
+        postcode
+        phoneNumber
+        players {
+          nextToken
+          __typename
+        }
+        team {
+          nextToken
+          __typename
+        }
+        posts {
+          nextToken
+          __typename
+        }
+        interestedPosts {
+          nextToken
+          __typename
+        }
+        chats {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      chat {
+        id
+        name
+        users {
+          nextToken
+          __typename
+        }
+        messages {
+          nextToken
+          __typename
+        }
+        userIDs
         createdAt
         updatedAt
         __typename

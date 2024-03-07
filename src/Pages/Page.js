@@ -18,11 +18,11 @@ export default function Page() {
 
   useEffect(() => {
     async function fetchUser() {
-      setCurrentUser({
-        ...(await GetProfile(user)),
-        players: await GetPlayersByProfileId(user.userId),
-        team: await GetTeamByProfileId(user.userId),
-      });
+      //setCurrentUser({
+        //...(await GetProfile(user)),
+       // players: await GetPlayersByProfileId(user.userId),
+       // team: await GetTeamByProfileId(user.userId),
+      //});
     }
     fetchUser();
   }, []);

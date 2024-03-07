@@ -365,6 +365,18 @@ export const getProfile = /* GraphQL */ `
         nextToken
         __typename
       }
+      chats {
+        items {
+          id
+          profileId
+          chatId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -403,6 +415,10 @@ export const listProfiles = /* GraphQL */ `
           __typename
         }
         interestedPosts {
+          nextToken
+          __typename
+        }
+        chats {
           nextToken
           __typename
         }
@@ -481,9 +497,6 @@ export const listMatchPosts = /* GraphQL */ `
         teamID
         teamName
         interestedUsers {
-          items {
-            id
-          }
           nextToken
           __typename
         }
@@ -531,9 +544,6 @@ export const matchPostsByCreatedByProfileID = /* GraphQL */ `
         teamID
         teamName
         interestedUsers {
-          items {
-            id
-          }
           nextToken
           __typename
         }
@@ -593,6 +603,153 @@ export const matchPostsByTeamID = /* GraphQL */ `
     }
   }
 `;
+export const getChat = /* GraphQL */ `
+  query GetChat($id: ID!) {
+    getChat(id: $id) {
+      id
+      name
+      users {
+        items {
+          profile {
+            id 
+            name
+            email
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      messages {
+        items {
+          id
+          chatID
+          senderUserID
+          message
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      userIDs
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listChats = /* GraphQL */ `
+  query ListChats(
+    $filter: ModelChatFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listChats(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        users {
+          items {
+            id
+            profile {
+                id
+                name 
+                email
+            }
+          }
+          nextToken
+          __typename
+        }
+        messages {
+          items {
+            id
+            chatID
+            senderUserID
+            message
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        userIDs
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getChatMessage = /* GraphQL */ `
+  query GetChatMessage($id: ID!) {
+    getChatMessage(id: $id) {
+      id
+      chatID
+      senderUserID
+      message
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listChatMessages = /* GraphQL */ `
+  query ListChatMessages(
+    $filter: ModelChatMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listChatMessages(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        chatID
+        senderUserID
+        message
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const chatMessagesByChatID = /* GraphQL */ `
+  query ChatMessagesByChatID(
+    $chatID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelChatMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    chatMessagesByChatID(
+      chatID: $chatID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        chatID
+        senderUserID
+        message
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getProfileMatchPost = /* GraphQL */ `
   query GetProfileMatchPost($id: ID!) {
     getProfileMatchPost(id: $id) {
@@ -624,6 +781,10 @@ export const getProfileMatchPost = /* GraphQL */ `
           __typename
         }
         interestedPosts {
+          nextToken
+          __typename
+        }
+        chats {
           nextToken
           __typename
         }
@@ -848,6 +1009,218 @@ export const profileMatchPostsByMatchPostId = /* GraphQL */ `
           isActive
           teamID
           teamName
+          createdAt
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getProfileChat = /* GraphQL */ `
+  query GetProfileChat($id: ID!) {
+    getProfileChat(id: $id) {
+      id
+      profileId
+      chatId
+      profile {
+        id
+        username
+        name
+        dob
+        email
+        accountType
+        street
+        townCity
+        county
+        postcode
+        phoneNumber
+        players {
+          nextToken
+          __typename
+        }
+        team {
+          nextToken
+          __typename
+        }
+        posts {
+          nextToken
+          __typename
+        }
+        interestedPosts {
+          nextToken
+          __typename
+        }
+        chats {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      chat {
+        id
+        name
+        users {
+          nextToken
+          __typename
+        }
+        messages {
+          nextToken
+          __typename
+        }
+        userIDs
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listProfileChats = /* GraphQL */ `
+  query ListProfileChats(
+    $filter: ModelProfileChatFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listProfileChats(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        profileId
+        chatId
+        profile {
+          id
+          username
+          name
+          dob
+          email
+          accountType
+          street
+          townCity
+          county
+          postcode
+          phoneNumber
+          createdAt
+          updatedAt
+          __typename
+        }
+        chat {
+          id
+          name
+          userIDs
+          createdAt
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const profileChatsByProfileId = /* GraphQL */ `
+  query ProfileChatsByProfileId(
+    $profileId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelProfileChatFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    profileChatsByProfileId(
+      profileId: $profileId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        profileId
+        chatId
+        profile {
+          id
+          username
+          name
+          dob
+          email
+          accountType
+          street
+          townCity
+          county
+          postcode
+          phoneNumber
+          createdAt
+          updatedAt
+          __typename
+        }
+        chat {
+          id
+          name
+          userIDs
+          createdAt
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const profileChatsByChatId = /* GraphQL */ `
+  query ProfileChatsByChatId(
+    $chatId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelProfileChatFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    profileChatsByChatId(
+      chatId: $chatId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        profileId
+        chatId
+        profile {
+          id
+          username
+          name
+          dob
+          email
+          accountType
+          street
+          townCity
+          county
+          postcode
+          phoneNumber
+          createdAt
+          updatedAt
+          __typename
+        }
+        chat {
+          id
+          name
+          userIDs
           createdAt
           updatedAt
           __typename
