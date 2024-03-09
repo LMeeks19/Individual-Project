@@ -150,7 +150,7 @@ export default function Profile() {
           <Tabs.Panel value="3">
             <Flex marginBottom="20px" justifyContent="space-between">
               <Heading level={3}>My Team</Heading>
-              {currentUser.team.id !== undefined ? (
+              {currentUser.team.id !== null ? (
                 <Button
                   className="custom-button delete"
                   variation="primary"

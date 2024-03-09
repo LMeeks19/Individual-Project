@@ -190,6 +190,14 @@ export const teamsByProfileID = /* GraphQL */ `
         website
         profileID
         players {
+          items {
+            id
+            name
+            age
+            kitNumber
+            positions
+            teamID
+          }
           nextToken
           __typename
         }
@@ -614,7 +622,7 @@ export const getChat = /* GraphQL */ `
       users {
         items {
           profile {
-            id 
+            id
             name
             email
           }
@@ -659,9 +667,9 @@ export const listChats = /* GraphQL */ `
           items {
             id
             profile {
-                id
-                name 
-                email
+              id
+              name
+              email
             }
           }
           nextToken
