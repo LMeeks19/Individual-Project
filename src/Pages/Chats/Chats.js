@@ -32,7 +32,6 @@ export default function Chats() {
   const setModal = useSetRecoilState(modalState);
   const currentUser = useRecoilValue(currentUserState);
   const { user } = useAuthenticator();
-  const isFirstRender = useRef(true);
 
   const [message, setMessage] = useState(null);
   const client = generateClient();
@@ -45,28 +44,21 @@ export default function Chats() {
   }, []);
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    } else if (selectedChat?.id) {
-      const sub = client
-        .graphql({
-          query: onCreateChatMessage,
-          variables: { filter: { chatID: { eq: selectedChat?.chatID } } },
-        })
-        .subscribe({
-          next: ({ provider, value }) =>
-            setSelectedChat({
-              ...selectedChat,
-              messages: [
-                ...selectedChat.messages,
-                value.data.onCreateChatMessage,
-              ],
-            }),
-          error: (err) => console.log(err),
-        });
-      return () => sub.unsubscribe();
-    }
+    const sub = client
+      .graphql({
+        query: onCreateChatMessage,
+      })
+      .subscribe({
+        next: ({ data }) =>
+          setSelectedChat({
+            ...selectedChat,
+            messages: [data.onCreateChatMessage, ...selectedChat.messages],
+          }),
+        error: (err) => console.log(err),
+      });
+    return () => {
+      sub.unsubscribe();
+    };
   }, [selectedChat]);
 
   Hub.listen("api", (data) => {
@@ -78,14 +70,7 @@ export default function Chats() {
   });
 
   async function sendMessage() {
-    let messages = [
-      ...selectedChat.messages,
-      await CreateChatMessage(selectedChat.id, currentUser.id, message),
-    ];
-    setSelectedChat({
-      ...selectedChat,
-      messages: messages.sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
-    });
+    await CreateChatMessage(selectedChat.id, currentUser.id, message);
   }
 
   async function toggleSelectedChat(chat) {
