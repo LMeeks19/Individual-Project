@@ -111,16 +111,16 @@ export async function GetTeamByProfileId(profileId) {
   const team = apiData.data.teamsByProfileID.items[0];
 
   return {
-    id: team?.id,
-    profileId: team?.profileID,
-    name: team?.name,
-    league: team?.league,
-    ageGroup: team?.ageGroup,
-    location: team?.location,
-    email: team?.email,
-    phoneNumber: team?.phoneNumber,
-    website: team?.website,
-    players: team?.players?.items,
+    id: team?.id ?? null,
+    profileId: team?.profileID ?? null,
+    name: team?.name?? null,
+    league: team?.league?? null,
+    ageGroup: team?.ageGroup ?? null,
+    location: team?.location ?? null,
+    email: team?.email ?? null,
+    phoneNumber: team?.phoneNumber ?? null,
+    website: team?.website ?? null,
+    players: team?.players?.items ?? [],
   };
 }
 
