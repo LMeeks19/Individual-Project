@@ -10,7 +10,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import SendIcon from "@mui/icons-material/Send";
 import DeleteIcon from "@mui/icons-material/Delete";
 import "./Chats.css";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   chatsState,
@@ -18,13 +18,15 @@ import {
   modalState,
   selectedChatState,
 } from "../../Functions/GlobalState";
-import { CreateChatMessage, GetChatsByProfileId } from "../../Functions/Server";
+import {
+  CreateChatMessage,
+  GetChatsByProfileId,
+  GetChatMessages,
+} from "../../Functions/Server";
 import CreateChatModal from "../../Modals/ChatModals/CreateChatModal";
 import { intlFormatDistance } from "date-fns";
 import { onCreateChatMessage } from "../../graphql/subscriptions";
 import { generateClient } from "aws-amplify/api";
-import { CONNECTION_STATE_CHANGE } from "aws-amplify/api";
-import { Hub } from "aws-amplify/utils";
 
 export default function Chats() {
   const [chats, setChats] = useRecoilState(chatsState);
@@ -33,65 +35,69 @@ export default function Chats() {
   const currentUser = useRecoilValue(currentUserState);
   const { user } = useAuthenticator();
 
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState("");
   const client = generateClient();
 
   useEffect(() => {
     async function GetChats() {
-      setChats(await GetChatsByProfileId(user.userId));
+      const chats = await GetChatsByProfileId(user.userId);
+      setChats(chats);
     }
     GetChats();
   }, []);
 
   useEffect(() => {
-    const sub = client
-      .graphql({
-        query: onCreateChatMessage,
-      })
-      .subscribe({
-        next: ({ data }) => {
-          if (data.onCreateChatMessage.chatID === selectedChat.id) {
-            setSelectedChat({
-              ...selectedChat,
-              messages: [data.onCreateChatMessage, ...selectedChat.messages],
-            });
-            let updatedChats = [...chats].map((chat) => {
-              if (chat.id === data.onCreateChatMessage.chatID)
-                return {
-                  ...chat,
-                  messages: [data.onCreateChatMessage, ...chat.messages],
-                };
-              else return chat;
-            });
+    async function getChatMessages() {
+      if (selectedChat?.id) {
+        const sub = client
+          .graphql({
+            query: onCreateChatMessage,
+          })
+          .subscribe({
+            next: ({ data }) => {
+              if (data.onCreateChatMessage.chatID === selectedChat.id) {
+                setSelectedChat({
+                  ...selectedChat,
+                  messages: [
+                    data.onCreateChatMessage,
+                    ...selectedChat.messages,
+                  ].sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
+                });
+                let updatedChats = [...chats].map((chat) => {
+                  if (chat.id === data.onCreateChatMessage.chatID)
+                    return {
+                      ...chat,
+                      messages: [
+                        data.onCreateChatMessage,
+                        ...selectedChat.messages,
+                      ].sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
+                    };
+                  else return chat;
+                });
 
-            setChats(updatedChats);
-          }
-        },
-        error: (error) => console.log(error),
-      });
-    return () => {
-      sub.unsubscribe();
-    };
-  }, [selectedChat]);
-
-  Hub.listen("api", (data) => {
-    const { payload } = data;
-    if (payload.event === CONNECTION_STATE_CHANGE) {
-      const connectionState = payload.data.connectionState;
-      console.log(connectionState);
+                setChats(updatedChats);
+              }
+            },
+            error: (error) => console.log(error),
+          });
+        return () => {
+          sub.unsubscribe();
+        };
+      }
     }
-  });
+    getChatMessages();
+  }, [selectedChat]);
 
   async function sendMessage() {
     await CreateChatMessage(selectedChat.id, currentUser.id, message);
+    setMessage("");
   }
 
-  async function toggleSelectedChat(chat) {
-    let messages = [...chat.messages];
-    setSelectedChat({
-      ...chat,
-      messages: messages.sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
-    });
+  function getChatNameFromUsers(chat) {
+    return chat.users
+      .toString()
+      .split(",")
+      .slice(0, chat.users.length - 1);
   }
 
   function openModal(component, title) {
@@ -110,46 +116,38 @@ export default function Chats() {
           />
         </Text>
         <View className="chat-list">
-          {chats
-            .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
-            .map((chat) => {
-              return (
-                <Flex
-                  key={chat.id}
-                  className={`chat-tile ${
-                    chat.id === selectedChat?.id ? "active" : ""
-                  }`}
-                  onClick={() => toggleSelectedChat(chat)}
-                >
-                  <Heading className="text-overflow" level={4}>
-                    {chat.name ??
-                      chat.users.map((user, index) => {
-                        if (user.id !== currentUser.id) {
-                          if (index !== 0) return ", " + user.name;
-                          else return user.name;
-                        }
-                        return "";
-                      })}
-                  </Heading>
-                  <DeleteIcon className="icon delete" />
-                </Flex>
-              );
-            })}
+          {chats.map((chat) => {
+            return (
+              <Flex
+                key={chat.id}
+                className={`chat-tile ${
+                  chat.id === selectedChat?.id ? "active" : ""
+                }`}
+                onClick={async () => {
+                  let chatMessages = await GetChatMessages(chat.id);
+                  setSelectedChat({
+                    ...chat,
+                    messages: chatMessages.sort((a, b) =>
+                      b.createdAt.localeCompare(a.createdAt)
+                    ),
+                  });
+                }}
+              >
+                <Heading className="text-overflow" level={4}>
+                  {chat.name ?? getChatNameFromUsers(chat)}
+                </Heading>
+                <DeleteIcon className="icon delete" />
+              </Flex>
+            );
+          })}
         </View>
       </Flex>
-      {selectedChat !== null ? (
+      {selectedChat?.id !== null ? (
         <Flex className="chat-container-2" direction="column">
           <View className="chat-current">
             <Text as="div">
               <Heading level={3}>
-                {selectedChat?.name ??
-                  selectedChat.users.map((user, index) => {
-                    if (user.id !== currentUser.id) {
-                      if (index !== 0) return ", " + user.name;
-                      else return user.name;
-                    }
-                    return "";
-                  })}
+                {selectedChat.name ?? getChatNameFromUsers(selectedChat)}
               </Heading>
             </Text>
           </View>
@@ -193,6 +191,7 @@ export default function Chats() {
             <TextField
               width="100%"
               labelHidden
+              value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyUp={async (e) => {
                 if (e.key === "Enter") {

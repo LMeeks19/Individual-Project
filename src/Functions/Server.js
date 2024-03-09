@@ -6,6 +6,7 @@ import {
   teamPlayersByTeamID,
   listMatchPosts,
   listChats,
+  listChatMessages,
 } from "../graphql/queries";
 import {
   deleteProfile as deleteProfileMutation,
@@ -15,7 +16,6 @@ import {
   deleteMatchPost as deleteMatchPostMutation,
   createChatMessage as createChatMessageMutation,
 } from "../graphql/mutations";
-import { onChatMessageCreate } from "../graphql/subscriptions";
 import { fetchUserAttributes } from "aws-amplify/auth";
 
 export async function GetProfile(user) {
@@ -113,8 +113,8 @@ export async function GetTeamByProfileId(profileId) {
   return {
     id: team?.id ?? null,
     profileId: team?.profileID ?? null,
-    name: team?.name?? null,
-    league: team?.league?? null,
+    name: team?.name ?? null,
+    league: team?.league ?? null,
     ageGroup: team?.ageGroup ?? null,
     location: team?.location ?? null,
     email: team?.email ?? null,
@@ -190,7 +190,7 @@ export async function GetChatsByProfileId(id) {
 
   chats.forEach((chat) => {
     chat.users = chat.users.items.map((user) => user.profile);
-    chat.messages = chat.messages.items;
+    chat.messages = []
   });
   return chats;
 }
@@ -210,4 +210,15 @@ export async function CreateChatMessage(chatId, senderId, message) {
   });
 
   return apiData.data.createChatMessage;
+}
+
+export async function GetChatMessages(chatId) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: listChatMessages,
+    variables: { filter: { chatID: { eq: chatId } } },
+  });
+
+  return apiData.data.listChatMessages.items;
 }

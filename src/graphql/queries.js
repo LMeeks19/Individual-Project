@@ -676,15 +676,6 @@ export const listChats = /* GraphQL */ `
           __typename
         }
         messages {
-          items {
-            id
-            chatID
-            senderUserID
-            message
-            createdAt
-            updatedAt
-            __typename
-          }
           nextToken
           __typename
         }

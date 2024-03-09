@@ -13,8 +13,8 @@ export const currentUserState = atom({
     name: null,
     dob: null,
     email: null,
-    phoneNumber:null,
-    accountType:null,
+    phoneNumber: null,
+    accountType: null,
     street: null,
     townCity: null,
     county: null,
@@ -30,9 +30,9 @@ export const currentUserState = atom({
       ageGroup: null,
       location: null,
       email: null,
-      phoneNumber:null,
+      phoneNumber: null,
       website: null,
-      players: []
+      players: [],
     },
   },
 });
@@ -49,7 +49,13 @@ export const chatsState = atom({
 
 export const selectedChatState = atom({
   key: "selectedChatState",
-  default: null,
+  default: {
+    id: null,
+    name: null,
+    users: [],
+    messages: [],
+    userIDs: [],
+  },
 });
 
 export const warningIsShownState = atom({
