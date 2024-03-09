@@ -10,7 +10,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import SendIcon from "@mui/icons-material/Send";
 import DeleteIcon from "@mui/icons-material/Delete";
 import "./Chats.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   chatsState,
@@ -26,13 +26,13 @@ import { generateClient } from "aws-amplify/api";
 import { CONNECTION_STATE_CHANGE } from "aws-amplify/api";
 import { Hub } from "aws-amplify/utils";
 
-
 export default function Chats() {
   const [chats, setChats] = useRecoilState(chatsState);
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
   const setModal = useSetRecoilState(modalState);
   const currentUser = useRecoilValue(currentUserState);
   const { user } = useAuthenticator();
+  const isFirstRender = useRef(true);
 
   const [message, setMessage] = useState(null);
   const client = generateClient();
@@ -45,23 +45,31 @@ export default function Chats() {
   }, []);
 
   useEffect(() => {
-    const sub = client
-      .graphql({
-        query: onCreateChatMessage,
-        variables: { filter: { chatID: { eq: selectedChat?.chatID } } },
-      })
-      .subscribe({
-        next: ({ value }) =>
-          setSelectedChat({
-            ...selectedChat,
-            messages: value.data.onCreateChatMessage,
-          }),
-        error: (error) => console.warn(error),
-      });
-    return () => sub.unsubscribe();
-  }, [selectedChat]);
-  
-  Hub.listen('api', (data) => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    } else {
+      const sub = client
+        .graphql({
+          query: onCreateChatMessage,
+          variables: { filter: { chatID: { eq: selectedChat?.chatID } } },
+        })
+        .subscribe({
+          next: ({ provider, value }) =>
+            setSelectedChat({
+              ...selectedChat,
+              messages: [
+                ...selectedChat.messages,
+                value.data.onCreateChatMessage,
+              ],
+            }),
+          error: (err) => console.log(err),
+        });
+      return () => sub.unsubscribe();
+    }
+  }, [selectedChat.id]);
+
+  Hub.listen("api", (data) => {
     const { payload } = data;
     if (payload.event === CONNECTION_STATE_CHANGE) {
       const connectionState = payload.data.connectionState;
