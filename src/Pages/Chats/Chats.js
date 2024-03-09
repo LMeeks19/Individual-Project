@@ -48,7 +48,7 @@ export default function Chats() {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
-    } else {
+    } else if (selectedChat?.id) {
       const sub = client
         .graphql({
           query: onCreateChatMessage,
@@ -67,7 +67,7 @@ export default function Chats() {
         });
       return () => sub.unsubscribe();
     }
-  }, [selectedChat.id]);
+  }, [selectedChat]);
 
   Hub.listen("api", (data) => {
     const { payload } = data;
