@@ -146,7 +146,7 @@ export default function Chats() {
         <Flex className="chat-container-2" direction="column">
           <View className="chat-current">
             <Text as="div">
-              <Heading level={3}>
+              <Heading level={3} className="text-overflow">
                 {selectedChat.name ?? getChatNameFromUsers(selectedChat)}
               </Heading>
             </Text>
