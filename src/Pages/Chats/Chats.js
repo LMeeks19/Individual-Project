@@ -23,6 +23,9 @@ import CreateChatModal from "../../Modals/ChatModals/CreateChatModal";
 import { intlFormatDistance } from "date-fns";
 import { onCreateChatMessage } from "../../graphql/subscriptions";
 import { generateClient } from "aws-amplify/api";
+import { CONNECTION_STATE_CHANGE } from "aws-amplify/api";
+import { Hub } from "aws-amplify/utils";
+
 
 export default function Chats() {
   const [chats, setChats] = useRecoilState(chatsState);
@@ -42,25 +45,29 @@ export default function Chats() {
   }, []);
 
   useEffect(() => {
-    async function chatMessageSubscription() {
-      if (selectedChat !== null) {
-        await client
-          .graphql({
-            query: onCreateChatMessage,
-            variables: { filter: { chatID: { eq: selectedChat.chatID } } },
-          })
-          .subscribe({
-            next: ({ value }) =>
-              setSelectedChat({
-                ...selectedChat,
-                messages: value.data.onCreateChatMessage,
-              }),
-            error: (error) => console.warn(error),
-          });
-      }
-    }
-    chatMessageSubscription();
+    const sub = client
+      .graphql({
+        query: onCreateChatMessage,
+        variables: { filter: { chatID: { eq: selectedChat?.chatID } } },
+      })
+      .subscribe({
+        next: ({ value }) =>
+          setSelectedChat({
+            ...selectedChat,
+            messages: value.data.onCreateChatMessage,
+          }),
+        error: (error) => console.warn(error),
+      });
+    return () => sub.unsubscribe();
   }, [selectedChat]);
+  
+  Hub.listen('api', (data) => {
+    const { payload } = data;
+    if (payload.event === CONNECTION_STATE_CHANGE) {
+      const connectionState = payload.data.connectionState;
+      console.log(connectionState);
+    }
+  });
 
   async function sendMessage() {
     let messages = [
