@@ -497,6 +497,9 @@ export const listMatchPosts = /* GraphQL */ `
         teamID
         teamName
         interestedUsers {
+          items {
+            id
+          }
           nextToken
           __typename
         }

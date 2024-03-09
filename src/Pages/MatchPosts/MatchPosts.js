@@ -16,9 +16,9 @@ export default function MatchPosts() {
 
   useEffect(() => {
     async function getPosts() {
-     // let apiPosts = await GetMatchPosts();
-     // apiPosts = apiPosts.sort((a, b) => a.title.localeCompare(b.title));
-     // setPosts(apiPosts);
+     let apiPosts = await GetMatchPosts();
+     apiPosts = apiPosts.sort((a, b) => a.title.localeCompare(b.title));
+     setPosts(apiPosts);
     }
     getPosts();
   }, []);

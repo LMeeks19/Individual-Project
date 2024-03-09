@@ -13,8 +13,9 @@ import {
   deleteTeam as deleteTeamMutation,
   deleteTeamPlayer as deleteTeamPlayerMutation,
   deleteMatchPost as deleteMatchPostMutation,
-  createChatMessage as createChatMessageMutation
+  createChatMessage as createChatMessageMutation,
 } from "../graphql/mutations";
+import { onChatMessageCreate } from "../graphql/subscriptions";
 import { fetchUserAttributes } from "aws-amplify/auth";
 
 export async function GetProfile(user) {
@@ -191,7 +192,6 @@ export async function GetChatsByProfileId(id) {
     chat.users = chat.users.items.map((user) => user.profile);
     chat.messages = chat.messages.items;
   });
-  console.log(chats);
   return chats;
 }
 

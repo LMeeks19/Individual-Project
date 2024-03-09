@@ -20,7 +20,9 @@ import {
 } from "../../Functions/GlobalState";
 import { CreateChatMessage, GetChatsByProfileId } from "../../Functions/Server";
 import CreateChatModal from "../../Modals/ChatModals/CreateChatModal";
-import { formatRelative } from "date-fns";
+import { intlFormatDistance } from "date-fns";
+import { onCreateChatMessage } from "../../graphql/subscriptions";
+import { generateClient } from "aws-amplify/api";
 
 export default function Chats() {
   const [chats, setChats] = useRecoilState(chatsState);
@@ -30,6 +32,7 @@ export default function Chats() {
   const { user } = useAuthenticator();
 
   const [message, setMessage] = useState(null);
+  const client = generateClient();
 
   useEffect(() => {
     async function GetChats() {
@@ -37,6 +40,27 @@ export default function Chats() {
     }
     GetChats();
   }, []);
+
+  useEffect(() => {
+    async function chatMessageSubscription() {
+      if (selectedChat !== null) {
+        await client
+          .graphql({
+            query: onCreateChatMessage,
+            variables: { filter: { chatID: { eq: selectedChat.chatID } } },
+          })
+          .subscribe({
+            next: ({ value }) =>
+              setSelectedChat({
+                ...selectedChat,
+                messages: value.data.onCreateChatMessage,
+              }),
+            error: (error) => console.warn(error),
+          });
+      }
+    }
+    chatMessageSubscription();
+  }, [selectedChat]);
 
   async function sendMessage() {
     let messages = [
@@ -57,12 +81,6 @@ export default function Chats() {
     });
   }
 
-  function formatDate(date) {
-    let formattedDate = formatRelative(new Date(date), new Date(), {});
-    formattedDate = formattedDate.replace(" at", ",");
-    return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
-  }
-
   function openModal(component, title) {
     setModal({ component: component, title: title, isShown: true });
   }
@@ -79,29 +97,31 @@ export default function Chats() {
           />
         </Text>
         <View className="chat-list">
-          {chats?.map((chat) => {
-            return (
-              <Flex
-                key={chat.id}
-                className={`chat-tile ${
-                  chat.id === selectedChat?.id ? "active" : ""
-                }`}
-                onClick={() => toggleSelectedChat(chat)}
-              >
-                <Heading className="text-overflow" level={4}>
-                  {chat.name ??
-                    chat.users.map((user, index) => {
-                      if (user.id !== currentUser.id) {
-                        if (index !== 0) return ", " + user.name;
-                        else return user.name;
-                      }
-                      return "";
-                    })}
-                </Heading>
-                <DeleteIcon className="icon delete" />
-              </Flex>
-            );
-          })}
+          {chats
+            .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
+            .map((chat) => {
+              return (
+                <Flex
+                  key={chat.id}
+                  className={`chat-tile ${
+                    chat.id === selectedChat?.id ? "active" : ""
+                  }`}
+                  onClick={() => toggleSelectedChat(chat)}
+                >
+                  <Heading className="text-overflow" level={4}>
+                    {chat.name ??
+                      chat.users.map((user, index) => {
+                        if (user.id !== currentUser.id) {
+                          if (index !== 0) return ", " + user.name;
+                          else return user.name;
+                        }
+                        return "";
+                      })}
+                  </Heading>
+                  <DeleteIcon className="icon delete" />
+                </Flex>
+              );
+            })}
         </View>
       </Flex>
       {selectedChat !== null ? (
@@ -134,7 +154,10 @@ export default function Chats() {
                     }`}
                   >
                     <Text fontSize="x-small" opacity="75%">
-                      {formatDate(message.createdAt)}
+                      {intlFormatDistance(
+                        new Date(message.createdAt),
+                        new Date()
+                      )}
                     </Text>
                     <Text>{message.message}</Text>{" "}
                   </Flex>
@@ -158,6 +181,11 @@ export default function Chats() {
               width="100%"
               labelHidden
               onChange={(e) => setMessage(e.target.value)}
+              onKeyUp={async (e) => {
+                if (e.key === "Enter") {
+                  sendMessage();
+                }
+              }}
             />
             <SendIcon
               className="icon"
