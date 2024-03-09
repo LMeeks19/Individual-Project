@@ -55,6 +55,16 @@ export default function Chats() {
               ...selectedChat,
               messages: [data.onCreateChatMessage, ...selectedChat.messages],
             });
+            let updatedChats = [...chats].map((chat) => {
+              if (chat.id === data.onCreateChatMessage.chatID)
+                return {
+                  ...chat,
+                  messages: [data.onCreateChatMessage, ...chat.messages],
+                };
+              else return chat;
+            });
+
+            setChats(updatedChats);
           }
         },
         error: (error) => console.log(error),
