@@ -6,7 +6,11 @@ import { currentUserState, modalState } from "../Functions/GlobalState";
 import NavBar from "../Components/NavBar";
 import NavRouter from "../Components/Router";
 import { BrowserRouter as Router } from "react-router-dom";
-import { GetProfile, GetPlayersByProfileId, GetTeamByProfileId } from "../Functions/Server";
+import {
+  GetProfile,
+  GetPlayersByProfileId,
+  GetTeamByProfileId,
+} from "../Functions/Server";
 import "./Page.css";
 import WarningMessage from "../Components/Warning-Message";
 import Modal from "../Modals/Modal";
@@ -18,11 +22,11 @@ export default function Page() {
 
   useEffect(() => {
     async function fetchUser() {
-      //setCurrentUser({
-        //...(await GetProfile(user)),
-       // players: await GetPlayersByProfileId(user.userId),
-       // team: await GetTeamByProfileId(user.userId),
-      //});
+      setCurrentUser({
+        ...(await GetProfile(user)),
+        players: await GetPlayersByProfileId(user.userId),
+        team: await GetTeamByProfileId(user.userId),
+      });
     }
     fetchUser();
   }, []);

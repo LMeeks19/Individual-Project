@@ -25,8 +25,6 @@ import ViewMatchPostModal from "../../Modals/MatchPostModals/ViewMatchPostModal"
 import UpdateMatchPostModal from "../../Modals/MatchPostModals/UpdateMatchPostModal";
 import "./MatchPosts.css";
 
-// TODO: View, Create, Update Modals
-
 export default function PostsTab(props) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(8);
