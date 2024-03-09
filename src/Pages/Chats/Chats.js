@@ -49,12 +49,15 @@ export default function Chats() {
         query: onCreateChatMessage,
       })
       .subscribe({
-        next: ({ data }) =>
-          setSelectedChat({
-            ...selectedChat,
-            messages: [data.onCreateChatMessage, ...selectedChat.messages],
-          }),
-        error: (err) => console.log(err),
+        next: ({ data }) => {
+          if (data.onCreateChatMessage.chatID === selectedChat.id) {
+            setSelectedChat({
+              ...selectedChat,
+              messages: [data.onCreateChatMessage, ...selectedChat.messages],
+            });
+          }
+        },
+        error: (error) => console.log(error),
       });
     return () => {
       sub.unsubscribe();
