@@ -6,7 +6,7 @@ import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
 import { currentUserState, matchPostsState } from "../../Functions/GlobalState";
 import CreateMatchPostModal from "../../Modals/MatchPostModals/CreateMatchPostModal";
 import { modalState } from "../../Functions/GlobalState";
-import AddIcon from "@mui/icons-material/Add";
+import { Add }from "@mui/icons-material";
 import "./MatchPosts.css";
 
 export default function MatchPosts() {
@@ -16,9 +16,9 @@ export default function MatchPosts() {
 
   useEffect(() => {
     async function getPosts() {
-     let apiPosts = await GetMatchPosts();
-     apiPosts = apiPosts.sort((a, b) => a.title.localeCompare(b.title));
-     setPosts(apiPosts);
+      let apiPosts = await GetMatchPosts();
+      apiPosts = apiPosts.sort((a, b) => a.title.localeCompare(b.title));
+      setPosts(apiPosts);
     }
     getPosts();
   }, []);
@@ -29,7 +29,11 @@ export default function MatchPosts() {
 
   return (
     <View className="page">
-      <Flex marginBottom="20px" justifyContent="space-between" alignItems="center">
+      <Flex
+        marginBottom="20px"
+        justifyContent="space-between"
+        alignItems="center"
+      >
         <Heading level={3}>Match Posts</Heading>
         <Button
           className="custom-button"
@@ -39,7 +43,13 @@ export default function MatchPosts() {
           }
         >
           <Text display="flex">
-            <AddIcon fontSize="small" className="icon" onClick={() => openModal(<CreateMatchPostModal />, "Create Match Post")} />
+            <Add
+              fontSize="small"
+              className="icon"
+              onClick={() =>
+                openModal(<CreateMatchPostModal />, "Create Match Post")
+              }
+            />
             Create
           </Text>
         </Button>
@@ -84,7 +94,10 @@ export default function MatchPosts() {
             currentUser={currentUser}
             posts={posts.filter(
               (post) =>
-                post.interestedUsers.includes(currentUser.id) && post.isActive
+                post.interestedUsers?.some(
+                  (interestedUser) =>
+                    interestedUser.profileId === currentUser.id
+                ) && post.isActive
             )}
           />
         </Tabs.Panel>
@@ -94,8 +107,7 @@ export default function MatchPosts() {
             posts={posts.filter(
               (post) =>
                 !post.isActive &&
-                (post.createdByProfileID === currentUser.id ||
-                  post.selectedOpponentProfileID)
+                (post.createdByProfileID === currentUser.id)
             )}
           />
         </Tabs.Panel>

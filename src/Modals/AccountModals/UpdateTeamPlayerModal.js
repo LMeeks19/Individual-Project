@@ -39,9 +39,6 @@ export default function UpdateTeamPlayerModal(props) {
           });
           setModal({ component: null, title: null, isShown: false });
         }}
-        onError={(error) => {
-          // TODO: Error Message
-        }}
       />
     </View>
   );

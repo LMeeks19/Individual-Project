@@ -6,9 +6,7 @@ import {
   TextField,
   useAuthenticator,
 } from "@aws-amplify/ui-react";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import SendIcon from "@mui/icons-material/Send";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { AddCircle, Send, Delete } from "@mui/icons-material";
 import "./Chats.css";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -94,10 +92,17 @@ export default function Chats() {
   }
 
   function getChatNameFromUsers(chat) {
-    return chat.users
-      .toString()
-      .split(",")
-      .slice(0, chat.users.length - 1);
+    let names = chat.users
+      .map((user) => {
+        if (user.id !== currentUser.id) {
+          return user.name;
+        }
+        return "";
+      })
+      .toString();
+    if (names.charAt(names.length - 1) === ",")
+      names = names.slice(0, names.length - 1);
+    return names.replace(",", ", ");
   }
 
   function openModal(component, title) {
@@ -109,7 +114,7 @@ export default function Chats() {
       <Flex className="chat-container-1" direction="column">
         <Text as="div" className="chat-title">
           <Heading level={3}>Chats</Heading>
-          <AddCircleIcon
+          <AddCircle
             className="icon"
             fontSize="large"
             onClick={() => openModal(<CreateChatModal />, "Create Chat")}
@@ -136,7 +141,7 @@ export default function Chats() {
                 <Heading className="text-overflow" level={4}>
                   {chat.name ?? getChatNameFromUsers(chat)}
                 </Heading>
-                <DeleteIcon className="icon delete" />
+                <Delete className="icon delete" />
               </Flex>
             );
           })}
@@ -199,7 +204,7 @@ export default function Chats() {
                 }
               }}
             />
-            <SendIcon
+            <Send
               className="icon"
               fontSize="large"
               onClick={() => sendMessage()}

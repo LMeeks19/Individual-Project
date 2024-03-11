@@ -4,10 +4,12 @@ import { modalState, currentUserState } from "../../Functions/GlobalState";
 import { Card, View, Heading, Flex, Text, Badge } from "@aws-amplify/ui-react";
 import { format } from "date-fns";
 
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
+import {
+  KeyboardArrowDown,
+  KeyboardArrowUp,
+  Delete,
+  Edit,
+} from "@mui/icons-material";
 import { DeletePlayer } from "../../Functions/Server";
 import UpdatePlayerModal from "../../Modals/AccountModals/UpdatePlayerModal";
 import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
@@ -79,7 +81,7 @@ export default function ViewRegisteredPlayers() {
                   </Heading>
                   <Flex direction="row">
                     <Text>
-                      <EditIcon
+                      <Edit
                         className="icon-button"
                         onClick={() =>
                           openModal(
@@ -90,7 +92,7 @@ export default function ViewRegisteredPlayers() {
                       />
                     </Text>
                     <Text>
-                      <DeleteIcon
+                      <Delete
                         className="icon-button delete"
                         onClick={() =>
                           openModal(
@@ -106,12 +108,12 @@ export default function ViewRegisteredPlayers() {
                     </Text>
                     <Text>
                       {registeredPlayer.isShown ? (
-                        <KeyboardArrowUpIcon
+                        <KeyboardArrowUp
                           className="icon-button"
                           onClick={() => updateIsShown(registeredPlayer.id)}
                         />
                       ) : (
-                        <KeyboardArrowDownIcon
+                        <KeyboardArrowDown
                           className="icon-button"
                           onClick={() => updateIsShown(registeredPlayer.id)}
                         />

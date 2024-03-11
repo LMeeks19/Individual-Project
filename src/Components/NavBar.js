@@ -5,126 +5,95 @@ import {
   Menu,
   MenuItem,
   Divider,
+  Heading
 } from "@aws-amplify/ui-react";
 import React from "react";
 import "./NavBar.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import PostAddIcon from "@mui/icons-material/PostAdd";
-import ChatIcon from "@mui/icons-material/Chat";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { PostAdd, Chat, AccountCircle } from "@mui/icons-material";
+import { useRecoilValue } from "recoil";
+import { currentUserState } from "../Functions/GlobalState";
 
 export default function NavBar() {
   const navigate = useNavigate();
+  const currentUser = useRecoilValue(currentUserState);
 
   return (
     <Flex gap="0" className="flex-container">
-      <Tabs.Container className="tab-container" defaultValue="1">
+      <Heading className="header" level={3}>Individual Project</Heading>
+      <Tabs.Container className="tab-container" defaultValue={currentUser.accountType === "COACH" || currentUser.accountType === "ADMIN" ? "1" : "2"}>
         <Tabs.List className="navbar" spacing="equal">
+
           <Tabs.Item
             className="item"
             value="1"
-            onClick={() => navigate("/dashboard")}
-          >
-            <Text display="flex">
-              <DashboardIcon className="icon" />
-              DASHBOARD
-            </Text>
-          </Tabs.Item>
-
-          <Tabs.Item
-            className="item"
-            value="2"
-            onClick={() => navigate("/schedule")}
-          >
-            <Text display="flex">
-              <CalendarMonthIcon className="icon" />
-              SCHEDULE
-            </Text>
-          </Tabs.Item>
-
-          <Tabs.Item
-            className="item"
-            value="3"
             onClick={() => navigate("/match-posts")}
           >
             <Text display="flex">
-              <PostAddIcon className="icon" />
+              <PostAdd className="icon" />
               MATCH POSTS
             </Text>
           </Tabs.Item>
 
           <Tabs.Item
             className="item"
-            value="4"
+            value="2"
             onClick={() => navigate("/player-posts")}
           >
             <Text display="flex">
-              <PostAddIcon className="icon" />
+              <PostAdd className="icon" />
               PLAYER POSTS
             </Text>
           </Tabs.Item>
 
           <Tabs.Item
             className="item"
-            value="5"
+            value="3"
             onClick={() => navigate("/messages")}
           >
             <Text display="flex">
-              <ChatIcon className="icon" />
+              <Chat className="icon" />
               MESSAGES
             </Text>
           </Tabs.Item>
+
           <Tabs.Item
             className="item"
-            value="6"
+            value="4"
             onClick={() => navigate("/account")}
           >
             <Text display="flex">
-              <AccountCircleIcon className="icon" />
+              <AccountCircle className="icon" />
               ACCOUNT
             </Text>
           </Tabs.Item>
         </Tabs.List>
       </Tabs.Container>
       <Menu width="fit-content" menuAlign="end">
-        <MenuItem onClick={() => navigate("/dashboard")}>
-          <Text display="flex">
-            <DashboardIcon className="icon" />
-            DASHBOARD
-          </Text>
-        </MenuItem>
         <Divider />
-        <MenuItem onClick={() => navigate("/schedule")}>
-          <Text display="flex">
-            <CalendarMonthIcon className="icon" />
-            SCHEDULE
-          </Text>
-        </MenuItem>
         <MenuItem onClick={() => navigate("/match-posts")}>
           <Text display="flex">
-            <PostAddIcon className="icon" />
+            <PostAdd className="icon" />
             MATCH POSTS
           </Text>
         </MenuItem>
         <MenuItem onClick={() => navigate("/player-posts")}>
           <Text display="flex">
-            <PostAddIcon className="icon" />
+            <PostAdd className="icon" />
             PLAYER POSTS
           </Text>
         </MenuItem>
         <Divider />
         <MenuItem onClick={() => navigate("/messages")}>
           <Text display="flex">
-            <ChatIcon className="icon" />
+            <Chat className="icon" />
             MESSAGES
           </Text>
         </MenuItem>
         <MenuItem onClick={() => navigate("/account")}>
           <Text display="flex">
-            <AccountCircleIcon className="icon" />
+            <AccountCircle className="icon" />
             ACCOUNT
           </Text>
         </MenuItem>

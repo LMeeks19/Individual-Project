@@ -41,6 +41,7 @@ export default function MatchPostUpdateForm(props) {
     ageGroup: "",
     teamSize: "",
     substitutionLimit: false,
+    createdByName: "",
     cards: false,
     halfLength: "",
     kickOff: "",
@@ -49,6 +50,7 @@ export default function MatchPostUpdateForm(props) {
     county: "",
     postcode: "",
     teamName: "",
+    selectedOpponent: "",
   };
   const [title, setTitle] = React.useState(initialValues.title);
   const [description, setDescription] = React.useState(
@@ -60,6 +62,9 @@ export default function MatchPostUpdateForm(props) {
   const [substitutionLimit, setSubstitutionLimit] = React.useState(
     initialValues.substitutionLimit
   );
+  const [createdByName, setCreatedByName] = React.useState(
+    initialValues.createdByName
+  );
   const [cards, setCards] = React.useState(initialValues.cards);
   const [halfLength, setHalfLength] = React.useState(initialValues.halfLength);
   const [kickOff, setKickOff] = React.useState(initialValues.kickOff);
@@ -68,6 +73,9 @@ export default function MatchPostUpdateForm(props) {
   const [county, setCounty] = React.useState(initialValues.county);
   const [postcode, setPostcode] = React.useState(initialValues.postcode);
   const [teamName, setTeamName] = React.useState(initialValues.teamName);
+  const [selectedOpponent, setSelectedOpponent] = React.useState(
+    initialValues.selectedOpponent
+  );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = matchPostRecord
@@ -79,6 +87,7 @@ export default function MatchPostUpdateForm(props) {
     setAgeGroup(cleanValues.ageGroup);
     setTeamSize(cleanValues.teamSize);
     setSubstitutionLimit(cleanValues.substitutionLimit);
+    setCreatedByName(cleanValues.createdByName);
     setCards(cleanValues.cards);
     setHalfLength(cleanValues.halfLength);
     setKickOff(cleanValues.kickOff);
@@ -87,6 +96,7 @@ export default function MatchPostUpdateForm(props) {
     setCounty(cleanValues.county);
     setPostcode(cleanValues.postcode);
     setTeamName(cleanValues.teamName);
+    setSelectedOpponent(cleanValues.selectedOpponent);
     setErrors({});
   };
   const [matchPostRecord, setMatchPostRecord] =
@@ -113,6 +123,7 @@ export default function MatchPostUpdateForm(props) {
     ageGroup: [{ type: "Required" }],
     teamSize: [{ type: "Required" }],
     substitutionLimit: [{ type: "Required" }],
+    createdByName: [{ type: "Required" }],
     cards: [{ type: "Required" }],
     halfLength: [{ type: "Required" }],
     kickOff: [{ type: "Required" }],
@@ -121,6 +132,7 @@ export default function MatchPostUpdateForm(props) {
     county: [{ type: "Required" }],
     postcode: [{ type: "Required" }],
     teamName: [{ type: "Required" }],
+    selectedOpponent: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -171,6 +183,7 @@ export default function MatchPostUpdateForm(props) {
           ageGroup,
           teamSize,
           substitutionLimit,
+          createdByName,
           cards,
           halfLength,
           kickOff,
@@ -179,6 +192,7 @@ export default function MatchPostUpdateForm(props) {
           county,
           postcode,
           teamName,
+          selectedOpponent: selectedOpponent ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -245,6 +259,7 @@ export default function MatchPostUpdateForm(props) {
               ageGroup,
               teamSize,
               substitutionLimit,
+              createdByName,
               cards,
               halfLength,
               kickOff,
@@ -253,6 +268,7 @@ export default function MatchPostUpdateForm(props) {
               county,
               postcode,
               teamName,
+              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.title ?? value;
@@ -282,6 +298,7 @@ export default function MatchPostUpdateForm(props) {
               ageGroup,
               teamSize,
               substitutionLimit,
+              createdByName,
               cards,
               halfLength,
               kickOff,
@@ -290,6 +307,7 @@ export default function MatchPostUpdateForm(props) {
               county,
               postcode,
               teamName,
+              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -319,6 +337,7 @@ export default function MatchPostUpdateForm(props) {
               ageGroup,
               teamSize,
               substitutionLimit,
+              createdByName,
               cards,
               halfLength,
               kickOff,
@@ -327,6 +346,7 @@ export default function MatchPostUpdateForm(props) {
               county,
               postcode,
               teamName,
+              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.gameType ?? value;
@@ -372,6 +392,7 @@ export default function MatchPostUpdateForm(props) {
               ageGroup: value,
               teamSize,
               substitutionLimit,
+              createdByName,
               cards,
               halfLength,
               kickOff,
@@ -380,6 +401,7 @@ export default function MatchPostUpdateForm(props) {
               county,
               postcode,
               teamName,
+              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.ageGroup ?? value;
@@ -489,6 +511,7 @@ export default function MatchPostUpdateForm(props) {
               ageGroup,
               teamSize: value,
               substitutionLimit,
+              createdByName,
               cards,
               halfLength,
               kickOff,
@@ -497,6 +520,7 @@ export default function MatchPostUpdateForm(props) {
               county,
               postcode,
               teamName,
+              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.teamSize ?? value;
@@ -526,6 +550,7 @@ export default function MatchPostUpdateForm(props) {
               ageGroup,
               teamSize,
               substitutionLimit: value,
+              createdByName,
               cards,
               halfLength,
               kickOff,
@@ -534,6 +559,7 @@ export default function MatchPostUpdateForm(props) {
               county,
               postcode,
               teamName,
+              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.substitutionLimit ?? value;
@@ -550,6 +576,45 @@ export default function MatchPostUpdateForm(props) {
         hasError={errors.substitutionLimit?.hasError}
         {...getOverrideProps(overrides, "substitutionLimit")}
       ></SwitchField>
+      <TextField
+        label="Created by name"
+        isRequired={true}
+        isReadOnly={false}
+        value={createdByName}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              title,
+              description,
+              gameType,
+              ageGroup,
+              teamSize,
+              substitutionLimit,
+              createdByName: value,
+              cards,
+              halfLength,
+              kickOff,
+              street,
+              townCity,
+              county,
+              postcode,
+              teamName,
+              selectedOpponent,
+            };
+            const result = onChange(modelFields);
+            value = result?.createdByName ?? value;
+          }
+          if (errors.createdByName?.hasError) {
+            runValidationTasks("createdByName", value);
+          }
+          setCreatedByName(value);
+        }}
+        onBlur={() => runValidationTasks("createdByName", createdByName)}
+        errorMessage={errors.createdByName?.errorMessage}
+        hasError={errors.createdByName?.hasError}
+        {...getOverrideProps(overrides, "createdByName")}
+      ></TextField>
       <SwitchField
         label="Allow Cards"
         defaultChecked={false}
@@ -565,6 +630,7 @@ export default function MatchPostUpdateForm(props) {
               ageGroup,
               teamSize,
               substitutionLimit,
+              createdByName,
               cards: value,
               halfLength,
               kickOff,
@@ -573,6 +639,7 @@ export default function MatchPostUpdateForm(props) {
               county,
               postcode,
               teamName,
+              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.cards ?? value;
@@ -606,6 +673,7 @@ export default function MatchPostUpdateForm(props) {
               ageGroup,
               teamSize,
               substitutionLimit,
+              createdByName,
               cards,
               halfLength: value,
               kickOff,
@@ -614,6 +682,7 @@ export default function MatchPostUpdateForm(props) {
               county,
               postcode,
               teamName,
+              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.halfLength ?? value;
@@ -645,6 +714,7 @@ export default function MatchPostUpdateForm(props) {
               ageGroup,
               teamSize,
               substitutionLimit,
+              createdByName,
               cards,
               halfLength,
               kickOff: value,
@@ -653,6 +723,7 @@ export default function MatchPostUpdateForm(props) {
               county,
               postcode,
               teamName,
+              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.kickOff ?? value;
@@ -682,6 +753,7 @@ export default function MatchPostUpdateForm(props) {
               ageGroup,
               teamSize,
               substitutionLimit,
+              createdByName,
               cards,
               halfLength,
               kickOff,
@@ -690,6 +762,7 @@ export default function MatchPostUpdateForm(props) {
               county,
               postcode,
               teamName,
+              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.street ?? value;
@@ -719,6 +792,7 @@ export default function MatchPostUpdateForm(props) {
               ageGroup,
               teamSize,
               substitutionLimit,
+              createdByName,
               cards,
               halfLength,
               kickOff,
@@ -727,6 +801,7 @@ export default function MatchPostUpdateForm(props) {
               county,
               postcode,
               teamName,
+              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.townCity ?? value;
@@ -756,6 +831,7 @@ export default function MatchPostUpdateForm(props) {
               ageGroup,
               teamSize,
               substitutionLimit,
+              createdByName,
               cards,
               halfLength,
               kickOff,
@@ -764,6 +840,7 @@ export default function MatchPostUpdateForm(props) {
               county: value,
               postcode,
               teamName,
+              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.county ?? value;
@@ -793,6 +870,7 @@ export default function MatchPostUpdateForm(props) {
               ageGroup,
               teamSize,
               substitutionLimit,
+              createdByName,
               cards,
               halfLength,
               kickOff,
@@ -801,6 +879,7 @@ export default function MatchPostUpdateForm(props) {
               county,
               postcode: value,
               teamName,
+              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.postcode ?? value;
@@ -830,6 +909,7 @@ export default function MatchPostUpdateForm(props) {
               ageGroup,
               teamSize,
               substitutionLimit,
+              createdByName,
               cards,
               halfLength,
               kickOff,
@@ -838,6 +918,7 @@ export default function MatchPostUpdateForm(props) {
               county,
               postcode,
               teamName: value,
+              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.teamName ?? value;
@@ -851,6 +932,45 @@ export default function MatchPostUpdateForm(props) {
         errorMessage={errors.teamName?.errorMessage}
         hasError={errors.teamName?.hasError}
         {...getOverrideProps(overrides, "teamName")}
+      ></TextField>
+      <TextField
+        label="Selected opponent"
+        isRequired={false}
+        isReadOnly={false}
+        value={selectedOpponent}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              title,
+              description,
+              gameType,
+              ageGroup,
+              teamSize,
+              substitutionLimit,
+              createdByName,
+              cards,
+              halfLength,
+              kickOff,
+              street,
+              townCity,
+              county,
+              postcode,
+              teamName,
+              selectedOpponent: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.selectedOpponent ?? value;
+          }
+          if (errors.selectedOpponent?.hasError) {
+            runValidationTasks("selectedOpponent", value);
+          }
+          setSelectedOpponent(value);
+        }}
+        onBlur={() => runValidationTasks("selectedOpponent", selectedOpponent)}
+        errorMessage={errors.selectedOpponent?.errorMessage}
+        hasError={errors.selectedOpponent?.hasError}
+        {...getOverrideProps(overrides, "selectedOpponent")}
       ></TextField>
       <Flex
         justifyContent="space-between"

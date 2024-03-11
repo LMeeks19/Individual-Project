@@ -32,9 +32,6 @@ export default function UpdateTeamModal() {
           setCurrentUser({ ...currentUser, team: data });
           setModal({ component: null, title: null, isShown: false });
         }}
-        onError={(error) => {
-          // TODO: Error Message
-        }}
       />
     </View>
   );

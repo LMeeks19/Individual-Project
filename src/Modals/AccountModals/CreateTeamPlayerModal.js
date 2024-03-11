@@ -22,9 +22,6 @@ export default function CreateTeamPlayerModal(props) {
           setCurrentUser({ ...currentUser, team: { ...currentUser.team, players: [...currentUser.team.players, data] } });
           setModal({ component: null, title: null, isShown: false });
         }}
-        onError={(error) => {
-          // TODO: Error Message
-        }}
       />
     </View>
   );

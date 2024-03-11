@@ -33,9 +33,6 @@ export default function CreateMatchPostModal() {
           setPosts([...posts, data]);
           setModal({ component: null, title: null, isShown: false });
         }}
-        onError={(error) => {
-          // TODO: Error Message
-        }}
       />
     </View>
   );

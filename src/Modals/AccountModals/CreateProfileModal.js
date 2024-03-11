@@ -37,9 +37,6 @@ export default function CreateProfileModal() {
           });
           setModal({ component: null, title: null, isShown: false });
         }}
-        onError={(error) => {
-          // TODO: Error Message
-        }}
       />
     </View>
   );

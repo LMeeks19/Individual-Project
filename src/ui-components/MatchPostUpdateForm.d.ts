@@ -28,6 +28,7 @@ export declare type MatchPostUpdateFormInputValues = {
     ageGroup?: string;
     teamSize?: number;
     substitutionLimit?: boolean;
+    createdByName?: string;
     cards?: boolean;
     halfLength?: number;
     kickOff?: string;
@@ -36,6 +37,7 @@ export declare type MatchPostUpdateFormInputValues = {
     county?: string;
     postcode?: string;
     teamName?: string;
+    selectedOpponent?: string;
 };
 export declare type MatchPostUpdateFormValidationValues = {
     title?: ValidationFunction<string>;
@@ -44,6 +46,7 @@ export declare type MatchPostUpdateFormValidationValues = {
     ageGroup?: ValidationFunction<string>;
     teamSize?: ValidationFunction<number>;
     substitutionLimit?: ValidationFunction<boolean>;
+    createdByName?: ValidationFunction<string>;
     cards?: ValidationFunction<boolean>;
     halfLength?: ValidationFunction<number>;
     kickOff?: ValidationFunction<string>;
@@ -52,6 +55,7 @@ export declare type MatchPostUpdateFormValidationValues = {
     county?: ValidationFunction<string>;
     postcode?: ValidationFunction<string>;
     teamName?: ValidationFunction<string>;
+    selectedOpponent?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type MatchPostUpdateFormOverridesProps = {
@@ -62,6 +66,7 @@ export declare type MatchPostUpdateFormOverridesProps = {
     ageGroup?: PrimitiveOverrideProps<SelectFieldProps>;
     teamSize?: PrimitiveOverrideProps<TextFieldProps>;
     substitutionLimit?: PrimitiveOverrideProps<SwitchFieldProps>;
+    createdByName?: PrimitiveOverrideProps<TextFieldProps>;
     cards?: PrimitiveOverrideProps<SwitchFieldProps>;
     halfLength?: PrimitiveOverrideProps<TextFieldProps>;
     kickOff?: PrimitiveOverrideProps<TextFieldProps>;
@@ -70,6 +75,7 @@ export declare type MatchPostUpdateFormOverridesProps = {
     county?: PrimitiveOverrideProps<TextFieldProps>;
     postcode?: PrimitiveOverrideProps<TextFieldProps>;
     teamName?: PrimitiveOverrideProps<TextFieldProps>;
+    selectedOpponent?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type MatchPostUpdateFormProps = React.PropsWithChildren<{
     overrides?: MatchPostUpdateFormOverridesProps | undefined | null;

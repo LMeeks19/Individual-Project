@@ -1,5 +1,5 @@
 import { View, Text } from "@aws-amplify/ui-react";
-import CloseIcon from "@mui/icons-material/Close";
+import { Close } from "@mui/icons-material";
 import "./Warning-Message.css";
 import { useRecoilState } from "recoil";
 import { modalState, warningIsShownState } from "../Functions/GlobalState";
@@ -20,7 +20,7 @@ export default function WarningMessage(props) {
     >
       <View className="warning-close" onClick={() => setWarningIsShown(false)}>
         <Text>
-          <CloseIcon />
+          <Close />
         </Text>
       </View>
       <View className="warning-header">

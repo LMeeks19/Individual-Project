@@ -95,6 +95,7 @@ type MatchPost @model @auth(rules: [{allow: public}]) {
   id: ID!
   title: String!
   description: String!
+  createdByName: String!
   createdByProfileID: ID! @index(name: "byProfile")
   gameType: GameType!
   ageGroup: AgeGroup!
@@ -111,6 +112,7 @@ type MatchPost @model @auth(rules: [{allow: public}]) {
   teamID: ID! @index(name: "byTeam")
   teamName: String!
   interestedUsers: [Profile] @manyToMany(relationName: "ProfileMatchPost")
+  selectedOpponent: ID
 }
 
 type Chat @model @auth(rules: [{allow: public}]) {

@@ -6,6 +6,14 @@
   background-color: #008080;
   display: flex;
   flex-shrink: 0;
+  justify-content: space-between;
+
+  .header {
+    display: flex;
+    justify-self: start;
+    align-self: center;
+    margin-left: 40px;
+  }
 
   .amplify-button {
     display: none;
@@ -27,16 +35,14 @@
   }
 
   .tab-container {
-    width: 100%;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-right: 40px;
 
     .navbar {
       z-index: 5;
       border-color: transparent;
       width: 100%;
       display: flex;
-      justify-content: space-evenly;
+      gap: 40px;
 
       .item {
         transition: border .5s ease-in-out;
@@ -46,7 +52,6 @@
         border-color: transparent;
         z-index: 5;
         display: flex;
-        justify-content: center;
 
         .amplify-text {
           color: #fff;
@@ -84,39 +89,8 @@
   }
 }
 
-@media screen and (max-width: 1100px) {
-  .flex-container {
-    .tab-container {
-      .navbar {
-        .item {
-          font-size: medium;
-        }
 
-        .icon {
-          font-size: 1.25rem;
-        }
-      }
-    }
-  }
-}
-
-@media screen and (max-width: 990px) {
-  .flex-container {
-    .tab-container {
-      .navbar {
-        .item {
-          font-size: small;
-        }
-
-        .icon {
-          font-size: 1rem;
-        }
-      }
-    }
-  }
-}
-
-@media screen and (max-width: 862px) {
+@media screen and (max-width: 1060px) {
   .flex-container {
     .amplify-button {
       display: flex;

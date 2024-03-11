@@ -486,37 +486,71 @@ export const listMatchPosts = /* GraphQL */ `
   ) {
     listMatchPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        id
-        title
-        description
-        createdByProfileID
-        gameType
         ageGroup
-        teamSize
-        substitutionLimit
         cards
-        halfLength
-        kickOff
-        street
-        townCity
         county
-        postcode
+        createdAt
+        createdByName
+        createdByProfileID
+        description
+        gameType
+        halfLength
+        id
         isActive
+        kickOff
+        postcode
+        street
+        substitutionLimit
         teamID
         teamName
+        teamSize
+        title
+        townCity
+        updatedAt
+        selectedOpponent 
         interestedUsers {
           items {
+            profileId
             id
+            matchPostId
+            createdAt
+            updatedAt
+            profile {
+              id
+              name
+              email
+              accountType
+              county
+              createdAt
+              dob
+              phoneNumber
+              postcode
+              street
+              townCity
+              updatedAt
+              username
+              team {
+                items {
+                  ageGroup
+                  createdAt
+                  email
+                  id
+                  league
+                  location
+                  name
+                  updatedAt
+                  website
+                  profileID
+                  phoneNumber
+                }
+                nextToken
+              }
+            }
           }
           nextToken
-          __typename
         }
-        createdAt
-        updatedAt
-        __typename
       }
       nextToken
-      __typename
     }
   }
 `;

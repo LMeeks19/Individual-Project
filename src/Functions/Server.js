@@ -15,6 +15,9 @@ import {
   deleteTeamPlayer as deleteTeamPlayerMutation,
   deleteMatchPost as deleteMatchPostMutation,
   createChatMessage as createChatMessageMutation,
+  createProfileMatchPost,
+  deleteProfileMatchPost,
+  updateMatchPost,
 } from "../graphql/mutations";
 import { fetchUserAttributes } from "aws-amplify/auth";
 
@@ -190,7 +193,7 @@ export async function GetChatsByProfileId(id) {
 
   chats.forEach((chat) => {
     chat.users = chat.users.items.map((user) => user.profile);
-    chat.messages = []
+    chat.messages = [];
   });
   return chats;
 }
@@ -221,4 +224,73 @@ export async function GetChatMessages(chatId) {
   });
 
   return apiData.data.listChatMessages.items;
+}
+
+export async function AddMatchPostInterestedUser(profileId, matchPostId) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: createProfileMatchPost,
+    variables: {
+      input: {
+        profileId: profileId,
+        matchPostId: matchPostId,
+      },
+    },
+  });
+
+  return apiData.data.createProfileMatchPost;
+}
+
+export async function RemoveMatchPostInterestedUser(interestedUserId) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: deleteProfileMatchPost,
+    variables: {
+      input: {
+        id: interestedUserId,
+      },
+    },
+  });
+
+  return apiData.data.deleteProfileMatchPost;
+}
+
+export async function SelectMatchPostOpponent(matchPostId, interestedUserId) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: updateMatchPost,
+    variables: {
+      input: {
+        id: matchPostId,
+        selectedOpponent: interestedUserId,
+        isActive: false,
+      },
+    },
+  });
+
+  let data = apiData.data.updateMatchPost;
+  data.interestedUsers = data.interestedUsers.items;
+  return data;
+}
+
+export async function ReactivateMatchPost(matchPostId, interestedUserId) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: updateMatchPost,
+    variables: {
+      input: {
+        id: matchPostId,
+        selectedOpponent: null,
+        isActive: true,
+      },
+    },
+  });
+
+  let data = apiData.data.updateMatchPost;
+  data.interestedUsers = data.interestedUsers.items;
+  return data;
 }

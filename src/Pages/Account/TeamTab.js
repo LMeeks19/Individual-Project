@@ -9,8 +9,7 @@ import {
 } from "@aws-amplify/ui-react";
 import "./Account.css";
 import { Avatar } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { Edit, Delete } from "@mui/icons-material";
 import { DeleteTeamPlayer } from "../../Functions/Server";
 import { currentUserState, modalState } from "../../Functions/GlobalState";
 import { useRecoilState, useSetRecoilState } from "recoil";
@@ -20,7 +19,7 @@ import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
 export function TeamDetails(props) {
   return (
     <View>
-      {props.team.id !== undefined ? (
+      {props.team.id !== null ? (
         <Flex className="details-card" wrap="wrap" gap="0">
           <Card className="crest">
             <Avatar variant="square" sx={{ width: "100%", height: "100%" }} />
@@ -99,7 +98,7 @@ export function TeamRoster(props) {
 
   return (
     <View>
-      {currentUser.team.id !== undefined &&
+      {currentUser.team.id !== null &&
       currentUser.team.players.length !== 0 ? (
         <Flex marginTop="20px" wrap="wrap">
           {props.players?.map((player) => {
@@ -115,7 +114,7 @@ export function TeamRoster(props) {
                   <Heading className="header" color="#fff" level={4}>
                     <Text>{player.name}</Text>
                     <Flex className="icons">
-                      <EditIcon
+                      <Edit
                         className="icon"
                         onClick={() =>
                           openModal(
@@ -124,7 +123,7 @@ export function TeamRoster(props) {
                           )
                         }
                       />
-                      <DeleteIcon
+                      <Delete
                         className="icon"
                         htmlColor="red"
                         onClick={() => openModal(<ConfirmDeleteModal deleteFunction={() => deleteTeamPlayer(player.id)} />, "Confirm Delete Team Player")}

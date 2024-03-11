@@ -649,6 +649,7 @@ export const createMatchPost = /* GraphQL */ `
       isActive
       teamID
       teamName
+      selectedOpponent
       interestedUsers {
         items {
           id
@@ -691,17 +692,47 @@ export const updateMatchPost = /* GraphQL */ `
       isActive
       teamID
       teamName
+      selectedOpponent
       interestedUsers {
         items {
-          id
           profileId
+          id
           matchPostId
           createdAt
           updatedAt
-          __typename
+          profile {
+            id
+            name
+            email
+            accountType
+            county
+            createdAt
+            dob
+            phoneNumber
+            postcode
+            street
+            townCity
+            updatedAt
+            username
+            team {
+              items {
+                ageGroup
+                createdAt
+                email
+                id
+                league
+                location
+                name
+                updatedAt
+                website
+                profileID
+                phoneNumber
+              }
+              nextToken
+            }
+          }
         }
         nextToken
-        __typename
       }
       createdAt
       updatedAt
@@ -735,15 +766,44 @@ export const deleteMatchPost = /* GraphQL */ `
       teamName
       interestedUsers {
         items {
-          id
           profileId
+          id
           matchPostId
           createdAt
           updatedAt
-          __typename
+          profile {
+            id
+            name
+            email
+            accountType
+            county
+            createdAt
+            dob
+            phoneNumber
+            postcode
+            street
+            townCity
+            updatedAt
+            username
+            team {
+              items {
+                ageGroup
+                createdAt
+                email
+                id
+                league
+                location
+                name
+                updatedAt
+                website
+                profileID
+                phoneNumber
+              }
+              nextToken
+            }
+          }
         }
         nextToken
-        __typename
       }
       createdAt
       updatedAt
@@ -762,8 +822,8 @@ export const createChat = /* GraphQL */ `
       users {
         items {
           profile {
-            id 
-            name 
+            id
+            name
             email
           }
           createdAt
@@ -804,8 +864,8 @@ export const updateChat = /* GraphQL */ `
       users {
         items {
           profile {
-            id 
-            name 
+            id
+            name
             email
           }
           createdAt
@@ -949,6 +1009,19 @@ export const createProfileMatchPost = /* GraphQL */ `
           __typename
         }
         team {
+          items {
+            id
+            name
+            league
+            ageGroup
+            location
+            email
+            phoneNumber
+            website
+            profileID
+            createdAt
+            updatedAt
+          }
           nextToken
           __typename
         }
@@ -969,30 +1042,9 @@ export const createProfileMatchPost = /* GraphQL */ `
         __typename
       }
       matchPost {
-        id
-        title
-        description
-        createdByProfileID
-        gameType
-        ageGroup
-        teamSize
-        substitutionLimit
-        cards
-        halfLength
-        kickOff
-        street
-        townCity
-        county
-        postcode
-        isActive
-        teamID
-        teamName
         interestedUsers {
-          nextToken
           __typename
         }
-        createdAt
-        updatedAt
         __typename
       }
       createdAt
@@ -1088,75 +1140,10 @@ export const deleteProfileMatchPost = /* GraphQL */ `
       id
       profileId
       matchPostId
-      profile {
-        id
-        username
-        name
-        dob
-        email
-        accountType
-        street
-        townCity
-        county
-        postcode
-        phoneNumber
-        players {
-          nextToken
-          __typename
-        }
-        team {
-          nextToken
-          __typename
-        }
-        posts {
-          nextToken
-          __typename
-        }
-        interestedPosts {
-          nextToken
-          __typename
-        }
-        chats {
-          nextToken
-          __typename
-        }
-        createdAt
-        updatedAt
-        __typename
-      }
-      matchPost {
-        id
-        title
-        description
-        createdByProfileID
-        gameType
-        ageGroup
-        teamSize
-        substitutionLimit
-        cards
-        halfLength
-        kickOff
-        street
-        townCity
-        county
-        postcode
-        isActive
-        teamID
-        teamName
-        interestedUsers {
-          nextToken
-          __typename
-        }
-        createdAt
-        updatedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
     }
   }
 `;
+
 export const createProfileChat = /* GraphQL */ `
   mutation CreateProfileChat(
     $input: CreateProfileChatInput!
@@ -1183,6 +1170,19 @@ export const createProfileChat = /* GraphQL */ `
           __typename
         }
         team {
+          items {
+            ageGroup
+            createdAt
+            email
+            id
+            league
+            location
+            name
+            updatedAt
+            website
+            profileID
+            phoneNumber
+          }
           nextToken
           __typename
         }

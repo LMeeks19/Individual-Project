@@ -16,14 +16,9 @@ import {
   ViewSettingsTable,
 } from "./ProfileTab";
 import ViewRegisteredPlayers from "./PlayersTab";
-
 import { currentUserState, modalState } from "../../Functions/GlobalState";
 import { useRecoilState, useSetRecoilState } from "recoil";
-
-import LogoutIcon from "@mui/icons-material/Logout";
-import EditIcon from "@mui/icons-material/Edit";
-import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { Logout, Edit, Add, Delete } from "@mui/icons-material";
 
 import UpdateProfileModal from "../../Modals/AccountModals/UpdateProfileModal";
 import CreateProfileModal from "../../Modals/AccountModals/CreateProfileModal";
@@ -52,7 +47,7 @@ export default function Profile() {
   }
 
   function hasNoProfile(object) {
-    return Object.values(object).some((v) => v === undefined);
+    return Object.values(object).some((v) => v === null);
   }
 
   return (
@@ -61,7 +56,7 @@ export default function Profile() {
         <Heading level={2}>ACCOUNT</Heading>
         <Button className="custom-button" variation="primary" onClick={signOut}>
           <Text display="flex">
-            <LogoutIcon fontSize="small" className="icon" />
+            <Logout fontSize="small" className="icon" />
             SignOut
           </Text>
         </Button>
@@ -107,7 +102,7 @@ export default function Profile() {
                 }
               >
                 <Text display="flex">
-                  <EditIcon fontSize="small" className="icon" />
+                  <Edit fontSize="small" className="icon" />
                   Edit
                 </Text>
               </Button>
@@ -120,7 +115,7 @@ export default function Profile() {
                 }
               >
                 <Text display="flex">
-                  <EditIcon fontSize="small" className="icon" />
+                  <Edit fontSize="small" className="icon" />
                   Create
                 </Text>
               </Button>
@@ -165,7 +160,7 @@ export default function Profile() {
                   }
                 >
                   <Text display="flex">
-                    <DeleteIcon fontSize="small" className="icon" />
+                    <Delete fontSize="small" className="icon" />
                     Delete Team
                   </Text>
                 </Button>
@@ -176,7 +171,7 @@ export default function Profile() {
                   onClick={() => openModal(<CreateTeamModal />, "Create Team")}
                 >
                   <Text display="flex">
-                    <AddIcon fontSize="small" className="icon" />
+                    <Add fontSize="small" className="icon" />
                     Create Team
                   </Text>
                 </Button>
@@ -184,14 +179,14 @@ export default function Profile() {
             </Flex>
             <Flex justifyContent="space-between" alignItems="center">
               <Heading level={4}>Details</Heading>
-              {currentUser.team.id !== undefined ? (
+              {currentUser.team.id !== null ? (
                 <Button
                   className="custom-button"
                   variation="primary"
                   onClick={() => openModal(<UpdateTeamModal />, "Update Team")}
                 >
                   <Text display="flex">
-                    <EditIcon fontSize="small" className="icon" />
+                    <Edit fontSize="small" className="icon" />
                     Edit
                   </Text>
                 </Button>
@@ -203,7 +198,7 @@ export default function Profile() {
             <TeamDetails team={currentUser.team} />
             <Flex justifyContent="space-between" alignItems="center">
               <Heading level={4}>Roster</Heading>
-              {currentUser.team.id !== undefined ? (
+              {currentUser.team.id !== null ? (
                 <Button
                   className="custom-button"
                   variation="primary"
@@ -215,7 +210,7 @@ export default function Profile() {
                   }
                 >
                   <Text display="flex">
-                    <AddIcon fontSize="small" className="icon" />
+                    <Add fontSize="small" className="icon" />
                     Add
                   </Text>
                 </Button>
@@ -245,7 +240,7 @@ export default function Profile() {
                 onClick={() => openModal(<CreatePlayerModal />, "Add Player")}
               >
                 <Text display="flex">
-                  <AddIcon className="icon" />
+                  <Add className="icon" />
                   Add
                 </Text>
               </Button>

@@ -1,32 +1,116 @@
-import { Divider, Flex, Heading, Text, View } from "@aws-amplify/ui-react";
+import {
+  Divider,
+  Flex,
+  Heading,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Text,
+  View,
+} from "@aws-amplify/ui-react";
 import { format } from "date-fns";
 import "./ViewMatchPostModal.css";
+import {
+  Close,
+  Done,
+  KeyboardArrowDown,
+  KeyboardArrowUp,
+  Message,
+} from "@mui/icons-material";
+import { Tooltip } from "@mui/material";
+import { useState } from "react";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  currentUserState,
+  matchPostsState,
+  modalState,
+} from "../../Functions/GlobalState";
+import { useNavigate } from "react-router-dom";
+import {
+  RemoveMatchPostInterestedUser,
+  SelectMatchPostOpponent,
+} from "../../Functions/Server";
+import CreateChatModal from "../ChatModals/CreateChatModal";
 
 export default function ViewMatchPostModal(props) {
+  const currentUser = useRecoilValue(currentUserState);
+  const navigate = useNavigate();
+  const setModal = useSetRecoilState(modalState);
+  const [post, setPost] = useState(props.post);
+  const [posts, setPosts] = useRecoilState(matchPostsState);
+
   function formatDate(date) {
-    return format(new Date(date), "do MMMM yyyy H:mm a");
+    return format(new Date(date), "do MMMM yyyy @ H:mm a");
+  }
+
+  function updateIsShown(id, field) {
+    let updatedList = [...post.interestedUsers].map((item) => {
+      if (item.id === id && field === "coach")
+        return { ...item, isCoachShown: !item.isCoachShown };
+      else if (item.id === id && field === "team")
+        return { ...item, isTeamShown: !item.isTeamShown };
+      else return item;
+    });
+
+    setPost({
+      ...post,
+      interestedUsers: updatedList,
+    });
+  }
+
+  async function acceptCoach(interestedUserId) {
+    const updatedMatchPost = await SelectMatchPostOpponent(
+      post.id,
+      interestedUserId
+    );
+    setPost(updatedMatchPost);
+    let updatedMatchPosts = [...posts].map((post) => {
+      if (post.id === updatedMatchPost.id) {
+        return updatedMatchPost;
+      }
+      return post;
+    });
+    setPosts(updatedMatchPosts);
+  }
+
+  async function rejectCoach(interestedUserId) {
+    const removedInterestedUser = await RemoveMatchPostInterestedUser(
+      interestedUserId
+    );
+    setPost({
+      ...post,
+      interestedUsers: post.interestedUsers.filter(
+        (interestedUser) => interestedUser.id !== removedInterestedUser.id
+      ),
+    });
   }
 
   return (
     <View className="content">
-      <Flex direction="row" justifyContent="space-around" gap="80px">
+      <Flex direction="row" justifyContent="space-evenly" gap="80px">
         <Flex width="50%" direction="column">
           <Heading level={4}>Post Details</Heading>
           <Divider />
           <Text>
-            <b>Title:</b> {props.post.title}
+            <b>Title:</b> {post.title}
           </Text>
           <Text>
-            <b>CreatedBy:</b> {props.post.createdByName}
+            <b>CreatedBy:</b> {post.createdByName}
           </Text>
           <Text>
-            <b>Created On:</b> {formatDate(props.post.createdAt)}
+            <b>Created On:</b> {formatDate(post.createdAt)}
           </Text>
-          {props.post.updatedAt !== props.post.createdAt ? <Text>
-            <b>Last Updated On:</b> {formatDate(props.post.updatedAt)}
-          </Text> : <></>}
+          {post.updatedAt !== post.createdAt ? (
+            <Text>
+              <b>Last Updated On:</b> {formatDate(post.updatedAt)}
+            </Text>
+          ) : (
+            <></>
+          )}
           <Text>
-            <b>Description:</b> {props.post.description}
+            <b>Description:</b> {post.description}
           </Text>
         </Flex>
         <Flex width="50%" direction="column">
@@ -35,34 +119,277 @@ export default function ViewMatchPostModal(props) {
           </Heading>
           <Divider />
           <Text>
-            <b>Team:</b> {props.post.teamName}
+            <b>Team:</b> {post.teamName}
           </Text>
           <Text>
-            <b>Game Type:</b> {props.post.gameType}
+            <b>Game Type:</b> {post.gameType}
           </Text>
           <Text>
-            <b>Age Group:</b> {props.post.ageGroup}
+            <b>Age Group:</b> {post.ageGroup}
           </Text>
           <Text>
-            <b>Team Size:</b> {props.post.teamSize} a side
+            <b>Team Size:</b> {post.teamSize} a side
           </Text>
           <Text>
-            <b>Limit Substitutions:</b> {props.post.substitutionLimit ? 'Yes' : 'No'}
+            <b>Limit Substitutions:</b> {post.substitutionLimit ? "Yes" : "No"}
           </Text>
           <Text>
-            <b>Cards:</b> {props.post.cards ? 'Yes' : 'No'}
+            <b>Cards:</b> {post.cards ? "Yes" : "No"}
           </Text>
           <Text>
-            <b>Half Length:</b> {props.post.halfLength} minutes 
+            <b>Half Length:</b> {post.halfLength} minutes
           </Text>
           <Text>
-            <b>Kick Off:</b> {formatDate(props.post.kickOff)}
+            <b>Kick Off:</b> {formatDate(post.kickOff)}
           </Text>
           <Text>
-            <b>Venue:</b> {props.post.street}, {props.post.townCity}, {props.post.county}, {props.post.postcode}
+            <b>Venue:</b> {post.street}, {post.townCity}, {post.county},{" "}
+            {post.postcode}
           </Text>
         </Flex>
       </Flex>
+      {post.createdByProfileID === currentUser.id ? (
+        <Flex width="100%" direction="column" marginTop="40px">
+          <Heading level={4}>
+            {post.selectedOpponent !== null && !post.isActive
+              ? "Selected Opponent"
+              : "Interested Coaches"}
+          </Heading>
+          <Divider />
+          <Table className="table" size="small" variation="striped">
+            <TableHead>
+              {post.interestedUsers?.length > 0 ? (
+                <TableRow>
+                  <TableCell as="th">Coach</TableCell>
+                  <TableCell as="th">Team</TableCell>
+                  <TableCell as="th">Actions</TableCell>
+                </TableRow>
+              ) : (
+                <TableRow>
+                  <TableCell textAlign="center" colSpan={4}>
+                    No Coaches Interested
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableHead>
+            {post.interestedUsers?.map((interestedUser) => {
+              return (
+                <TableBody key={interestedUser.id}>
+                  <TableRow>
+                    <TableCell
+                      backgroundColor={
+                        post.selectedOpponent !== null
+                          ? "#D4AF37 "
+                          : interestedUser.isCoachShown
+                          ? "#008080"
+                          : ""
+                      }
+                      opacity={
+                        post.selectedOpponent !== null &&
+                        post.selectedOpponent !== interestedUser.id
+                          ? "75%"
+                          : ""
+                      }
+                      fontWeight={interestedUser.isCoachShown ? "bold" : ""}
+                    >
+                      <Tooltip
+                        title={
+                          interestedUser.isCoachShown
+                            ? "Collapse Coach"
+                            : "Expand Coach"
+                        }
+                        onClick={() =>
+                          updateIsShown(interestedUser.id, "coach")
+                        }
+                        arrow
+                      >
+                        <Flex
+                          className="icon"
+                          justifyContent="space-between"
+                          alignItems="center"
+                        >
+                          {interestedUser.profile.name}
+                          {interestedUser.isCoachShown ? (
+                            <KeyboardArrowUp />
+                          ) : (
+                            <KeyboardArrowDown />
+                          )}
+                        </Flex>
+                      </Tooltip>
+                    </TableCell>
+                    <TableCell
+                      backgroundColor={
+                        post.selectedOpponent !== null
+                          ? "#D4AF37 "
+                          : interestedUser.isTeamShown
+                          ? "#008080"
+                          : ""
+                      }
+                      opacity={
+                        post.selectedOpponent !== null &&
+                        post.selectedOpponent !== interestedUser.id
+                          ? "75%"
+                          : ""
+                      }
+                      fontWeight={interestedUser.isTeamShown ? "bold" : ""}
+                    >
+                      <Tooltip
+                        title={
+                          interestedUser.isTeamShown
+                            ? "Collapse Team"
+                            : "Expand Team"
+                        }
+                        onClick={() => updateIsShown(interestedUser.id, "team")}
+                        arrow
+                      >
+                        <Flex
+                          className="icon"
+                          justifyContent="space-between"
+                          alignItems="center"
+                        >
+                          {interestedUser.profile.team.items[0].name}
+                          {interestedUser.isTeamShown ? (
+                            <KeyboardArrowUp />
+                          ) : (
+                            <KeyboardArrowDown />
+                          )}
+                        </Flex>
+                      </Tooltip>
+                    </TableCell>
+                    <TableCell
+                      backgroundColor={
+                        post.selectedOpponent !== null ? "#D4AF37 " : ""
+                      }
+                      opacity={
+                        post.selectedOpponent !== null &&
+                        post.selectedOpponent !== interestedUser.id
+                          ? "75%"
+                          : ""
+                      }
+                    >
+                      {post.selectedOpponent === null ? (
+                        <Flex
+                          justifyContent="center"
+                          alignItems="center"
+                          gap="10px"
+                        >
+                          <Tooltip title="Message" arrow>
+                            <Message
+                              className="icon"
+                              onClick={() => navigate("/messages")}
+                            />
+                          </Tooltip>
+
+                          <Tooltip title="Accept" arrow>
+                            <Done
+                              className="icon green"
+                              onClick={() => acceptCoach(interestedUser.id)}
+                            />
+                          </Tooltip>
+                          <Tooltip title="Reject" arrow>
+                            <Close
+                              className="icon red"
+                              onClick={() => rejectCoach(interestedUser.id)}
+                            />
+                          </Tooltip>
+                        </Flex>
+                      ) : (
+                        <Flex justifyContent="center" alignItems="center">
+                          No Actions
+                        </Flex>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                  {interestedUser.isCoachShown ? (
+                    <>
+                      <TableRow
+                        as="th"
+                        backgroundColor={
+                          post.selectedOpponent !== null
+                            ? "#D4AF37 "
+                            : "#008080"
+                        }
+                        opacity={
+                          post.selectedOpponent !== null &&
+                          post.selectedOpponent !== interestedUser.id
+                            ? "75%"
+                            : ""
+                        }
+                        fontWeight="bold"
+                      >
+                        <TableCell fontWeight="bold">Username</TableCell>
+                        <TableCell fontWeight="bold">Email</TableCell>
+                        <TableCell fontWeight="bold">Phone Number</TableCell>
+                      </TableRow>
+                      <TableRow
+                        opacity={
+                          post.selectedOpponent !== null &&
+                          post.selectedOpponent !== interestedUser.id
+                            ? "75%"
+                            : ""
+                        }
+                      >
+                        <TableCell>{interestedUser.profile.username}</TableCell>
+                        <TableCell>{interestedUser.profile.email}</TableCell>
+                        <TableCell>
+                          {interestedUser.profile.phoneNumber}
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                  {interestedUser.isTeamShown ? (
+                    <>
+                      <TableRow
+                        as="th"
+                        backgroundColor={
+                          post.selectedOpponent !== null
+                            ? "#D4AF37 "
+                            : "#008080"
+                        }
+                        opacity={
+                          post.selectedOpponent !== null &&
+                          post.selectedOpponent !== interestedUser.id
+                            ? "75%"
+                            : ""
+                        }
+                        fontWeight="bold"
+                      >
+                        <TableCell fontWeight="bold">League</TableCell>
+                        <TableCell fontWeight="bold">Age Group</TableCell>
+                        <TableCell fontWeight="bold">Location</TableCell>
+                      </TableRow>
+                      <TableRow
+                        opacity={
+                          post.selectedOpponent !== null &&
+                          post.selectedOpponent !== interestedUser.id
+                            ? "75%"
+                            : ""
+                        }
+                      >
+                        <TableCell>
+                          {interestedUser.profile.team.items[0].league}
+                        </TableCell>
+                        <TableCell>
+                          {interestedUser.profile.team.items[0].ageGroup}
+                        </TableCell>
+                        <TableCell>
+                          {interestedUser.profile.team.items[0].location}
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                </TableBody>
+              );
+            })}
+          </Table>
+        </Flex>
+      ) : (
+        <></>
+      )}
     </View>
   );
 }

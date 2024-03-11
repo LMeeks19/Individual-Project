@@ -11,25 +11,35 @@ import { TablePagination, Tooltip } from "@mui/material";
 import { modalState, matchPostsState } from "../../Functions/GlobalState";
 import { useState } from "react";
 import { formatRelative } from "date-fns";
-import { DeleteMatchPost } from "../../Functions/Server";
+import {
+  AddMatchPostInterestedUser,
+  DeleteMatchPost,
+  RemoveMatchPostInterestedUser,
+  ReactivateMatchPost,
+} from "../../Functions/Server";
 import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
 import { useSetRecoilState, useRecoilState } from "recoil";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import ReplayIcon from "@mui/icons-material/Replay";
-import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
-import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
-// import { UpdateMatchPost } from "../../Functions/Server";
 import ViewMatchPostModal from "../../Modals/MatchPostModals/ViewMatchPostModal";
 import UpdateMatchPostModal from "../../Modals/MatchPostModals/UpdateMatchPostModal";
 import "./MatchPosts.css";
+import { useNavigate } from "react-router-dom";
+import CreateChatModal from "../../Modals/ChatModals/CreateChatModal";
+import {
+  Message,
+  Edit,
+  Delete,
+  Visibility,
+  Replay,
+  ThumbUpOffAlt,
+  ThumbUpAlt,
+} from "@mui/icons-material";
 
 export default function PostsTab(props) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(8);
   const setModal = useSetRecoilState(modalState);
   const [posts, setPosts] = useRecoilState(matchPostsState);
+  const navigate = useNavigate();
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -50,35 +60,58 @@ export default function PostsTab(props) {
     setPosts(posts.filter((post) => post.id !== deletedMatchPostId));
   }
 
+  async function reActivateMatchPost(matchPostId) {
+    const updatedMatchPost = await ReactivateMatchPost(matchPostId);
+    let updatedMatchPosts = [...posts].map((post) => {
+      if (post.id === updatedMatchPost.id) {
+        return updatedMatchPost;
+      }
+      return post;
+    });
+    setPosts(updatedMatchPosts);
+  }
+
   function openModal(component, title) {
     setModal({ component: component, title: title, isShown: true });
   }
 
-  async function toggleInterestedUsers(post, userId) {
-    let updatedPosts = posts.map((curPost) => {
-      if (curPost.id === post.id) {
-        if (curPost.interestedUsers.includes(userId)) {
-          return {
-            ...curPost,
-            interestedUsers: curPost.interestedUsers.filter(
-              (id) => id !== userId
-            ),
-          };
-        } else {
-          return {
-            ...curPost,
-            interestedUsers: [...curPost.interestedUsers, userId],
-          };
-        }
+  async function RegisterInterest(profileId, postId) {
+    let addedInterestedUser = await AddMatchPostInterestedUser(
+      profileId,
+      postId
+    );
+    let updatedPosts = posts.map((post) => {
+      if (post.id === addedInterestedUser.matchPostId) {
+        return {
+          ...post,
+          interestedUsers: [...post.interestedUsers, addedInterestedUser],
+        };
       }
-      return curPost;
+      return post;
     });
-    // await UpdateMatchPost(updatedPosts.find((p) => p.id === post.id));
+    setPosts(updatedPosts);
+  }
+
+  async function UnRegisterInterest(interestedUserId) {
+    let removedInterestedUser = await RemoveMatchPostInterestedUser(
+      interestedUserId
+    );
+    let updatedPosts = posts.map((post) => {
+      if (post.id === removedInterestedUser.matchPostId) {
+        return {
+          ...post,
+          interestedUsers: post.interestedUsers.filter(
+            (interestedUser) => interestedUser.id !== removedInterestedUser.id
+          ),
+        };
+      }
+      return post;
+    });
     setPosts(updatedPosts);
   }
 
   return (
-    <Table className="table" variation="striped">
+    <Table className="match-posts-table" variation="striped">
       <TableHead width="100%">
         <TableRow>
           <th className="title">Title</th>
@@ -121,7 +154,7 @@ export default function PostsTab(props) {
                           <Flex justifyContent="center">
                             <Flex gap="4px" className="icon">
                               <Tooltip title="View Match Post Details" arrow>
-                                <VisibilityIcon
+                                <Visibility
                                   onClick={() =>
                                     openModal(
                                       <ViewMatchPostModal post={post} />,
@@ -134,7 +167,7 @@ export default function PostsTab(props) {
                             <Divider orientation="vertical" />
                             <Flex gap="4px" className="icon">
                               <Tooltip title="Update Match Post Details" arrow>
-                                <EditIcon
+                                <Edit
                                   onClick={() =>
                                     openModal(
                                       <UpdateMatchPostModal post={post} />,
@@ -147,7 +180,7 @@ export default function PostsTab(props) {
                             <Divider orientation="vertical" />
                             <Flex gap="4px" className="icon delete">
                               <Tooltip title="Delete Match Post" arrow>
-                                <DeleteIcon
+                                <Delete
                                   onClick={() =>
                                     openModal(
                                       <ConfirmDeleteModal
@@ -166,7 +199,7 @@ export default function PostsTab(props) {
                           <Flex justifyContent="center">
                             <Flex gap="4px" className="icon">
                               <Tooltip title="View Match Post Details" arrow>
-                                <VisibilityIcon
+                                <Visibility
                                   onClick={() =>
                                     openModal(
                                       <ViewMatchPostModal post={post} />,
@@ -177,16 +210,18 @@ export default function PostsTab(props) {
                               </Tooltip>
                             </Flex>
                             <Divider orientation="vertical" />
-                            {!post.interestedUsers.includes(
-                              props.currentUser.id
+                            {!post.interestedUsers.some(
+                              (interestedUser) =>
+                                interestedUser.profileId ===
+                                props.currentUser.id
                             ) ? (
                               <Flex gap="4px" className="icon">
                                 <Tooltip title="Register Interest" arrow>
-                                  <ThumbUpOffAltIcon
+                                  <ThumbUpOffAlt
                                     onClick={() =>
-                                      toggleInterestedUsers(
-                                        post,
-                                        props.currentUser.id
+                                      RegisterInterest(
+                                        props.currentUser.id,
+                                        post.id
                                       )
                                     }
                                   />
@@ -195,17 +230,28 @@ export default function PostsTab(props) {
                             ) : (
                               <Flex gap="4px" className="icon">
                                 <Tooltip title="Unregister Interest" arrow>
-                                  <ThumbUpAltIcon
+                                  <ThumbUpAlt
                                     onClick={() =>
-                                      toggleInterestedUsers(
-                                        post,
-                                        props.currentUser.id
+                                      UnRegisterInterest(
+                                        post.interestedUsers.find(
+                                          (interestedUser) =>
+                                            interestedUser.profileId ===
+                                            props.currentUser.id
+                                        ).id
                                       )
                                     }
                                   />
                                 </Tooltip>
                               </Flex>
                             )}
+                            <Divider orientation="vertical" />
+                            <Flex gap="4px" className="icon">
+                              <Tooltip title="Message" arrow>
+                                <Message
+                                  onClick={() => navigate("/messages")}
+                                />
+                              </Tooltip>
+                            </Flex>
                           </Flex>
                         )}
                       </Text>
@@ -214,7 +260,7 @@ export default function PostsTab(props) {
                         <Flex justifyContent="center">
                           <Flex gap="4px" className="icon">
                             <Tooltip title="View Match Post Details" arrow>
-                              <VisibilityIcon
+                              <Visibility
                                 onClick={() =>
                                   openModal(
                                     <ViewMatchPostModal post={post} />,
@@ -229,7 +275,9 @@ export default function PostsTab(props) {
                               <Divider orientation="vertical" />
                               <Flex gap="4px" className="icon">
                                 <Tooltip title="Reactivate Post" arrow>
-                                  <ReplayIcon />
+                                  <Replay
+                                    onClick={() => reActivateMatchPost(post.id)}
+                                  />
                                 </Tooltip>
                               </Flex>
                             </>

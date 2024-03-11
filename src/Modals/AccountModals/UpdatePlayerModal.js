@@ -22,9 +22,6 @@ export default function UpdatePlayerModal(props) {
           setCurrentUser({ ...currentUser, players: updatedPlayers });
           setModal({ component: null, title: null, isShown: false });
         }}
-        onError={(error) => {
-          // TODO: Error Message
-        }}
       />
     </View>
   );
