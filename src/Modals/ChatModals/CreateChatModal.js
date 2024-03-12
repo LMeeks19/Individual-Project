@@ -1,10 +1,15 @@
 import { View, Heading, Divider } from "@aws-amplify/ui-react";
 import { ChatCreateForm } from "../../ui-components";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { chatsState, modalState } from "../../Functions/GlobalState";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  chatsState,
+  currentUserState,
+  modalState,
+} from "../../Functions/GlobalState";
 
 export default function CreateChatModal() {
   const [chats, setChats] = useRecoilState(chatsState);
+  const currentUser = useRecoilValue(currentUserState);
   const setModal = useSetRecoilState(modalState);
 
   return (
@@ -16,12 +21,18 @@ export default function CreateChatModal() {
       <ChatCreateForm
         padding="0"
         onSubmit={(fields) => {
+          fields.users.push(currentUser);
           fields.userIDs = fields.users.map((user) => {
             return user.id;
           });
-          return fields
+          return fields;
         }}
         onSuccess={(data) => {
+          setChats({
+            ...chats,
+            users: data.users.items,
+            messages: data.messages.items,
+          });
           setModal({ component: null, title: null, isShown: false });
         }}
       />

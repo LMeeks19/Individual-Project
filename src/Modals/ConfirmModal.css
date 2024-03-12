@@ -1,4 +1,4 @@
-.confirm-delete-container {
+.confirm-container {
     width: 100%;
     padding: 20px;
 
@@ -17,8 +17,8 @@
             background-color: grey;
         }
 
-        &.delete {
-            background-color: red;
+        &.confirm {
+            background-color: #008080;
         }
 
         &.cancel:hover, &.delete:hover {

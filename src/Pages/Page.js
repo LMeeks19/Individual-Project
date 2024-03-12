@@ -14,6 +14,7 @@ import {
 import "./Page.css";
 import WarningMessage from "../Components/Warning-Message";
 import Modal from "../Modals/Modal";
+import { SnackbarProvider } from "notistack";
 
 export default function Page() {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
@@ -32,15 +33,17 @@ export default function Page() {
   }, []);
 
   return (
-    <Router>
-      {modal.isShown ? <Modal /> : <></>}
-      <View className={`layout ${modal.isShown ? "disabled" : ""}`}>
-        <NavBar />
-        <View className="container">
-          <WarningMessage currentUser={currentUser} />
-          <NavRouter />
+    <SnackbarProvider anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
+      <Router>
+        {modal.isShown ? <Modal /> : <></>}
+        <View className={`layout ${modal.isShown ? "disabled" : ""}`}>
+          <NavBar />
+          <View className="container">
+            <WarningMessage currentUser={currentUser} />
+            <NavRouter />
+          </View>
         </View>
-      </View>
-    </Router>
+      </Router>
+    </SnackbarProvider>
   );
 }

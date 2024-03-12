@@ -32,7 +32,7 @@ import {
   RemoveMatchPostInterestedUser,
   SelectMatchPostOpponent,
 } from "../../Functions/Server";
-import CreateChatModal from "../ChatModals/CreateChatModal";
+import ConfirmModal from "../ConfirmModal";
 
 export default function ViewMatchPostModal(props) {
   const currentUser = useRecoilValue(currentUserState);
@@ -41,7 +41,7 @@ export default function ViewMatchPostModal(props) {
   const [post, setPost] = useState(props.post);
   const [posts, setPosts] = useRecoilState(matchPostsState);
 
-  function formatDate(date) {
+  function formatDateTime(date) {
     return format(new Date(date), "do MMMM yyyy @ H:mm a");
   }
 
@@ -87,6 +87,10 @@ export default function ViewMatchPostModal(props) {
     });
   }
 
+  function openModal(component, title) {
+    setModal({ component: component, title: title, isShown: true });
+  }
+
   return (
     <View className="content">
       <Flex direction="row" justifyContent="space-evenly" gap="80px">
@@ -100,11 +104,11 @@ export default function ViewMatchPostModal(props) {
             <b>CreatedBy:</b> {post.createdByName}
           </Text>
           <Text>
-            <b>Created On:</b> {formatDate(post.createdAt)}
+            <b>Created On:</b> {formatDateTime(post.createdAt)}
           </Text>
           {post.updatedAt !== post.createdAt ? (
             <Text>
-              <b>Last Updated On:</b> {formatDate(post.updatedAt)}
+              <b>Last Updated On:</b> {formatDateTime(post.updatedAt)}
             </Text>
           ) : (
             <></>
@@ -140,7 +144,7 @@ export default function ViewMatchPostModal(props) {
             <b>Half Length:</b> {post.halfLength} minutes
           </Text>
           <Text>
-            <b>Kick Off:</b> {formatDate(post.kickOff)}
+            <b>Kick Off:</b> {formatDateTime(post.kickOff)}
           </Text>
           <Text>
             <b>Venue:</b> {post.street}, {post.townCity}, {post.county},{" "}
@@ -283,7 +287,14 @@ export default function ViewMatchPostModal(props) {
                           <Tooltip title="Accept" arrow>
                             <Done
                               className="icon green"
-                              onClick={() => acceptCoach(interestedUser.id)}
+                              onClick={() =>
+                                openModal(
+                                  <ConfirmModal
+                                    function={() => acceptCoach(interestedUser.id)}
+                                  />,
+                                  "Confirm"
+                                )
+                              }
                             />
                           </Tooltip>
                           <Tooltip title="Reject" arrow>

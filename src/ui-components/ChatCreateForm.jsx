@@ -17,6 +17,7 @@ import {
   ScrollView,
   Text,
   TextField,
+  useAuthenticator,
   useTheme,
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
@@ -194,6 +195,7 @@ export default function ChatCreateForm(props) {
     name: "",
     users: [],
   };
+  const { user } = useAuthenticator();
   const [name, setName] = React.useState(initialValues.name);
   const [users, setUsers] = React.useState(initialValues.users);
   const [usersLoading, setUsersLoading] = React.useState(false);
@@ -250,7 +252,7 @@ export default function ChatCreateForm(props) {
     while (newOptions.length < autocompleteLength && newNext != null) {
       const variables = {
         limit: autocompleteLength * 5,
-        filter: { or: [{ username: { contains: value } }] },
+        filter: { or: [{ username: { contains: value } }], id: { ne: user.userId } },
       };
       if (newNext) {
         variables["nextToken"] = newNext;

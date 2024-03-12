@@ -23,7 +23,6 @@ import ViewMatchPostModal from "../../Modals/MatchPostModals/ViewMatchPostModal"
 import UpdateMatchPostModal from "../../Modals/MatchPostModals/UpdateMatchPostModal";
 import "./MatchPosts.css";
 import { useNavigate } from "react-router-dom";
-import CreateChatModal from "../../Modals/ChatModals/CreateChatModal";
 import {
   Message,
   Edit,
