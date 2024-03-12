@@ -1,5 +1,5 @@
 import "@aws-amplify/ui-react/styles.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, useAuthenticator } from "@aws-amplify/ui-react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { currentUserState, modalState } from "../Functions/GlobalState";
@@ -15,11 +15,13 @@ import "./Page.css";
 import WarningMessage from "../Components/Warning-Message";
 import Modal from "../Modals/Modal";
 import { SnackbarProvider } from "notistack";
+import PreLoadScreen from "../Components/PreLoadScreen";
 
 export default function Page() {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const modal = useRecoilValue(modalState);
   const { user } = useAuthenticator();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchUser() {
@@ -28,22 +30,29 @@ export default function Page() {
         players: await GetPlayersByProfileId(user.userId),
         team: await GetTeamByProfileId(user.userId),
       });
+      setIsLoading(false);
     }
     fetchUser();
   }, []);
 
-  return (
-    <SnackbarProvider anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
-      <Router>
-        {modal.isShown ? <Modal /> : <></>}
-        <View className={`layout ${modal.isShown ? "disabled" : ""}`}>
-          <NavBar />
-          <View className="container">
-            <WarningMessage currentUser={currentUser} />
-            <NavRouter />
+  if (isLoading) {
+    return <PreLoadScreen />;
+  } else {
+    return (
+      <SnackbarProvider
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Router>
+          {modal.isShown ? <Modal /> : <></>}
+          <View className={`layout ${modal.isShown ? "disabled" : ""}`}>
+            <NavBar />
+            <View className="container">
+              <WarningMessage currentUser={currentUser} />
+              <NavRouter />
+            </View>
           </View>
-        </View>
-      </Router>
-    </SnackbarProvider>
-  );
+        </Router>
+      </SnackbarProvider>
+    );
+  }
 }

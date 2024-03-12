@@ -8,6 +8,7 @@ import {
 } from "@aws-amplify/ui-react";
 import { AddCircle, Send, Delete } from "@mui/icons-material";
 import "./Chats.css";
+import "../../Components/Animations.css";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
@@ -32,14 +33,15 @@ export default function Chats() {
   const setModal = useSetRecoilState(modalState);
   const currentUser = useRecoilValue(currentUserState);
   const { user } = useAuthenticator();
-
   const [message, setMessage] = useState("");
   const client = generateClient();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function GetChats() {
       const chats = await GetChatsByProfileId(user.userId);
       setChats(chats);
+      setIsLoading(false);
     }
     GetChats();
   }, []);
@@ -47,6 +49,7 @@ export default function Chats() {
   useEffect(() => {
     async function getChatMessages() {
       if (selectedChat?.id) {
+        setIsLoading(true);
         const sub = client
           .graphql({
             query: onCreateChatMessage,
@@ -78,6 +81,7 @@ export default function Chats() {
             },
             error: (error) => console.log(error),
           });
+        setIsLoading(false);
         return () => {
           sub.unsubscribe();
         };
@@ -120,32 +124,47 @@ export default function Chats() {
             onClick={() => openModal(<CreateChatModal />, "Create Chat")}
           />
         </Text>
-        <View className="chat-list">
-          {chats.map((chat) => {
-            return (
-              <Flex
-                key={chat.id}
-                className={`chat-tile ${
-                  chat.id === selectedChat?.id ? "active" : ""
-                }`}
-                onClick={async () => {
-                  let chatMessages = await GetChatMessages(chat.id);
-                  setSelectedChat({
-                    ...chat,
-                    messages: chatMessages.sort((a, b) =>
-                      b.createdAt.localeCompare(a.createdAt)
-                    ),
-                  });
-                }}
-              >
-                <Heading className="text-overflow" level={4}>
-                  {chat.name ?? getChatNameFromUsers(chat)}
-                </Heading>
-                <Delete className="icon delete" />
+        {chats.length === 0 || isLoading ? (
+          <>
+            {isLoading ? (
+              <Flex height="100%" justifyContent="center" alignItems="center">
+                <Text fontSize="large">Loading</Text>
+                <View className="loader"></View>
               </Flex>
-            );
-          })}
-        </View>
+            ) : (
+              <Flex height="100%" justifyContent="center" alignItems="center">
+                <Text fontSize="large">No Chats</Text>
+              </Flex>
+            )}
+          </>
+        ) : (
+          <View className="chat-list">
+            {chats.map((chat) => {
+              return (
+                <Flex
+                  key={chat.id}
+                  className={`chat-tile ${
+                    chat.id === selectedChat?.id ? "active" : ""
+                  }`}
+                  onClick={async () => {
+                    let chatMessages = await GetChatMessages(chat.id);
+                    setSelectedChat({
+                      ...chat,
+                      messages: chatMessages.sort((a, b) =>
+                        b.createdAt.localeCompare(a.createdAt)
+                      ),
+                    });
+                  }}
+                >
+                  <Heading className="text-overflow" level={4}>
+                    {chat.name ?? getChatNameFromUsers(chat)}
+                  </Heading>
+                  <Delete className="icon delete" />
+                </Flex>
+              );
+            })}
+          </View>
+        )}
       </Flex>
       {selectedChat?.id !== null ? (
         <Flex className="chat-container-2" direction="column">
@@ -212,11 +231,22 @@ export default function Chats() {
           </Flex>
         </Flex>
       ) : (
-        <Flex width="75%" justifyContent="center" alignItems="center">
-          <Text fontSize="x-large" opacity="75%">
-            No chat selected
-          </Text>
-        </Flex>
+        <>
+          {isLoading ? (
+            <Flex width="75%" justifyContent="center" alignItems="center">
+              <Text fontSize="x-large" opacity="75%">
+                Loading
+              </Text>
+              <View className="loader"></View>
+            </Flex>
+          ) : (
+            <Flex width="75%" justifyContent="center" alignItems="center">
+              <Text fontSize="x-large" opacity="75%">
+                No Chat Selected
+              </Text>
+            </Flex>
+          )}
+        </>
       )}
     </Flex>
   );

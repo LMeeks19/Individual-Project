@@ -1,24 +1,26 @@
 import { Heading, View, Tabs, Flex, Button, Text } from "@aws-amplify/ui-react";
 import PostsTab from "./PostsTab";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { GetMatchPosts } from "../../Functions/Server";
 import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
 import { currentUserState, matchPostsState } from "../../Functions/GlobalState";
 import CreateMatchPostModal from "../../Modals/MatchPostModals/CreateMatchPostModal";
 import { modalState } from "../../Functions/GlobalState";
-import { Add }from "@mui/icons-material";
+import { Add } from "@mui/icons-material";
 import "./MatchPosts.css";
 
 export default function MatchPosts() {
   const currentUser = useRecoilValue(currentUserState);
   const [posts, setPosts] = useRecoilState(matchPostsState);
   const setModal = useSetRecoilState(modalState);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function getPosts() {
       let apiPosts = await GetMatchPosts();
       apiPosts = apiPosts.sort((a, b) => a.title.localeCompare(b.title));
       setPosts(apiPosts);
+      setIsLoading(false);
     }
     getPosts();
   }, []);
@@ -72,6 +74,7 @@ export default function MatchPosts() {
 
         <Tabs.Panel value="1">
           <PostsTab
+            isLoading={isLoading}
             currentUser={currentUser}
             posts={posts.filter(
               (post) =>
@@ -82,6 +85,7 @@ export default function MatchPosts() {
 
         <Tabs.Panel value="2">
           <PostsTab
+            isLoading={isLoading}
             currentUser={currentUser}
             posts={posts.filter(
               (post) =>
@@ -91,6 +95,7 @@ export default function MatchPosts() {
         </Tabs.Panel>
         <Tabs.Panel value="3">
           <PostsTab
+            isLoading={isLoading}
             currentUser={currentUser}
             posts={posts.filter(
               (post) =>
@@ -103,11 +108,11 @@ export default function MatchPosts() {
         </Tabs.Panel>
         <Tabs.Panel value="4">
           <PostsTab
+            isLoading={isLoading}
             currentUser={currentUser}
             posts={posts.filter(
               (post) =>
-                !post.isActive &&
-                (post.createdByProfileID === currentUser.id)
+                !post.isActive && post.createdByProfileID === currentUser.id
             )}
           />
         </Tabs.Panel>

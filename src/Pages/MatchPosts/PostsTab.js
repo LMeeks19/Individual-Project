@@ -6,6 +6,7 @@ import {
   TableHead,
   TableRow,
   Text,
+  View,
 } from "@aws-amplify/ui-react";
 import { TablePagination, Tooltip } from "@mui/material";
 import { modalState, matchPostsState } from "../../Functions/GlobalState";
@@ -22,6 +23,7 @@ import { useSetRecoilState, useRecoilState } from "recoil";
 import ViewMatchPostModal from "../../Modals/MatchPostModals/ViewMatchPostModal";
 import UpdateMatchPostModal from "../../Modals/MatchPostModals/UpdateMatchPostModal";
 import "./MatchPosts.css";
+import "../../Components/Animations.css";
 import { useNavigate } from "react-router-dom";
 import {
   Message,
@@ -120,11 +122,18 @@ export default function PostsTab(props) {
         </TableRow>
       </TableHead>
 
-      {props.posts.length === 0 ? (
+      {props.posts.length === 0 || props.isLoading ? (
         <TableBody width="100%">
           <TableRow>
             <td colSpan="4">
-              <Text textAlign="center">No Posts</Text>
+              {!props.isLoading ? (
+                <Text textAlign="center">No Posts</Text>
+              ) : (
+                <Flex justifyContent="center" alignItems="center">
+                  <Text fontSize="1rem">Loading</Text>
+                  <View className="loader"></View>
+                </Flex>
+              )}
             </td>
           </TableRow>
         </TableBody>

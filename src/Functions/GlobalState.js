@@ -54,7 +54,7 @@ export const currentUserState = atom({
 
 export const matchPostsState = atom({
   key: "matchPostsState",
-  default: []
+  default: [],
 });
 
 export const chatsState = atom({
@@ -85,4 +85,9 @@ export const modalState = atom({
     title: null,
     isShown: false,
   },
+});
+
+export const isLoadingState = atom({
+  key: "isLoadingState",
+  default: false,
 });
