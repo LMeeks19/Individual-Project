@@ -21,8 +21,8 @@ import {
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
-import { listProfiles } from "../graphql/queries";
-import { createChat, createProfileChat } from "../graphql/mutations";
+import { getChat, getChatMessage, listChats } from "../graphql/queries";
+import { updateChatMessage } from "../graphql/mutations";
 const client = generateClient();
 function ArrayField({
   items = [],
@@ -179,9 +179,10 @@ function ArrayField({
     </React.Fragment>
   );
 }
-export default function ChatCreateForm(props) {
+export default function ChatMessageUpdateForm(props) {
   const {
-    clearOnSuccess = true,
+    id: idProp,
+    chatMessage: chatMessageModelProp,
     onSuccess,
     onError,
     onSubmit,
@@ -191,40 +192,70 @@ export default function ChatCreateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    name: "",
-    users: [],
+    chatID: undefined,
+    senderUserID: "",
+    message: "",
   };
-  const [name, setName] = React.useState(initialValues.name);
-  const [users, setUsers] = React.useState(initialValues.users);
-  const [usersLoading, setUsersLoading] = React.useState(false);
-  const [usersRecords, setUsersRecords] = React.useState([]);
+  const [chatID, setChatID] = React.useState(initialValues.chatID);
+  const [chatIDLoading, setChatIDLoading] = React.useState(false);
+  const [chatIDRecords, setChatIDRecords] = React.useState([]);
+  const [selectedChatIDRecords, setSelectedChatIDRecords] = React.useState([]);
+  const [senderUserID, setSenderUserID] = React.useState(
+    initialValues.senderUserID
+  );
+  const [message, setMessage] = React.useState(initialValues.message);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setName(initialValues.name);
-    setUsers(initialValues.users);
-    setCurrentUsersValue(undefined);
-    setCurrentUsersDisplayValue("");
+    const cleanValues = chatMessageRecord
+      ? { ...initialValues, ...chatMessageRecord, chatID }
+      : initialValues;
+    setChatID(cleanValues.chatID);
+    setCurrentChatIDValue(undefined);
+    setCurrentChatIDDisplayValue("");
+    setSenderUserID(cleanValues.senderUserID);
+    setMessage(cleanValues.message);
     setErrors({});
   };
-  const [currentUsersDisplayValue, setCurrentUsersDisplayValue] =
+  const [chatMessageRecord, setChatMessageRecord] =
+    React.useState(chatMessageModelProp);
+  React.useEffect(() => {
+    const queryData = async () => {
+      const record = idProp
+        ? (
+            await client.graphql({
+              query: getChatMessage.replaceAll("__typename", ""),
+              variables: { id: idProp },
+            })
+          )?.data?.getChatMessage
+        : chatMessageModelProp;
+      const chatIDRecord = record ? record.chatID : undefined;
+      const chatRecord = chatIDRecord
+        ? (
+            await client.graphql({
+              query: getChat.replaceAll("__typename", ""),
+              variables: { id: chatIDRecord },
+            })
+          )?.data?.getChat
+        : undefined;
+      setChatID(chatIDRecord);
+      setSelectedChatIDRecords([chatRecord]);
+      setChatMessageRecord(record);
+    };
+    queryData();
+  }, [idProp, chatMessageModelProp]);
+  React.useEffect(resetStateValues, [chatMessageRecord, chatID]);
+  const [currentChatIDDisplayValue, setCurrentChatIDDisplayValue] =
     React.useState("");
-  const [currentUsersValue, setCurrentUsersValue] = React.useState(undefined);
-  const usersRef = React.createRef();
-  const getIDValue = {
-    users: (r) => JSON.stringify({ id: r?.id }),
-  };
-  const usersIdSet = new Set(
-    Array.isArray(users)
-      ? users.map((r) => getIDValue.users?.(r))
-      : getIDValue.users?.(users)
-  );
+  const [currentChatIDValue, setCurrentChatIDValue] = React.useState(undefined);
+  const chatIDRef = React.createRef();
   const getDisplayValue = {
-    users: (r) => `${r?.username}`,
+    chatID: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
   };
   const validations = {
-    name: [],
-    users: [{ type: "Required", validationMessage: "Profile is required." }],
+    chatID: [{ type: "Required" }],
+    senderUserID: [{ type: "Required" }],
+    message: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -243,35 +274,35 @@ export default function ChatCreateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
-  const fetchUsersRecords = async (value) => {
-    setUsersLoading(true);
+  const fetchChatIDRecords = async (value) => {
+    setChatIDLoading(true);
     const newOptions = [];
     let newNext = "";
     while (newOptions.length < autocompleteLength && newNext != null) {
       const variables = {
         limit: autocompleteLength * 5,
-        filter: { or: [{ username: { contains: value } }] },
+        filter: {
+          or: [{ name: { contains: value } }, { id: { contains: value } }],
+        },
       };
       if (newNext) {
         variables["nextToken"] = newNext;
       }
       const result = (
         await client.graphql({
-          query: listProfiles.replaceAll("__typename", ""),
+          query: listChats.replaceAll("__typename", ""),
           variables,
         })
-      )?.data?.listProfiles?.items;
-      var loaded = result.filter(
-        (item) => !usersIdSet.has(getIDValue.users?.(item))
-      );
+      )?.data?.listChats?.items;
+      var loaded = result.filter((item) => chatID !== item.id);
       newOptions.push(...loaded);
       newNext = result.nextToken;
     }
-    setUsersRecords(newOptions.slice(0, autocompleteLength));
-    setUsersLoading(false);
+    setChatIDRecords(newOptions.slice(0, autocompleteLength));
+    setChatIDLoading(false);
   };
   React.useEffect(() => {
-    fetchUsersRecords("");
+    fetchChatIDRecords("");
   }, []);
   return (
     <Grid
@@ -282,29 +313,22 @@ export default function ChatCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          name,
-          users,
+          chatID,
+          senderUserID,
+          message,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
             if (Array.isArray(modelFields[fieldName])) {
               promises.push(
                 ...modelFields[fieldName].map((item) =>
-                  runValidationTasks(
-                    fieldName,
-                    item,
-                    getDisplayValue[fieldName]
-                  )
+                  runValidationTasks(fieldName, item)
                 )
               );
               return promises;
             }
             promises.push(
-              runValidationTasks(
-                fieldName,
-                modelFields[fieldName],
-                getDisplayValue[fieldName]
-              )
+              runValidationTasks(fieldName, modelFields[fieldName])
             );
             return promises;
           }, [])
@@ -321,42 +345,17 @@ export default function ChatCreateForm(props) {
               modelFields[key] = null;
             }
           });
-          const modelFieldsToSave = {
-            name: modelFields.name,
-          };
-          const chat = (
-            await client.graphql({
-              query: createChat.replaceAll("__typename", ""),
-              variables: {
-                input: {
-                  ...modelFieldsToSave,
-                },
+          await client.graphql({
+            query: updateChatMessage.replaceAll("__typename", ""),
+            variables: {
+              input: {
+                id: chatMessageRecord.id,
+                ...modelFields,
               },
-            })
-          )?.data?.createChat;
-          const promises = [];
-          promises.push(
-            ...users.reduce((promises, profile) => {
-              promises.push(
-                client.graphql({
-                  query: createProfileChat.replaceAll("__typename", ""),
-                  variables: {
-                    input: {
-                      chatId: chat.id,
-                      profileId: profile.id,
-                    },
-                  },
-                })
-              );
-              return promises;
-            }, [])
-          );
-          await Promise.all(promises);
+            },
+          });
           if (onSuccess) {
             onSuccess(modelFields);
-          }
-          if (clearOnSuccess) {
-            resetStateValues();
           }
         } catch (err) {
           if (onError) {
@@ -365,121 +364,166 @@ export default function ChatCreateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "ChatCreateForm")}
+      {...getOverrideProps(overrides, "ChatMessageUpdateForm")}
       {...rest}
     >
+      <ArrayField
+        lengthLimit={1}
+        onChange={async (items) => {
+          let value = items[0];
+          if (onChange) {
+            const modelFields = {
+              chatID: value,
+              senderUserID,
+              message,
+            };
+            const result = onChange(modelFields);
+            value = result?.chatID ?? value;
+          }
+          setChatID(value);
+          setCurrentChatIDValue(undefined);
+        }}
+        currentFieldValue={currentChatIDValue}
+        label={"Chat id"}
+        items={chatID ? [chatID] : []}
+        hasError={errors?.chatID?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks("chatID", currentChatIDValue)
+        }
+        errorMessage={errors?.chatID?.errorMessage}
+        getBadgeText={(value) =>
+          value
+            ? getDisplayValue.chatID(
+                chatIDRecords.find((r) => r.id === value) ??
+                  selectedChatIDRecords.find((r) => r.id === value)
+              )
+            : ""
+        }
+        setFieldValue={(value) => {
+          setCurrentChatIDDisplayValue(
+            value
+              ? getDisplayValue.chatID(
+                  chatIDRecords.find((r) => r.id === value) ??
+                    selectedChatIDRecords.find((r) => r.id === value)
+                )
+              : ""
+          );
+          setCurrentChatIDValue(value);
+          const selectedRecord = chatIDRecords.find((r) => r.id === value);
+          if (selectedRecord) {
+            setSelectedChatIDRecords([selectedRecord]);
+          }
+        }}
+        inputFieldRef={chatIDRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Chat id"
+          isRequired={true}
+          isReadOnly={false}
+          placeholder="Search Chat"
+          value={currentChatIDDisplayValue}
+          options={chatIDRecords
+            .filter(
+              (r, i, arr) =>
+                arr.findIndex((member) => member?.id === r?.id) === i
+            )
+            .map((r) => ({
+              id: r?.id,
+              label: getDisplayValue.chatID?.(r),
+            }))}
+          isLoading={chatIDLoading}
+          onSelect={({ id, label }) => {
+            setCurrentChatIDValue(id);
+            setCurrentChatIDDisplayValue(label);
+            runValidationTasks("chatID", label);
+          }}
+          onClear={() => {
+            setCurrentChatIDDisplayValue("");
+          }}
+          defaultValue={chatID}
+          onChange={(e) => {
+            let { value } = e.target;
+            fetchChatIDRecords(value);
+            if (errors.chatID?.hasError) {
+              runValidationTasks("chatID", value);
+            }
+            setCurrentChatIDDisplayValue(value);
+            setCurrentChatIDValue(undefined);
+          }}
+          onBlur={() => runValidationTasks("chatID", currentChatIDValue)}
+          errorMessage={errors.chatID?.errorMessage}
+          hasError={errors.chatID?.hasError}
+          ref={chatIDRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "chatID")}
+        ></Autocomplete>
+      </ArrayField>
       <TextField
-        label="Name"
-        isRequired={false}
+        label="Sender user id"
+        isRequired={true}
         isReadOnly={false}
-        value={name}
+        value={senderUserID}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              name: value,
-              users,
+              chatID,
+              senderUserID: value,
+              message,
             };
             const result = onChange(modelFields);
-            value = result?.name ?? value;
+            value = result?.senderUserID ?? value;
           }
-          if (errors.name?.hasError) {
-            runValidationTasks("name", value);
+          if (errors.senderUserID?.hasError) {
+            runValidationTasks("senderUserID", value);
           }
-          setName(value);
+          setSenderUserID(value);
         }}
-        onBlur={() => runValidationTasks("name", name)}
-        errorMessage={errors.name?.errorMessage}
-        hasError={errors.name?.hasError}
-        {...getOverrideProps(overrides, "name")}
+        onBlur={() => runValidationTasks("senderUserID", senderUserID)}
+        errorMessage={errors.senderUserID?.errorMessage}
+        hasError={errors.senderUserID?.hasError}
+        {...getOverrideProps(overrides, "senderUserID")}
       ></TextField>
-      <ArrayField
-        onChange={async (items) => {
-          let values = items;
+      <TextField
+        label="Message"
+        isRequired={true}
+        isReadOnly={false}
+        value={message}
+        onChange={(e) => {
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              name,
-              users: values,
+              chatID,
+              senderUserID,
+              message: value,
             };
             const result = onChange(modelFields);
-            values = result?.users ?? values;
+            value = result?.message ?? value;
           }
-          setUsers(values);
-          setCurrentUsersValue(undefined);
-          setCurrentUsersDisplayValue("");
+          if (errors.message?.hasError) {
+            runValidationTasks("message", value);
+          }
+          setMessage(value);
         }}
-        currentFieldValue={currentUsersValue}
-        label={"Users"}
-        items={users}
-        hasError={errors?.users?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks("users", currentUsersValue)
-        }
-        errorMessage={errors?.users?.errorMessage}
-        getBadgeText={getDisplayValue.users}
-        setFieldValue={(model) => {
-          setCurrentUsersDisplayValue(
-            model ? getDisplayValue.users(model) : ""
-          );
-          setCurrentUsersValue(model);
-        }}
-        inputFieldRef={usersRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Users"
-          isRequired={true}
-          isReadOnly={false}
-          placeholder="Search Profile"
-          value={currentUsersDisplayValue}
-          options={usersRecords.map((r) => ({
-            id: getIDValue.users?.(r),
-            label: getDisplayValue.users?.(r),
-          }))}
-          isLoading={usersLoading}
-          onSelect={({ id, label }) => {
-            setCurrentUsersValue(
-              usersRecords.find((r) =>
-                Object.entries(JSON.parse(id)).every(
-                  ([key, value]) => r[key] === value
-                )
-              )
-            );
-            setCurrentUsersDisplayValue(label);
-            runValidationTasks("users", label);
-          }}
-          onClear={() => {
-            setCurrentUsersDisplayValue("");
-          }}
-          onChange={(e) => {
-            let { value } = e.target;
-            fetchUsersRecords(value);
-            if (errors.users?.hasError) {
-              runValidationTasks("users", value);
-            }
-            setCurrentUsersDisplayValue(value);
-            setCurrentUsersValue(undefined);
-          }}
-          onBlur={() => runValidationTasks("users", currentUsersDisplayValue)}
-          errorMessage={errors.users?.errorMessage}
-          hasError={errors.users?.hasError}
-          ref={usersRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "users")}
-        ></Autocomplete>
-      </ArrayField>
+        onBlur={() => runValidationTasks("message", message)}
+        errorMessage={errors.message?.errorMessage}
+        hasError={errors.message?.hasError}
+        {...getOverrideProps(overrides, "message")}
+      ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
       >
         <Button
-          children="Clear"
+          children="Reset"
           type="reset"
           onClick={(event) => {
             event.preventDefault();
             resetStateValues();
           }}
-          {...getOverrideProps(overrides, "ClearButton")}
+          isDisabled={!(idProp || chatMessageModelProp)}
+          {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
           gap="15px"
@@ -489,7 +533,10 @@ export default function ChatCreateForm(props) {
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={Object.values(errors).some((e) => e?.hasError)}
+            isDisabled={
+              !(idProp || chatMessageModelProp) ||
+              Object.values(errors).some((e) => e?.hasError)
+            }
             {...getOverrideProps(overrides, "SubmitButton")}
           ></Button>
         </Flex>

@@ -57,6 +57,12 @@ export const matchPostsState = atom({
   default: [],
 });
 
+export const playerPostsState = atom({
+  key: "playerPostsState",
+  default: [],
+});
+
+
 export const chatsState = atom({
   key: "chatsState",
   default: [],

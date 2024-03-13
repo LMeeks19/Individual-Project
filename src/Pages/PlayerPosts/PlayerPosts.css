@@ -1,14 +1,10 @@
-.match-posts-tab:hover,
-.match-posts-tab[aria-selected='true'] {
+.player-posts-tab:hover,
+.player-posts-tab[aria-selected='true'] {
     color: #008080;
     border-color: #008080;
 }
 
-.match-posts-tab[aria-selected='true'] {
-    cursor: default;
-}
-
-.match-posts-table {
+.player-posts-table {
     margin-top: 40px;
     box-shadow: 0 0 20px -4px #000;
     border-radius: 15px;

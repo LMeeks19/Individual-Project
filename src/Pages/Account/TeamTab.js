@@ -111,7 +111,7 @@ export function TeamRoster(props) {
                   />
                 </Card>
                 <Card className="details">
-                  <Heading className="header" color="#fff" level={4}>
+                  <Heading className="header" color="#f7f5ef" level={4}>
                     <Text>{player.name}</Text>
                     <Flex className="icons">
                       <Edit
@@ -130,10 +130,10 @@ export function TeamRoster(props) {
                       />
                     </Flex>
                   </Heading>
-                  <Text color="#fff">Age: {player.age}</Text>
-                  <Text color="#fff">Number: {player.kitNumber}</Text>
+                  <Text color="#f7f5ef">Age: {player.age}</Text>
+                  <Text color="#f7f5ef">Number: {player.kitNumber}</Text>
                   <Flex wrap="wrap" gap="0">
-                    <Text marginRight="4px" as="div" color="#fff">
+                    <Text marginRight="4px" as="div" color="#f7f5ef">
                       Positions:
                     </Text>
                     {player.positions.map((position) => {
@@ -141,7 +141,7 @@ export function TeamRoster(props) {
                         <Badge
                           key={position}
                           marginRight="4px"
-                          color="#fff"
+                          color="#f7f5ef"
                           backgroundColor="#404040"
                         >
                           {position}

@@ -1,31 +1,18 @@
-.loader-container {
-  height: 100%;
+.loading-container {
   justify-content: center;
   align-items: center;
-  background-color: #008080;
-  gap: 20px;
+  height: 100%;
 
-  .loader-text {
+  .text {
     font-size: 3rem;
+    margin-bottom: 10px;
+    text-align: center;
   }
 
-  .loader {
-    border: 5px solid #f9f1f1;
-    border-top: 5px solid #404040;
-    border-radius: 50%;
-    width: 2.5rem;
-    height: 2.5rem;
-    animation: spin 1.5s linear infinite;
-    align-self: center;
-  }
 
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-
-    100% {
-      transform: rotate(360deg);
-    }
+  .MuiCircularProgress-root {
+    color: #008080;
+    height: 6rem !important;
+    width: 6rem !important;
   }
 }

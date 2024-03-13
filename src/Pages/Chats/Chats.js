@@ -26,6 +26,7 @@ import CreateChatModal from "../../Modals/ChatModals/CreateChatModal";
 import { intlFormatDistance } from "date-fns";
 import { onCreateChatMessage } from "../../graphql/subscriptions";
 import { generateClient } from "aws-amplify/api";
+import { CircularProgress } from "@mui/material";
 
 export default function Chats() {
   const [chats, setChats] = useRecoilState(chatsState);
@@ -114,12 +115,14 @@ export default function Chats() {
   }
 
   return (
-    <Flex height="100%" gap="0">
+    <Flex className="chats">
       <Flex className="chat-container-1" direction="column">
         <Text as="div" className="chat-title">
-          <Heading level={3}>Chats</Heading>
+          <Heading level={3} color="#f7f5ef">
+            Chats
+          </Heading>
           <AddCircle
-            className="icon"
+            className="icon add"
             fontSize="large"
             onClick={() => openModal(<CreateChatModal />, "Create Chat")}
           />
@@ -128,8 +131,8 @@ export default function Chats() {
           <>
             {isLoading ? (
               <Flex height="100%" justifyContent="center" alignItems="center">
-                <Text fontSize="large">Loading</Text>
-                <View className="loader"></View>
+                <Text fontSize="large" opacity="50%">Loading</Text>
+                <CircularProgress />
               </Flex>
             ) : (
               <Flex height="100%" justifyContent="center" alignItems="center">
@@ -188,13 +191,17 @@ export default function Chats() {
                         : "reciever"
                     }`}
                   >
-                    <Text fontSize="x-small" opacity="75%">
+                    <Text
+                      className="message-text"
+                      fontSize="x-small"
+                      opacity="75%"
+                    >
                       {intlFormatDistance(
                         new Date(message.createdAt),
                         new Date()
                       )}
                     </Text>
-                    <Text>{message.message}</Text>{" "}
+                    <Text className="message-text">{message.message}</Text>
                   </Flex>
                 );
               })}
@@ -234,10 +241,10 @@ export default function Chats() {
         <>
           {isLoading ? (
             <Flex width="75%" justifyContent="center" alignItems="center">
-              <Text fontSize="x-large" opacity="75%">
+              <Text fontSize="x-large" opacity="50%">
                 Loading
               </Text>
-              <View className="loader"></View>
+              <CircularProgress />
             </Flex>
           ) : (
             <Flex width="75%" justifyContent="center" alignItems="center">

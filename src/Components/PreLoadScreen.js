@@ -1,11 +1,12 @@
-import { Flex, Text, View } from "@aws-amplify/ui-react";
+import * as React from "react";
+import { View, Flex } from "@aws-amplify/ui-react";
+import { CircularProgress } from "@mui/material";
 import "./PreLoadScreen.css";
 
 export default function PreLoadScreen() {
   return (
-    <Flex className="loader-container">
-      <Text className="loader-text">Loading</Text>
-      <View className="loader"></View>
+    <Flex className="loading-container">
+        <CircularProgress />
     </Flex>
   );
 }

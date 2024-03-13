@@ -6,8 +6,8 @@ export const theme = {
       tokens: {
         colors: {
           font: {
-            primary: { value: "#fff" },
-            secondary: { value: "#fff" },
+            primary: { value: "#f7f5ef" },
+            secondary: { value: "#f7f5ef" },
           },
           background: {
             primary: { value: "#404040" },
@@ -18,22 +18,22 @@ export const theme = {
             primary: {
               backgroundColor: { value: "#008080" },
               _hover: {
-                borderColor: { value: "#fff" },
+                borderColor: { value: "#f7f5ef" },
               },
             },
           },
           togglebutton: {
             _pressed: {
-              borderColor: { value: "#fff" },
+              borderColor: { value: "#f7f5ef" },
               backgroundColor: { value: "#008080" },
             },
             _focus: {
-              borderColor: { value: "#fff" },
+              borderColor: { value: "#f7f5ef" },
               backgroundColor: { value: "#008080" },
             },
           },
           badge: {
-            color: { value: "#f9f1f1" },
+            color: { value: "#f7f5ef" },
             backgroundColor: { value: "#008080" },
           },
           table: {
@@ -59,7 +59,7 @@ export const theme = {
             secondary: { value: "#000" },
           },
           background: {
-            primary: { value: "#f9f1f1" },
+            primary: { value: "#f7f5ef" },
           },
         },
         components: {
@@ -67,7 +67,7 @@ export const theme = {
             primary: {
               backgroundColor: { value: "#008080" },
               _hover: {
-                borderColor: { value: "#fff" },
+                borderColor: { value: "#f7f5ef" },
               },
             },
           },
@@ -82,7 +82,7 @@ export const theme = {
             },
           },
           badge: {
-            color: { value: "#f9f1f1" },
+            color: { value: "#f7f5ef" },
             backgroundColor: { value: "#008080" },
           },
           table: {

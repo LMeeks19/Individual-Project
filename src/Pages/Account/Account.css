@@ -8,7 +8,7 @@
   margin-bottom: auto;
 
   .amplify-text {
-    color: #fff;
+    color: #f7f5ef;
   }
 
   &.delete {
@@ -66,10 +66,10 @@
   .registered-player-heading {
     padding: 15px;
     background-color: #008080;
-    color: #f9f1f1;
+    color: #f7f5ef;
 
     .header {
-      color: #f9f1f1;
+      color: #f7f5ef;
       margin-top: auto;
       margin-bottom: auto;
     }
@@ -78,7 +78,7 @@
       cursor: pointer;
       display: flex;
       align-items: center;
-      color: #f9f1f1;
+      color: #f7f5ef;
 
       &.delete {
         color: red !important;

@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, SelectFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { AutocompleteProps, GridProps, SelectFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -30,6 +30,10 @@ export declare type ProfileCreateFormInputValues = {
     townCity?: string;
     county?: string;
     postcode?: string;
+    matchPosts?: any[];
+    interestedMatchPosts?: any[];
+    playerPosts?: any[];
+    interestedPlayerPosts?: any[];
 };
 export declare type ProfileCreateFormValidationValues = {
     name?: ValidationFunction<string>;
@@ -40,6 +44,10 @@ export declare type ProfileCreateFormValidationValues = {
     townCity?: ValidationFunction<string>;
     county?: ValidationFunction<string>;
     postcode?: ValidationFunction<string>;
+    matchPosts?: ValidationFunction<any>;
+    interestedMatchPosts?: ValidationFunction<any>;
+    playerPosts?: ValidationFunction<any>;
+    interestedPlayerPosts?: ValidationFunction<any>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type ProfileCreateFormOverridesProps = {
@@ -52,6 +60,10 @@ export declare type ProfileCreateFormOverridesProps = {
     townCity?: PrimitiveOverrideProps<TextFieldProps>;
     county?: PrimitiveOverrideProps<TextFieldProps>;
     postcode?: PrimitiveOverrideProps<TextFieldProps>;
+    matchPosts?: PrimitiveOverrideProps<AutocompleteProps>;
+    interestedMatchPosts?: PrimitiveOverrideProps<AutocompleteProps>;
+    playerPosts?: PrimitiveOverrideProps<AutocompleteProps>;
+    interestedPlayerPosts?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type ProfileCreateFormProps = React.PropsWithChildren<{
     overrides?: ProfileCreateFormOverridesProps | undefined | null;

@@ -1,5 +1,5 @@
 import MatchPosts from "../Pages/MatchPosts/MatchPosts";
-import PlayersPost from "../Pages/PlayersPost";
+import PlayersPosts from "../Pages/PlayerPosts/PlayerPosts";
 import Account from "../Pages/Account/Account";
 import Messages from "../Pages/Chats/Chats";
 
@@ -9,7 +9,7 @@ export default function NavRouter() {
   return (
     <Routes>
       <Route path="/match-posts" element={<MatchPosts />} />
-      <Route path="/player-posts" element={<PlayersPost />} />
+      <Route path="/player-posts" element={<PlayersPosts />} />
       <Route path="/account" element={<Account />} />
       <Route path="/messages" element={<Messages />} />
     </Routes>

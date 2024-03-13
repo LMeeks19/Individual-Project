@@ -4,7 +4,7 @@ import { useSetRecoilState, useRecoilState } from "recoil";
 import { matchPostsState, modalState } from "../../Functions/GlobalState";
 
 export default function UpdateMatchPostModal(props) {
-  const [posts, setPosts] = useRecoilState(matchPostsState);
+  const [matchPosts, setMatchPosts] = useRecoilState(matchPostsState);
   const setModal = useSetRecoilState(modalState);
 
   return (
@@ -38,10 +38,10 @@ export default function UpdateMatchPostModal(props) {
           isActive: props.post.isActive,
         }}
         onSuccess={(data) => {
-          let curPosts = posts.filter((post) => post.id === data.id);
+          let curPosts = matchPosts.filter((post) => post.id === data.id);
           data.interestedUsers = data.interestedUsers.items;
           curPosts.push(data);
-          setPosts(curPosts);
+          setMatchPosts(curPosts);
           setModal({ component: null, title: null, isShown: false });
         }}
       />

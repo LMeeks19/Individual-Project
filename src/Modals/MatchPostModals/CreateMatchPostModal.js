@@ -9,7 +9,7 @@ import {
 
 export default function CreateMatchPostModal() {
   const currentUser = useRecoilValue(currentUserState);
-  const [posts, setPosts] = useRecoilState(matchPostsState);
+  const [matchPosts, setMatchPosts] = useRecoilState(matchPostsState);
   const setModal = useSetRecoilState(modalState);
 
   return (
@@ -30,7 +30,7 @@ export default function CreateMatchPostModal() {
         }}
         onSuccess={(data) => {
           data.interestedUsers = []
-          setPosts([...posts, data]);
+          setMatchPosts([...matchPosts, data]);
           setModal({ component: null, title: null, isShown: false });
         }}
       />

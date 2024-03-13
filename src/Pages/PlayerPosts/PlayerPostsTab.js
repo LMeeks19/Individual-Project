@@ -8,21 +8,13 @@ import {
   Text,
   View,
 } from "@aws-amplify/ui-react";
-import { TablePagination, Tooltip } from "@mui/material";
-import { modalState, matchPostsState } from "../../Functions/GlobalState";
+import { CircularProgress, TablePagination, Tooltip } from "@mui/material";
+import { modalState, playerPostsState } from "../../Functions/GlobalState";
 import { useState } from "react";
 import { formatRelative } from "date-fns";
-import {
-  AddMatchPostInterestedUser,
-  DeleteMatchPost,
-  RemoveMatchPostInterestedUser,
-  ReactivateMatchPost,
-} from "../../Functions/Server";
 import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
 import { useSetRecoilState, useRecoilState } from "recoil";
-import ViewMatchPostModal from "../../Modals/MatchPostModals/ViewMatchPostModal";
-import UpdateMatchPostModal from "../../Modals/MatchPostModals/UpdateMatchPostModal";
-import "./MatchPosts.css";
+import "./PlayerPosts.css";
 import "../../Components/Animations.css";
 import { useNavigate } from "react-router-dom";
 import {
@@ -35,11 +27,11 @@ import {
   ThumbUpAlt,
 } from "@mui/icons-material";
 
-export default function PostsTab(props) {
+export default function PlayerPostsTab(props) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(8);
   const setModal = useSetRecoilState(modalState);
-  const [posts, setPosts] = useRecoilState(matchPostsState);
+  const [playerPosts, setPlayerPosts] = useRecoilState(playerPostsState);
   const navigate = useNavigate();
 
   const handleChangePage = (event, newPage) => {
@@ -56,63 +48,28 @@ export default function PostsTab(props) {
     return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
   }
 
-  async function deleteMatchPost(matchPostId) {
-    const deletedMatchPostId = await DeleteMatchPost(matchPostId);
-    setPosts(posts.filter((post) => post.id !== deletedMatchPostId));
+  async function deletePlayerPost(playerPostId) {
+    // TODO:
   }
 
-  async function reActivateMatchPost(matchPostId) {
-    const updatedMatchPost = await ReactivateMatchPost(matchPostId);
-    let updatedMatchPosts = [...posts].map((post) => {
-      if (post.id === updatedMatchPost.id) {
-        return updatedMatchPost;
-      }
-      return post;
-    });
-    setPosts(updatedMatchPosts);
+  async function reActivatePlayerPost(playerPostId) {
+    // TODO:
   }
 
   function openModal(component, title) {
     setModal({ component: component, title: title, isShown: true });
   }
 
-  async function RegisterInterest(profileId, postId) {
-    let addedInterestedUser = await AddMatchPostInterestedUser(
-      profileId,
-      postId
-    );
-    let updatedPosts = posts.map((post) => {
-      if (post.id === addedInterestedUser.matchPostId) {
-        return {
-          ...post,
-          interestedUsers: [...post.interestedUsers, addedInterestedUser],
-        };
-      }
-      return post;
-    });
-    setPosts(updatedPosts);
+  async function registerInterest(profileId, postId) {
+    // TODO:
   }
 
-  async function UnRegisterInterest(interestedUserId) {
-    let removedInterestedUser = await RemoveMatchPostInterestedUser(
-      interestedUserId
-    );
-    let updatedPosts = posts.map((post) => {
-      if (post.id === removedInterestedUser.matchPostId) {
-        return {
-          ...post,
-          interestedUsers: post.interestedUsers.filter(
-            (interestedUser) => interestedUser.id !== removedInterestedUser.id
-          ),
-        };
-      }
-      return post;
-    });
-    setPosts(updatedPosts);
+  async function unRegisterInterest(interestedUserId) {
+    // TODO:
   }
 
   return (
-    <Table className="match-posts-table" variation="striped">
+    <Table className="player-posts-table" variation="striped">
       <TableHead width="100%">
         <TableRow>
           <th className="title">Title</th>
@@ -122,7 +79,7 @@ export default function PostsTab(props) {
         </TableRow>
       </TableHead>
 
-      {props.posts.length === 0 || props.isLoading ? (
+      {props.playerPosts.length === 0 || props.isLoading ? (
         <TableBody width="100%">
           <TableRow>
             <td colSpan="4">
@@ -130,8 +87,10 @@ export default function PostsTab(props) {
                 <Text textAlign="center">No Posts</Text>
               ) : (
                 <Flex justifyContent="center" alignItems="center">
-                  <Text fontSize="1rem">Loading</Text>
-                  <View className="loader"></View>
+                  <Text fontSize="1rem" opacity="75%">
+                    Loading
+                  </Text>
+                  <CircularProgress />
                 </Flex>
               )}
             </td>
@@ -139,7 +98,7 @@ export default function PostsTab(props) {
         </TableBody>
       ) : (
         <TableBody width="100%">
-          {props.posts
+          {props.playerPosts
             .sort((a, b) => a.title.localeCompare(b.title))
             .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -161,42 +120,32 @@ export default function PostsTab(props) {
                         {post.createdByProfileID === props.currentUser.id ? (
                           <Flex justifyContent="center">
                             <Flex gap="4px" className="icon">
-                              <Tooltip title="View Match Post Details" arrow>
+                              <Tooltip title="View Player Post Details" arrow>
                                 <Visibility
-                                  onClick={() =>
-                                    openModal(
-                                      <ViewMatchPostModal post={post} />,
-                                      "View Match Post Details"
-                                    )
-                                  }
+                                // TODO: OnClick Modal View
                                 />
                               </Tooltip>
                             </Flex>
                             <Divider orientation="vertical" />
                             <Flex gap="4px" className="icon">
-                              <Tooltip title="Update Match Post Details" arrow>
+                              <Tooltip title="Update Player Post Details" arrow>
                                 <Edit
-                                  onClick={() =>
-                                    openModal(
-                                      <UpdateMatchPostModal post={post} />,
-                                      "Update Match Post Details"
-                                    )
-                                  }
+                                // TODO OnClick Modal Edit
                                 />
                               </Tooltip>
                             </Flex>
                             <Divider orientation="vertical" />
                             <Flex gap="4px" className="icon delete">
-                              <Tooltip title="Delete Match Post" arrow>
+                              <Tooltip title="Delete Player Post" arrow>
                                 <Delete
                                   onClick={() =>
                                     openModal(
                                       <ConfirmDeleteModal
                                         deleteFunction={() =>
-                                          deleteMatchPost(post.id)
+                                          deletePlayerPost(post.id)
                                         }
                                       />,
-                                      "Confirm Match Post Delete"
+                                      "Confirm Player Post Delete"
                                     )
                                   }
                                 />
@@ -206,14 +155,9 @@ export default function PostsTab(props) {
                         ) : (
                           <Flex justifyContent="center">
                             <Flex gap="4px" className="icon">
-                              <Tooltip title="View Match Post Details" arrow>
+                              <Tooltip title="View Player Post Details" arrow>
                                 <Visibility
-                                  onClick={() =>
-                                    openModal(
-                                      <ViewMatchPostModal post={post} />,
-                                      "View Match Post Details"
-                                    )
-                                  }
+                                // TODO: OnClick Modal View
                                 />
                               </Tooltip>
                             </Flex>
@@ -227,7 +171,7 @@ export default function PostsTab(props) {
                                 <Tooltip title="Register Interest" arrow>
                                   <ThumbUpOffAlt
                                     onClick={() =>
-                                      RegisterInterest(
+                                      registerInterest(
                                         props.currentUser.id,
                                         post.id
                                       )
@@ -240,7 +184,7 @@ export default function PostsTab(props) {
                                 <Tooltip title="Unregister Interest" arrow>
                                   <ThumbUpAlt
                                     onClick={() =>
-                                      UnRegisterInterest(
+                                      unRegisterInterest(
                                         post.interestedUsers.find(
                                           (interestedUser) =>
                                             interestedUser.profileId ===
@@ -267,14 +211,9 @@ export default function PostsTab(props) {
                       <Text as="div">
                         <Flex justifyContent="center">
                           <Flex gap="4px" className="icon">
-                            <Tooltip title="View Match Post Details" arrow>
+                            <Tooltip title="View PLayer Post Details" arrow>
                               <Visibility
-                                onClick={() =>
-                                  openModal(
-                                    <ViewMatchPostModal post={post} />,
-                                    "View Match Post Details"
-                                  )
-                                }
+                              // TODO: OnClick Modal View
                               />
                             </Tooltip>
                           </Flex>
@@ -282,9 +221,11 @@ export default function PostsTab(props) {
                             <>
                               <Divider orientation="vertical" />
                               <Flex gap="4px" className="icon">
-                                <Tooltip title="Reactivate Post" arrow>
+                                <Tooltip title="Reactivate Player Post" arrow>
                                   <Replay
-                                    onClick={() => reActivateMatchPost(post.id)}
+                                    onClick={() =>
+                                      reActivatePlayerPost(post.id)
+                                    }
                                   />
                                 </Tooltip>
                               </Flex>
@@ -303,14 +244,14 @@ export default function PostsTab(props) {
           <TableRow>
             <TablePagination
               sx={{
-                color: "#f9f1f1",
+                color: "#f7f5ef",
                 borderBottom: "transparent",
                 backgroundColor: "#008080",
               }}
-              rowsPerPageOptions={[8, 16, 32, 64, 128, props.posts.length]
+              rowsPerPageOptions={[8, 16, 32, 64, 128, props.playerPosts.length]
                 .sort((a, b) => a - b)
-                .filter((a) => a <= props.posts.length)}
-              count={props.posts.length}
+                .filter((a) => a <= props.playerPosts.length)}
+              count={props.playerPosts.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

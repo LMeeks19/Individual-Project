@@ -1,28 +1,24 @@
 import { Heading, View, Tabs, Flex, Button, Text } from "@aws-amplify/ui-react";
-import MatchPostsTab from "./MatchPostsTab";
+import PlayerPostsTab from "./PlayerPostsTab";
 import { useEffect, useState } from "react";
-import { GetMatchPosts } from "../../Functions/Server";
 import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
-import { currentUserState, matchPostsState } from "../../Functions/GlobalState";
-import CreateMatchPostModal from "../../Modals/MatchPostModals/CreateMatchPostModal";
+import { currentUserState, playerPostsState } from "../../Functions/GlobalState";
 import { modalState } from "../../Functions/GlobalState";
 import { Add } from "@mui/icons-material";
-import "./MatchPosts.css";
+import "./PlayerPosts.css";
 
 export default function MatchPosts() {
   const currentUser = useRecoilValue(currentUserState);
-  const [matchPosts, setMatchPosts] = useRecoilState(matchPostsState);
+  const [playerPosts, setPlayerPosts] = useRecoilState(playerPostsState);
   const setModal = useSetRecoilState(modalState);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    async function getMatchPosts() {
-      let apiPosts = await GetMatchPosts();
-      apiPosts = apiPosts.sort((a, b) => a.title.localeCompare(b.title));
-      setMatchPosts(apiPosts);
+    async function getPlayerPosts() {
+      // TODO:
       setIsLoading(false);
     }
-    getMatchPosts();
+    getPlayerPosts();
   }, []);
 
   function openModal(component, title) {
@@ -36,21 +32,17 @@ export default function MatchPosts() {
         justifyContent="space-between"
         alignItems="center"
       >
-        <Heading level={3}>Match Posts</Heading>
+        <Heading level={3}>Player Posts</Heading>
         <Button
           className="custom-button"
           variation="primary"
-          onClick={() =>
-            openModal(<CreateMatchPostModal />, "Create Match Post")
-          }
+          // TODO: OnClick Modal
         >
           <Text display="flex">
             <Add
               fontSize="small"
               className="icon"
-              onClick={() =>
-                openModal(<CreateMatchPostModal />, "Create Match Post")
-              }
+              // TODO: OnClick Modal
             />
             Create
           </Text>
@@ -58,25 +50,25 @@ export default function MatchPosts() {
       </Flex>
       <Tabs.Container defaultValue="1">
         <Tabs.List spacing="equal" wrap="wrap">
-          <Tabs.Item className="match-posts-tab" value="1">
-            ALL MATCH POSTS
+          <Tabs.Item className="account-tab" value="1">
+            ALL PLAYER POSTS
           </Tabs.Item>
-          <Tabs.Item className="match-posts-tab" value="2">
-            MY MATCH POSTS
+          <Tabs.Item className="account-tab" value="2">
+            MY PLAEYR POSTS
           </Tabs.Item>
-          <Tabs.Item className="match-posts-tab" value="3">
-            INTERESTED MATCH POSTS
+          <Tabs.Item className="account-tab" value="3">
+            INTERESTED PLAYER POSTS
           </Tabs.Item>
-          <Tabs.Item className="match-posts-tab" value="4">
-            ARCHIVED MATCH POSTS
+          <Tabs.Item className="account-tab" value="4">
+            ARCHIVED PLAYER POSTS
           </Tabs.Item>
         </Tabs.List>
 
         <Tabs.Panel value="1">
-          <MatchPostsTab
+          <PlayerPostsTab
             isLoading={isLoading}
             currentUser={currentUser}
-            matchPosts={matchPosts.filter(
+            playerPosts={playerPosts.filter(
               (post) =>
                 post.createdByProfileID !== currentUser.id && post.isActive
             )}
@@ -84,20 +76,20 @@ export default function MatchPosts() {
         </Tabs.Panel>
 
         <Tabs.Panel value="2">
-          <MatchPostsTab
+          <PlayerPostsTab
             isLoading={isLoading}
             currentUser={currentUser}
-            matchPosts={matchPosts.filter(
+            playerPosts={playerPosts.filter(
               (post) =>
                 post.createdByProfileID === currentUser.id && post.isActive
             )}
           />
         </Tabs.Panel>
         <Tabs.Panel value="3">
-          <MatchPostsTab
+          <PlayerPostsTab
             isLoading={isLoading}
             currentUser={currentUser}
-            matchPosts={matchPosts.filter(
+            playerPosts={playerPosts.filter(
               (post) =>
                 post.interestedUsers?.some(
                   (interestedUser) =>
@@ -107,10 +99,10 @@ export default function MatchPosts() {
           />
         </Tabs.Panel>
         <Tabs.Panel value="4">
-          <MatchPostsTab
+          <PlayerPostsTab
             isLoading={isLoading}
             currentUser={currentUser}
-            matchPosts={matchPosts.filter(
+            playerPosts={playerPosts.filter(
               (post) =>
                 !post.isActive && post.createdByProfileID === currentUser.id
             )}

@@ -13,6 +13,7 @@
     justify-self: start;
     align-self: center;
     margin-left: 40px;
+    color: #f7f5ef;
   }
 
   .amplify-button {
@@ -20,7 +21,7 @@
     margin: 10px;
     padding: 10px;
     border: none;
-    color: #fff;
+    color: #f7f5ef;
 
     .amplify-icon {
       width: 1.4rem !important;
@@ -54,7 +55,7 @@
         display: flex;
 
         .amplify-text {
-          color: #fff;
+          color: #f7f5ef;
           margin-top: auto;
           margin-bottom: auto;
           text-wrap: nowrap;
@@ -90,7 +91,7 @@
 }
 
 
-@media screen and (max-width: 1060px) {
+@media screen and (max-width: 1210px) {
   .flex-container {
     .amplify-button {
       display: flex;

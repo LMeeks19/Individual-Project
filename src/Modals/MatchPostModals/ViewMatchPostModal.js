@@ -39,7 +39,7 @@ export default function ViewMatchPostModal(props) {
   const navigate = useNavigate();
   const setModal = useSetRecoilState(modalState);
   const [post, setPost] = useState(props.post);
-  const [posts, setPosts] = useRecoilState(matchPostsState);
+  const [matchPosts, setMatchPosts] = useRecoilState(matchPostsState);
 
   function formatDateTime(date) {
     return format(new Date(date), "do MMMM yyyy @ H:mm a");
@@ -66,13 +66,13 @@ export default function ViewMatchPostModal(props) {
       interestedUserId
     );
     setPost(updatedMatchPost);
-    let updatedMatchPosts = [...posts].map((post) => {
+    let updatedMatchPosts = [...matchPosts].map((post) => {
       if (post.id === updatedMatchPost.id) {
         return updatedMatchPost;
       }
       return post;
     });
-    setPosts(updatedMatchPosts);
+    setMatchPosts(updatedMatchPosts);
   }
 
   async function rejectCoach(interestedUserId) {
@@ -280,7 +280,14 @@ export default function ViewMatchPostModal(props) {
                           <Tooltip title="Message" arrow>
                             <Message
                               className="icon"
-                              onClick={() => navigate("/messages")}
+                              onClick={() => {
+                                setModal({
+                                  component: null,
+                                  title: null,
+                                  isShown: false,
+                                });
+                                navigate("/messages");
+                              }}
                             />
                           </Tooltip>
 
@@ -290,7 +297,9 @@ export default function ViewMatchPostModal(props) {
                               onClick={() =>
                                 openModal(
                                   <ConfirmModal
-                                    function={() => acceptCoach(interestedUser.id)}
+                                    function={() =>
+                                      acceptCoach(interestedUser.id)
+                                    }
                                   />,
                                   "Confirm"
                                 )
