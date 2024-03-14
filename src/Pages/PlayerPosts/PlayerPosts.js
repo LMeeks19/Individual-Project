@@ -2,10 +2,15 @@ import { Heading, View, Tabs, Flex, Button, Text } from "@aws-amplify/ui-react";
 import PlayerPostsTab from "./PlayerPostsTab";
 import { useEffect, useState } from "react";
 import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
-import { currentUserState, playerPostsState } from "../../Functions/GlobalState";
+import {
+  currentUserState,
+  playerPostsState,
+} from "../../Functions/GlobalState";
 import { modalState } from "../../Functions/GlobalState";
 import { Add } from "@mui/icons-material";
 import "./PlayerPosts.css";
+import { GetPlayerPosts } from "../../Functions/Server";
+import SnackbarAlert from "../../Components/Snackbar";
 
 export default function MatchPosts() {
   const currentUser = useRecoilValue(currentUserState);
@@ -15,7 +20,9 @@ export default function MatchPosts() {
 
   useEffect(() => {
     async function getPlayerPosts() {
-      // TODO:
+      let playerPosts = await GetPlayerPosts();
+      playerPosts = playerPosts.sort((a, b) => a.title.localeCompare(b.title));
+      setPlayerPosts(playerPosts);
       setIsLoading(false);
     }
     getPlayerPosts();
@@ -33,17 +40,9 @@ export default function MatchPosts() {
         alignItems="center"
       >
         <Heading level={3}>Player Posts</Heading>
-        <Button
-          className="custom-button"
-          variation="primary"
-          // TODO: OnClick Modal
-        >
+        <Button className="custom-button" variation="primary">
           <Text display="flex">
-            <Add
-              fontSize="small"
-              className="icon"
-              // TODO: OnClick Modal
-            />
+            <Add fontSize="small" className="icon" />
             Create
           </Text>
         </Button>
@@ -54,7 +53,7 @@ export default function MatchPosts() {
             ALL PLAYER POSTS
           </Tabs.Item>
           <Tabs.Item className="account-tab" value="2">
-            MY PLAEYR POSTS
+            MY PLAYER POSTS
           </Tabs.Item>
           <Tabs.Item className="account-tab" value="3">
             INTERESTED PLAYER POSTS

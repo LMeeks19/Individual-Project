@@ -134,7 +134,7 @@ type PlayerPost @model @auth(rules: [{allow: public}]) {
   county: String!
   postcode: String!
   isActive: Boolean!
-  interesetdUsers: [Profile] @manyToMany(relationName: "ProfilePlayerPost")
+  interestedUsers: [Profile] @manyToMany(relationName: "ProfilePlayerPost")
   registeredPlayers: [Player] @manyToMany(relationName: "PlayerPlayerPost")
   selectedPlayers: [ID]
 }

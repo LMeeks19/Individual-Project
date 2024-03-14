@@ -4738,7 +4738,7 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "interesetdUsers",
+          "name" : "interestedUsers",
           "description" : null,
           "args" : [ {
             "name" : "filter",

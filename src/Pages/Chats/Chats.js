@@ -21,8 +21,10 @@ import {
   CreateChatMessage,
   GetChatsByProfileId,
   GetChatMessages,
+  DeleteChat,
 } from "../../Functions/Server";
 import CreateChatModal from "../../Modals/ChatModals/CreateChatModal";
+import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
 import { intlFormatDistance } from "date-fns";
 import { onCreateChatMessage } from "../../graphql/subscriptions";
 import { generateClient } from "aws-amplify/api";
@@ -96,12 +98,19 @@ export default function Chats() {
     setMessage("");
   }
 
+  async function deleteChat(chat) {
+    const deletedChatId = await DeleteChat(chat, currentUser.id);
+
+    if (deletedChatId !== null) {
+      setChats(chats.filter((chat) => chat.id !== deletedChatId));
+    }
+  }
+
   function getChatNameFromUsers(chat) {
     let names = chat.users
       .map((user) => {
-        if (user.id !== currentUser.id) {
+        if (user.id !== currentUser.id) 
           return user.name;
-        }
         return "";
       })
       .toString();
@@ -131,7 +140,9 @@ export default function Chats() {
           <>
             {isLoading ? (
               <Flex height="100%" justifyContent="center" alignItems="center">
-                <Text fontSize="large" opacity="50%">Loading</Text>
+                <Text fontSize="large" opacity="50%">
+                  Loading
+                </Text>
                 <CircularProgress />
               </Flex>
             ) : (
@@ -162,7 +173,17 @@ export default function Chats() {
                   <Heading className="text-overflow" level={4}>
                     {chat.name ?? getChatNameFromUsers(chat)}
                   </Heading>
-                  <Delete className="icon delete" />
+                  <Delete
+                    className="icon delete"
+                    onClick={() =>
+                      openModal(
+                        <ConfirmDeleteModal
+                          deleteFunction={() => deleteChat(chat)}
+                        />,
+                        "Confirm Delete Chat"
+                      )
+                    }
+                  />
                 </Flex>
               );
             })}

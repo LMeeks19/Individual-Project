@@ -937,7 +937,7 @@ export const createPlayerPost = /* GraphQL */ `
       county
       postcode
       isActive
-      interesetdUsers {
+      interestedUsers {
         items {
           id
           profileId
@@ -989,11 +989,27 @@ export const updatePlayerPost = /* GraphQL */ `
       county
       postcode
       isActive
-      interesetdUsers {
+      selectedPlayers
+      createdAt
+      updatedAt
+      interestedUsers {
         items {
           id
           profileId
           playerPostId
+          profile {
+            id
+            username
+            name
+            dob
+            email
+            accountType
+            street
+            townCity
+            county
+            postcode
+            phoneNumber
+          }
           createdAt
           updatedAt
           __typename
@@ -1006,6 +1022,15 @@ export const updatePlayerPost = /* GraphQL */ `
           id
           playerId
           playerPostId
+          player {
+            id
+            name
+            dob
+            ageGroup
+            positions
+            skillLevel
+            profileID
+          }
           createdAt
           updatedAt
           __typename
@@ -1013,9 +1038,6 @@ export const updatePlayerPost = /* GraphQL */ `
         nextToken
         __typename
       }
-      selectedPlayers
-      createdAt
-      updatedAt
       __typename
     }
   }
@@ -1027,48 +1049,6 @@ export const deletePlayerPost = /* GraphQL */ `
   ) {
     deletePlayerPost(input: $input, condition: $condition) {
       id
-      title
-      description
-      createdByName
-      createdByProfileID
-      ageGroup
-      positionsNeeded
-      numOfPlayersNeeded
-      skillLevel
-      kickOff
-      street
-      townCity
-      county
-      postcode
-      isActive
-      interesetdUsers {
-        items {
-          id
-          profileId
-          playerPostId
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      registeredPlayers {
-        items {
-          id
-          playerId
-          playerPostId
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      selectedPlayers
-      createdAt
-      updatedAt
-      __typename
     }
   }
 `;
@@ -1159,36 +1139,6 @@ export const deleteChat = /* GraphQL */ `
   ) {
     deleteChat(input: $input, condition: $condition) {
       id
-      name
-      users {
-        items {
-          id
-          profileId
-          chatId
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      messages {
-        items {
-          id
-          chatID
-          senderUserID
-          message
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      userIDs
-      createdAt
-      updatedAt
-      __typename
     }
   }
 `;
@@ -1281,7 +1231,7 @@ export const createPlayerPlayerPost = /* GraphQL */ `
         county
         postcode
         isActive
-        interesetdUsers {
+        interestedUsers {
           nextToken
           __typename
         }
@@ -1341,7 +1291,7 @@ export const updatePlayerPlayerPost = /* GraphQL */ `
         county
         postcode
         isActive
-        interesetdUsers {
+        interestedUsers {
           nextToken
           __typename
         }
@@ -1401,7 +1351,7 @@ export const deletePlayerPlayerPost = /* GraphQL */ `
         county
         postcode
         isActive
-        interesetdUsers {
+        interestedUsers {
           nextToken
           __typename
         }
@@ -1738,22 +1688,7 @@ export const createProfilePlayerPost = /* GraphQL */ `
         __typename
       }
       playerPost {
-        id
-        title
-        description
-        createdByName
-        createdByProfileID
-        ageGroup
-        positionsNeeded
-        numOfPlayersNeeded
-        skillLevel
-        kickOff
-        street
-        townCity
-        county
-        postcode
-        isActive
-        interesetdUsers {
+        interestedUsers {
           nextToken
           __typename
         }
@@ -1761,13 +1696,8 @@ export const createProfilePlayerPost = /* GraphQL */ `
           nextToken
           __typename
         }
-        selectedPlayers
-        createdAt
-        updatedAt
         __typename
       }
-      createdAt
-      updatedAt
       __typename
     }
   }
@@ -1867,84 +1797,8 @@ export const deleteProfilePlayerPost = /* GraphQL */ `
   ) {
     deleteProfilePlayerPost(input: $input, condition: $condition) {
       id
-      profileId
       playerPostId
-      profile {
-        id
-        username
-        name
-        dob
-        email
-        accountType
-        street
-        townCity
-        county
-        postcode
-        phoneNumber
-        players {
-          nextToken
-          __typename
-        }
-        team {
-          nextToken
-          __typename
-        }
-        matchPosts {
-          nextToken
-          __typename
-        }
-        interestedMatchPosts {
-          nextToken
-          __typename
-        }
-        playerPosts {
-          nextToken
-          __typename
-        }
-        interestedPlayerPosts {
-          nextToken
-          __typename
-        }
-        chats {
-          nextToken
-          __typename
-        }
-        createdAt
-        updatedAt
-        __typename
-      }
-      playerPost {
-        id
-        title
-        description
-        createdByName
-        createdByProfileID
-        ageGroup
-        positionsNeeded
-        numOfPlayersNeeded
-        skillLevel
-        kickOff
-        street
-        townCity
-        county
-        postcode
-        isActive
-        interesetdUsers {
-          nextToken
-          __typename
-        }
-        registeredPlayers {
-          nextToken
-          __typename
-        }
-        selectedPlayers
-        createdAt
-        updatedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
+      profileId
     }
   }
 `;

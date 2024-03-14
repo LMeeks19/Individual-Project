@@ -56,8 +56,8 @@ export default function MatchPostsTab(props) {
     return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
   }
 
-  async function deleteMatchPost(matchPostId) {
-    const deletedMatchPostId = await DeleteMatchPost(matchPostId);
+  async function deleteMatchPost(matchPost) {
+    const deletedMatchPostId = await DeleteMatchPost(matchPost);
     setMatchPosts(matchPosts.filter((post) => post.id !== deletedMatchPostId));
   }
 
@@ -72,14 +72,10 @@ export default function MatchPostsTab(props) {
     setMatchPosts(updatedMatchPosts);
   }
 
-  function openModal(component, title) {
-    setModal({ component: component, title: title, isShown: true });
-  }
-
-  async function RegisterInterest(profileId, postId) {
+  async function registerInterest(profileId, matchPostId) {
     let addedInterestedUser = await AddMatchPostInterestedUser(
       profileId,
-      postId
+      matchPostId
     );
     let updatedPosts = matchPosts.map((post) => {
       if (post.id === addedInterestedUser.matchPostId) {
@@ -93,7 +89,7 @@ export default function MatchPostsTab(props) {
     setMatchPosts(updatedPosts);
   }
 
-  async function UnRegisterInterest(interestedUserId) {
+  async function unRegisterInterest(interestedUserId) {
     let removedInterestedUser = await RemoveMatchPostInterestedUser(
       interestedUserId
     );
@@ -109,6 +105,10 @@ export default function MatchPostsTab(props) {
       return post;
     });
     setMatchPosts(updatedPosts);
+  }
+
+  function openModal(component, title) {
+    setModal({ component: component, title: title, isShown: true });
   }
 
   return (
@@ -195,7 +195,7 @@ export default function MatchPostsTab(props) {
                                     openModal(
                                       <ConfirmDeleteModal
                                         deleteFunction={() =>
-                                          deleteMatchPost(post.id)
+                                          deleteMatchPost(post)
                                         }
                                       />,
                                       "Confirm Match Post Delete"
@@ -229,7 +229,7 @@ export default function MatchPostsTab(props) {
                                 <Tooltip title="Register Interest" arrow>
                                   <ThumbUpOffAlt
                                     onClick={() =>
-                                      RegisterInterest(
+                                      registerInterest(
                                         props.currentUser.id,
                                         post.id
                                       )
@@ -242,7 +242,7 @@ export default function MatchPostsTab(props) {
                                 <Tooltip title="Unregister Interest" arrow>
                                   <ThumbUpAlt
                                     onClick={() =>
-                                      UnRegisterInterest(
+                                      unRegisterInterest(
                                         post.interestedUsers.find(
                                           (interestedUser) =>
                                             interestedUser.profileId ===

@@ -2,8 +2,6 @@ import { Close } from "@mui/icons-material";
 import { enqueueSnackbar, closeSnackbar } from "notistack";
 
 export default class SnackbarAlert {
-  constructor() {}
-
   success(message) {
     enqueueSnackbar(message, {
       variant: "success",

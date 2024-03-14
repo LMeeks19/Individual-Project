@@ -36,7 +36,7 @@ export declare type PlayerPostUpdateFormInputValues = {
     county?: string;
     postcode?: string;
     isActive?: boolean;
-    interesetdUsers?: any[];
+    interestedUsers?: any[];
     registeredPlayers?: any[];
     selectedPlayers?: string[];
 };
@@ -55,7 +55,7 @@ export declare type PlayerPostUpdateFormValidationValues = {
     county?: ValidationFunction<string>;
     postcode?: ValidationFunction<string>;
     isActive?: ValidationFunction<boolean>;
-    interesetdUsers?: ValidationFunction<any>;
+    interestedUsers?: ValidationFunction<any>;
     registeredPlayers?: ValidationFunction<any>;
     selectedPlayers?: ValidationFunction<string>;
 };
@@ -76,7 +76,7 @@ export declare type PlayerPostUpdateFormOverridesProps = {
     county?: PrimitiveOverrideProps<TextFieldProps>;
     postcode?: PrimitiveOverrideProps<TextFieldProps>;
     isActive?: PrimitiveOverrideProps<SwitchFieldProps>;
-    interesetdUsers?: PrimitiveOverrideProps<AutocompleteProps>;
+    interestedUsers?: PrimitiveOverrideProps<AutocompleteProps>;
     registeredPlayers?: PrimitiveOverrideProps<AutocompleteProps>;
     selectedPlayers?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;

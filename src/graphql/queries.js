@@ -649,7 +649,7 @@ export const getPlayerPost = /* GraphQL */ `
       county
       postcode
       isActive
-      interesetdUsers {
+      interestedUsers {
         items {
           id
           profileId
@@ -703,17 +703,49 @@ export const listPlayerPosts = /* GraphQL */ `
         county
         postcode
         isActive
-        interesetdUsers {
+        selectedPlayers
+        createdAt
+        updatedAt
+        interestedUsers {
+          items {
+            id
+            profileId
+            playerPostId
+            profile {
+              id
+              username
+              name
+              dob
+              email
+              accountType
+              street
+              townCity
+              county
+              postcode
+              phoneNumber
+            }
+          }
           nextToken
           __typename
         }
         registeredPlayers {
+          items {
+            id
+            playerId
+            playerPostId
+            player {
+              id
+              name
+              dob
+              ageGroup
+              positions
+              skillLevel
+              profileID
+            }
+          }
           nextToken
           __typename
         }
-        selectedPlayers
-        createdAt
-        updatedAt
         __typename
       }
       nextToken
@@ -752,7 +784,7 @@ export const playerPostsByCreatedByProfileID = /* GraphQL */ `
         county
         postcode
         isActive
-        interesetdUsers {
+        interestedUsers {
           nextToken
           __typename
         }
@@ -954,7 +986,7 @@ export const getPlayerPlayerPost = /* GraphQL */ `
         county
         postcode
         isActive
-        interesetdUsers {
+        interestedUsers {
           nextToken
           __typename
         }
@@ -1506,7 +1538,7 @@ export const getProfilePlayerPost = /* GraphQL */ `
         county
         postcode
         isActive
-        interesetdUsers {
+        interestedUsers {
           nextToken
           __typename
         }

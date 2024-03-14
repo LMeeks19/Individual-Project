@@ -903,7 +903,7 @@ export const onCreatePlayerPost = /* GraphQL */ `
       county
       postcode
       isActive
-      interesetdUsers {
+      interestedUsers {
         items {
           id
           profileId
@@ -954,7 +954,7 @@ export const onUpdatePlayerPost = /* GraphQL */ `
       county
       postcode
       isActive
-      interesetdUsers {
+      interestedUsers {
         items {
           id
           profileId
@@ -1005,7 +1005,7 @@ export const onDeletePlayerPost = /* GraphQL */ `
       county
       postcode
       isActive
-      interesetdUsers {
+      interestedUsers {
         items {
           id
           profileId
@@ -1232,7 +1232,7 @@ export const onCreatePlayerPlayerPost = /* GraphQL */ `
         county
         postcode
         isActive
-        interesetdUsers {
+        interestedUsers {
           nextToken
           __typename
         }
@@ -1291,7 +1291,7 @@ export const onUpdatePlayerPlayerPost = /* GraphQL */ `
         county
         postcode
         isActive
-        interesetdUsers {
+        interestedUsers {
           nextToken
           __typename
         }
@@ -1350,7 +1350,7 @@ export const onDeletePlayerPlayerPost = /* GraphQL */ `
         county
         postcode
         isActive
-        interesetdUsers {
+        interestedUsers {
           nextToken
           __typename
         }
@@ -1698,7 +1698,7 @@ export const onCreateProfilePlayerPost = /* GraphQL */ `
         county
         postcode
         isActive
-        interesetdUsers {
+        interestedUsers {
           nextToken
           __typename
         }
@@ -1785,7 +1785,7 @@ export const onUpdateProfilePlayerPost = /* GraphQL */ `
         county
         postcode
         isActive
-        interesetdUsers {
+        interestedUsers {
           nextToken
           __typename
         }
@@ -1872,7 +1872,7 @@ export const onDeleteProfilePlayerPost = /* GraphQL */ `
         county
         postcode
         isActive
-        interesetdUsers {
+        interestedUsers {
           nextToken
           __typename
         }

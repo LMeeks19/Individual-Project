@@ -45,13 +45,7 @@ export default function MatchPosts() {
           }
         >
           <Text display="flex">
-            <Add
-              fontSize="small"
-              className="icon"
-              onClick={() =>
-                openModal(<CreateMatchPostModal />, "Create Match Post")
-              }
-            />
+            <Add fontSize="small" className="icon" />
             Create
           </Text>
         </Button>

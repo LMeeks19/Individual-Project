@@ -6,7 +6,6 @@ import {
   TableHead,
   TableRow,
   Text,
-  View,
 } from "@aws-amplify/ui-react";
 import { CircularProgress, TablePagination, Tooltip } from "@mui/material";
 import { modalState, playerPostsState } from "../../Functions/GlobalState";
@@ -26,6 +25,12 @@ import {
   ThumbUpOffAlt,
   ThumbUpAlt,
 } from "@mui/icons-material";
+import {
+  AddPlayerPostInterestedUser,
+  DeletePlayerPost,
+  ReactivatePlayerPost,
+  RemovePlayerPostInterestedUser,
+} from "../../Functions/Server";
 
 export default function PlayerPostsTab(props) {
   const [page, setPage] = useState(0);
@@ -48,24 +53,61 @@ export default function PlayerPostsTab(props) {
     return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
   }
 
-  async function deletePlayerPost(playerPostId) {
-    // TODO:
+  async function deletePlayerPost(playerPost) {
+    const deletedPlayerPostId = await DeletePlayerPost(playerPost);
+    setPlayerPosts(
+      playerPosts.filter((post) => post.id !== deletedPlayerPostId)
+    );
   }
 
   async function reActivatePlayerPost(playerPostId) {
-    // TODO:
+    const updatedPlayerPost = await ReactivatePlayerPost(playerPostId);
+    let updatedPlayerPosts = [...playerPosts].map((post) => {
+      if (post.id === updatedPlayerPost.id) {
+        return updatedPlayerPost;
+      }
+      return post;
+    });
+    setPlayerPosts(updatedPlayerPosts);
+  }
+
+  async function registerInterest(profileId, playerPostId) {
+    let addedInterestedUser = await AddPlayerPostInterestedUser(
+      profileId,
+      playerPostId
+    );
+    let updatedPosts = playerPosts.map((post) => {
+      if (post.id === addedInterestedUser.playerPostId) {
+        return {
+          ...post,
+          interestedUsers: [...post.interestedUsers, addedInterestedUser],
+        };
+      }
+      return post;
+    });
+    setPlayerPosts(updatedPosts);
+  }
+
+  async function unRegisterInterest(interestedUserId) {
+    let removedInterestedUser = await RemovePlayerPostInterestedUser(
+      interestedUserId
+    );
+    let updatedPosts = playerPosts.map((post) => {
+      if (post.id === removedInterestedUser.playerPostId) {
+        return {
+          ...post,
+          interestedUsers: post.interestedUsers.filter(
+            (interestedUser) => interestedUser.id !== removedInterestedUser.id
+          ),
+        };
+      }
+      return post;
+    });
+    setPlayerPosts(updatedPosts);
   }
 
   function openModal(component, title) {
     setModal({ component: component, title: title, isShown: true });
-  }
-
-  async function registerInterest(profileId, postId) {
-    // TODO:
-  }
-
-  async function unRegisterInterest(interestedUserId) {
-    // TODO:
   }
 
   return (
@@ -130,7 +172,7 @@ export default function PlayerPostsTab(props) {
                             <Flex gap="4px" className="icon">
                               <Tooltip title="Update Player Post Details" arrow>
                                 <Edit
-                                // TODO OnClick Modal Edit
+                                // TODO:SW OnClick Modal Edit
                                 />
                               </Tooltip>
                             </Flex>
@@ -142,7 +184,7 @@ export default function PlayerPostsTab(props) {
                                     openModal(
                                       <ConfirmDeleteModal
                                         deleteFunction={() =>
-                                          deletePlayerPost(post.id)
+                                          deletePlayerPost(post)
                                         }
                                       />,
                                       "Confirm Player Post Delete"

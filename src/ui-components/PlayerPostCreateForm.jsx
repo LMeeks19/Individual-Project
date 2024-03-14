@@ -211,7 +211,7 @@ export default function PlayerPostCreateForm(props) {
     county: "",
     postcode: "",
     isActive: false,
-    interesetdUsers: [],
+    interestedUsers: [],
     registeredPlayers: [],
     selectedPlayers: [],
   };
@@ -247,12 +247,12 @@ export default function PlayerPostCreateForm(props) {
   const [county, setCounty] = React.useState(initialValues.county);
   const [postcode, setPostcode] = React.useState(initialValues.postcode);
   const [isActive, setIsActive] = React.useState(initialValues.isActive);
-  const [interesetdUsers, setInteresetdUsers] = React.useState(
-    initialValues.interesetdUsers
+  const [interestedUsers, setInterestedUsers] = React.useState(
+    initialValues.interestedUsers
   );
-  const [interesetdUsersLoading, setInteresetdUsersLoading] =
+  const [interestedUsersLoading, setInterestedUsersLoading] =
     React.useState(false);
-  const [interesetdUsersRecords, setInteresetdUsersRecords] = React.useState(
+  const [interestedUsersRecords, setInterestedUsersRecords] = React.useState(
     []
   );
   const [registeredPlayers, setRegisteredPlayers] = React.useState(
@@ -285,9 +285,9 @@ export default function PlayerPostCreateForm(props) {
     setCounty(initialValues.county);
     setPostcode(initialValues.postcode);
     setIsActive(initialValues.isActive);
-    setInteresetdUsers(initialValues.interesetdUsers);
-    setCurrentInteresetdUsersValue(undefined);
-    setCurrentInteresetdUsersDisplayValue("");
+    setInterestedUsers(initialValues.interestedUsers);
+    setCurrentInterestedUsersValue(undefined);
+    setCurrentInterestedUsersDisplayValue("");
     setRegisteredPlayers(initialValues.registeredPlayers);
     setCurrentRegisteredPlayersValue(undefined);
     setCurrentRegisteredPlayersDisplayValue("");
@@ -306,12 +306,12 @@ export default function PlayerPostCreateForm(props) {
     React.useState("");
   const positionsNeededRef = React.createRef();
   const [
-    currentInteresetdUsersDisplayValue,
-    setCurrentInteresetdUsersDisplayValue,
+    currentInterestedUsersDisplayValue,
+    setCurrentInterestedUsersDisplayValue,
   ] = React.useState("");
-  const [currentInteresetdUsersValue, setCurrentInteresetdUsersValue] =
+  const [currentInterestedUsersValue, setCurrentInterestedUsersValue] =
     React.useState(undefined);
-  const interesetdUsersRef = React.createRef();
+  const interestedUsersRef = React.createRef();
   const [
     currentRegisteredPlayersDisplayValue,
     setCurrentRegisteredPlayersDisplayValue,
@@ -323,13 +323,13 @@ export default function PlayerPostCreateForm(props) {
     React.useState("");
   const selectedPlayersRef = React.createRef();
   const getIDValue = {
-    interesetdUsers: (r) => JSON.stringify({ id: r?.id }),
+    interestedUsers: (r) => JSON.stringify({ id: r?.id }),
     registeredPlayers: (r) => JSON.stringify({ id: r?.id }),
   };
-  const interesetdUsersIdSet = new Set(
-    Array.isArray(interesetdUsers)
-      ? interesetdUsers.map((r) => getIDValue.interesetdUsers?.(r))
-      : getIDValue.interesetdUsers?.(interesetdUsers)
+  const interestedUsersIdSet = new Set(
+    Array.isArray(interestedUsers)
+      ? interestedUsers.map((r) => getIDValue.interestedUsers?.(r))
+      : getIDValue.interestedUsers?.(interestedUsers)
   );
   const registeredPlayersIdSet = new Set(
     Array.isArray(registeredPlayers)
@@ -352,7 +352,7 @@ export default function PlayerPostCreateForm(props) {
       };
       return enumDisplayValueMap[r];
     },
-    interesetdUsers: (r) => `${r?.username ? r?.username + " - " : ""}${r?.id}`,
+    interestedUsers: (r) => `${r?.username ? r?.username + " - " : ""}${r?.id}`,
     registeredPlayers: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
   };
   const validations = {
@@ -370,7 +370,7 @@ export default function PlayerPostCreateForm(props) {
     county: [{ type: "Required" }],
     postcode: [{ type: "Required" }],
     isActive: [{ type: "Required" }],
-    interesetdUsers: [],
+    interestedUsers: [],
     registeredPlayers: [],
     selectedPlayers: [],
   };
@@ -435,8 +435,8 @@ export default function PlayerPostCreateForm(props) {
     setCreatedByProfileIDRecords(newOptions.slice(0, autocompleteLength));
     setCreatedByProfileIDLoading(false);
   };
-  const fetchInteresetdUsersRecords = async (value) => {
-    setInteresetdUsersLoading(true);
+  const fetchInterestedUsersRecords = async (value) => {
+    setInterestedUsersLoading(true);
     const newOptions = [];
     let newNext = "";
     while (newOptions.length < autocompleteLength && newNext != null) {
@@ -456,13 +456,13 @@ export default function PlayerPostCreateForm(props) {
         })
       )?.data?.listProfiles?.items;
       var loaded = result.filter(
-        (item) => !interesetdUsersIdSet.has(getIDValue.interesetdUsers?.(item))
+        (item) => !interestedUsersIdSet.has(getIDValue.interestedUsers?.(item))
       );
       newOptions.push(...loaded);
       newNext = result.nextToken;
     }
-    setInteresetdUsersRecords(newOptions.slice(0, autocompleteLength));
-    setInteresetdUsersLoading(false);
+    setInterestedUsersRecords(newOptions.slice(0, autocompleteLength));
+    setInterestedUsersLoading(false);
   };
   const fetchRegisteredPlayersRecords = async (value) => {
     setRegisteredPlayersLoading(true);
@@ -496,7 +496,7 @@ export default function PlayerPostCreateForm(props) {
   };
   React.useEffect(() => {
     fetchCreatedByProfileIDRecords("");
-    fetchInteresetdUsersRecords("");
+    fetchInterestedUsersRecords("");
     fetchRegisteredPlayersRecords("");
   }, []);
   return (
@@ -522,7 +522,7 @@ export default function PlayerPostCreateForm(props) {
           county,
           postcode,
           isActive,
-          interesetdUsers,
+          interestedUsers,
           registeredPlayers,
           selectedPlayers,
         };
@@ -591,7 +591,7 @@ export default function PlayerPostCreateForm(props) {
           )?.data?.createPlayerPost;
           const promises = [];
           promises.push(
-            ...interesetdUsers.reduce((promises, profile) => {
+            ...interestedUsers.reduce((promises, profile) => {
               promises.push(
                 client.graphql({
                   query: createProfilePlayerPost.replaceAll("__typename", ""),
@@ -662,7 +662,7 @@ export default function PlayerPostCreateForm(props) {
               county,
               postcode,
               isActive,
-              interesetdUsers,
+              interestedUsers,
               registeredPlayers,
               selectedPlayers,
             };
@@ -702,7 +702,7 @@ export default function PlayerPostCreateForm(props) {
               county,
               postcode,
               isActive,
-              interesetdUsers,
+              interestedUsers,
               registeredPlayers,
               selectedPlayers,
             };
@@ -742,7 +742,7 @@ export default function PlayerPostCreateForm(props) {
               county,
               postcode,
               isActive,
-              interesetdUsers,
+              interestedUsers,
               registeredPlayers,
               selectedPlayers,
             };
@@ -779,7 +779,7 @@ export default function PlayerPostCreateForm(props) {
               county,
               postcode,
               isActive,
-              interesetdUsers,
+              interestedUsers,
               registeredPlayers,
               selectedPlayers,
             };
@@ -899,7 +899,7 @@ export default function PlayerPostCreateForm(props) {
               county,
               postcode,
               isActive,
-              interesetdUsers,
+              interestedUsers,
               registeredPlayers,
               selectedPlayers,
             };
@@ -1011,7 +1011,7 @@ export default function PlayerPostCreateForm(props) {
               county,
               postcode,
               isActive,
-              interesetdUsers,
+              interestedUsers,
               registeredPlayers,
               selectedPlayers,
             };
@@ -1127,7 +1127,7 @@ export default function PlayerPostCreateForm(props) {
               county,
               postcode,
               isActive,
-              interesetdUsers,
+              interestedUsers,
               registeredPlayers,
               selectedPlayers,
             };
@@ -1169,7 +1169,7 @@ export default function PlayerPostCreateForm(props) {
               county,
               postcode,
               isActive,
-              interesetdUsers,
+              interestedUsers,
               registeredPlayers,
               selectedPlayers,
             };
@@ -1227,7 +1227,7 @@ export default function PlayerPostCreateForm(props) {
               county,
               postcode,
               isActive,
-              interesetdUsers,
+              interestedUsers,
               registeredPlayers,
               selectedPlayers,
             };
@@ -1267,7 +1267,7 @@ export default function PlayerPostCreateForm(props) {
               county,
               postcode,
               isActive,
-              interesetdUsers,
+              interestedUsers,
               registeredPlayers,
               selectedPlayers,
             };
@@ -1307,7 +1307,7 @@ export default function PlayerPostCreateForm(props) {
               county,
               postcode,
               isActive,
-              interesetdUsers,
+              interestedUsers,
               registeredPlayers,
               selectedPlayers,
             };
@@ -1347,7 +1347,7 @@ export default function PlayerPostCreateForm(props) {
               county: value,
               postcode,
               isActive,
-              interesetdUsers,
+              interestedUsers,
               registeredPlayers,
               selectedPlayers,
             };
@@ -1387,7 +1387,7 @@ export default function PlayerPostCreateForm(props) {
               county,
               postcode: value,
               isActive,
-              interesetdUsers,
+              interestedUsers,
               registeredPlayers,
               selectedPlayers,
             };
@@ -1427,7 +1427,7 @@ export default function PlayerPostCreateForm(props) {
               county,
               postcode,
               isActive: value,
-              interesetdUsers,
+              interestedUsers,
               registeredPlayers,
               selectedPlayers,
             };
@@ -1463,83 +1463,83 @@ export default function PlayerPostCreateForm(props) {
               county,
               postcode,
               isActive,
-              interesetdUsers: values,
+              interestedUsers: values,
               registeredPlayers,
               selectedPlayers,
             };
             const result = onChange(modelFields);
-            values = result?.interesetdUsers ?? values;
+            values = result?.interestedUsers ?? values;
           }
-          setInteresetdUsers(values);
-          setCurrentInteresetdUsersValue(undefined);
-          setCurrentInteresetdUsersDisplayValue("");
+          setInterestedUsers(values);
+          setCurrentInterestedUsersValue(undefined);
+          setCurrentInterestedUsersDisplayValue("");
         }}
-        currentFieldValue={currentInteresetdUsersValue}
-        label={"Interesetd users"}
-        items={interesetdUsers}
-        hasError={errors?.interesetdUsers?.hasError}
+        currentFieldValue={currentInterestedUsersValue}
+        label={"Interested users"}
+        items={interestedUsers}
+        hasError={errors?.interestedUsers?.hasError}
         runValidationTasks={async () =>
           await runValidationTasks(
-            "interesetdUsers",
-            currentInteresetdUsersValue
+            "interestedUsers",
+            currentInterestedUsersValue
           )
         }
-        errorMessage={errors?.interesetdUsers?.errorMessage}
-        getBadgeText={getDisplayValue.interesetdUsers}
+        errorMessage={errors?.interestedUsers?.errorMessage}
+        getBadgeText={getDisplayValue.interestedUsers}
         setFieldValue={(model) => {
-          setCurrentInteresetdUsersDisplayValue(
-            model ? getDisplayValue.interesetdUsers(model) : ""
+          setCurrentInterestedUsersDisplayValue(
+            model ? getDisplayValue.interestedUsers(model) : ""
           );
-          setCurrentInteresetdUsersValue(model);
+          setCurrentInterestedUsersValue(model);
         }}
-        inputFieldRef={interesetdUsersRef}
+        inputFieldRef={interestedUsersRef}
         defaultFieldValue={""}
       >
         <Autocomplete
-          label="Interesetd users"
+          label="Interested users"
           isRequired={false}
           isReadOnly={false}
           placeholder="Search Profile"
-          value={currentInteresetdUsersDisplayValue}
-          options={interesetdUsersRecords.map((r) => ({
-            id: getIDValue.interesetdUsers?.(r),
-            label: getDisplayValue.interesetdUsers?.(r),
+          value={currentInterestedUsersDisplayValue}
+          options={interestedUsersRecords.map((r) => ({
+            id: getIDValue.interestedUsers?.(r),
+            label: getDisplayValue.interestedUsers?.(r),
           }))}
-          isLoading={interesetdUsersLoading}
+          isLoading={interestedUsersLoading}
           onSelect={({ id, label }) => {
-            setCurrentInteresetdUsersValue(
-              interesetdUsersRecords.find((r) =>
+            setCurrentInterestedUsersValue(
+              interestedUsersRecords.find((r) =>
                 Object.entries(JSON.parse(id)).every(
                   ([key, value]) => r[key] === value
                 )
               )
             );
-            setCurrentInteresetdUsersDisplayValue(label);
-            runValidationTasks("interesetdUsers", label);
+            setCurrentInterestedUsersDisplayValue(label);
+            runValidationTasks("interestedUsers", label);
           }}
           onClear={() => {
-            setCurrentInteresetdUsersDisplayValue("");
+            setCurrentInterestedUsersDisplayValue("");
           }}
           onChange={(e) => {
             let { value } = e.target;
-            fetchInteresetdUsersRecords(value);
-            if (errors.interesetdUsers?.hasError) {
-              runValidationTasks("interesetdUsers", value);
+            fetchInterestedUsersRecords(value);
+            if (errors.interestedUsers?.hasError) {
+              runValidationTasks("interestedUsers", value);
             }
-            setCurrentInteresetdUsersDisplayValue(value);
-            setCurrentInteresetdUsersValue(undefined);
+            setCurrentInterestedUsersDisplayValue(value);
+            setCurrentInterestedUsersValue(undefined);
           }}
           onBlur={() =>
             runValidationTasks(
-              "interesetdUsers",
-              currentInteresetdUsersDisplayValue
+              "interestedUsers",
+              currentInterestedUsersDisplayValue
             )
           }
-          errorMessage={errors.interesetdUsers?.errorMessage}
-          hasError={errors.interesetdUsers?.hasError}
-          ref={interesetdUsersRef}
+          errorMessage={errors.interestedUsers?.errorMessage}
+          hasError={errors.interestedUsers?.hasError}
+          ref={interestedUsersRef}
           labelHidden={true}
-          {...getOverrideProps(overrides, "interesetdUsers")}
+          {...getOverrideProps(overrides, "interestedUsers")}
         ></Autocomplete>
       </ArrayField>
       <ArrayField
@@ -1561,7 +1561,7 @@ export default function PlayerPostCreateForm(props) {
               county,
               postcode,
               isActive,
-              interesetdUsers,
+              interestedUsers,
               registeredPlayers: values,
               selectedPlayers,
             };
@@ -1659,7 +1659,7 @@ export default function PlayerPostCreateForm(props) {
               county,
               postcode,
               isActive,
-              interesetdUsers,
+              interestedUsers,
               registeredPlayers,
               selectedPlayers: values,
             };

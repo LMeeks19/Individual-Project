@@ -7,6 +7,7 @@ import {
   listMatchPosts,
   listChats,
   listChatMessages,
+  listPlayerPosts,
 } from "../graphql/queries";
 import {
   deleteProfile as deleteProfileMutation,
@@ -18,9 +19,17 @@ import {
   createProfileMatchPost,
   deleteProfileMatchPost,
   updateMatchPost,
+  deleteChat,
+  deleteProfileChat,
+  updateChat,
+  deleteProfilePlayerPost,
+  deletePlayerPost,
+  updatePlayerPost,
+  createProfilePlayerPost,
 } from "../graphql/mutations";
 import { fetchUserAttributes } from "aws-amplify/auth";
 
+// Profile API Calls
 export async function GetProfile(user) {
   const client = generateClient();
   const authenticationAttributes = fetchUserAttributes();
@@ -54,7 +63,7 @@ export async function DeleteProfile(id) {
     query: deleteProfileMutation,
     variables: {
       input: {
-        id: { id },
+        id: id,
       },
     },
   });
@@ -62,6 +71,7 @@ export async function DeleteProfile(id) {
   return deletedProfile.data.deleteProfile;
 }
 
+// Player API Calls
 export async function DeletePlayer(id) {
   const client = generateClient();
 
@@ -88,6 +98,7 @@ export async function GetPlayersByProfileId(profileId) {
   return apiData.data.playersByProfileID.items;
 }
 
+// Team API Calls
 export async function DeleteTeam(team) {
   const client = generateClient();
 
@@ -127,6 +138,7 @@ export async function GetTeamByProfileId(profileId) {
   };
 }
 
+// Team Player API Calls
 export async function DeleteTeamPlayer(id) {
   const client = generateClient();
 
@@ -153,6 +165,7 @@ export async function GetTeamPlayersByTeamId(teamId) {
   return apiData.data.teamPlayersByTeamID.items;
 }
 
+// Match Post API Calls
 export async function GetMatchPosts() {
   const client = generateClient();
 
@@ -166,64 +179,30 @@ export async function GetMatchPosts() {
   return data;
 }
 
-export async function DeleteMatchPost(id) {
+export async function DeleteMatchPost(matchPost) {
   const client = generateClient();
+
+  matchPost.interestedUsers.forEach(async (interestedUser) => {
+    const deletedUserData = await client.graphql({
+      query: deleteProfileMatchPost,
+      variables: {
+        input: {
+          id: interestedUser.id,
+        },
+      },
+    });
+  });
 
   const apiData = await client.graphql({
     query: deleteMatchPostMutation,
     variables: {
       input: {
-        id: id,
+        id: matchPost.id,
       },
     },
   });
 
   return apiData.data.deleteMatchPost.id;
-}
-
-export async function GetChatsByProfileId(id) {
-  const client = generateClient();
-
-  const apiData = await client.graphql({
-    query: listChats,
-    variables: { filter: { userIDs: { contains: id } } },
-  });
-
-  let chats = apiData.data.listChats.items;
-
-  chats.forEach((chat) => {
-    chat.users = chat.users.items.map((user) => user.profile);
-    chat.messages = [];
-  });
-  return chats;
-}
-
-export async function CreateChatMessage(chatId, senderId, message) {
-  const client = generateClient();
-
-  const apiData = await client.graphql({
-    query: createChatMessageMutation,
-    variables: {
-      input: {
-        chatID: chatId,
-        senderUserID: senderId,
-        message: message,
-      },
-    },
-  });
-
-  return apiData.data.createChatMessage;
-}
-
-export async function GetChatMessages(chatId) {
-  const client = generateClient();
-
-  const apiData = await client.graphql({
-    query: listChatMessages,
-    variables: { filter: { chatID: { eq: chatId } } },
-  });
-
-  return apiData.data.listChatMessages.items;
 }
 
 export async function AddMatchPostInterestedUser(profileId, matchPostId) {
@@ -292,5 +271,204 @@ export async function ReactivateMatchPost(matchPostId, interestedUserId) {
 
   let data = apiData.data.updateMatchPost;
   data.interestedUsers = data.interestedUsers.items;
+  return data;
+}
+
+// Chat API Calls
+export async function GetChatsByProfileId(id) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: listChats,
+    variables: { filter: { userIDs: { contains: id } } },
+  });
+
+  let chats = apiData.data.listChats.items;
+
+  chats.forEach((chat) => {
+    chat.users = chat.users.items.map((user) => user.profile);
+    chat.messages = [];
+  });
+  return chats;
+}
+
+export async function CreateChatMessage(chatId, senderId, message) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: createChatMessageMutation,
+    variables: {
+      input: {
+        chatID: chatId,
+        senderUserID: senderId,
+        message: message,
+      },
+    },
+  });
+
+  return apiData.data.createChatMessage;
+}
+
+export async function GetChatMessages(chatId) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: listChatMessages,
+    variables: { filter: { chatID: { eq: chatId } } },
+  });
+
+  return apiData.data.listChatMessages.items;
+}
+
+export async function DeleteChat(chat, currentUserId) {
+  const client = generateClient();
+  let updatedChat = [];
+
+  chat.users.forEach(async (user) => {
+    if (user.profileId === currentUserId) {
+      const deletedUserId = await client.graphql({
+        query: deleteProfileChat,
+        variables: {
+          input: {
+            id: user.id,
+          },
+        },
+      }).data.deleteProfileChat.id;
+
+      updatedChat = await client.graphql({
+        query: updateChat,
+        variables: {
+          input: {
+            id: chat.id,
+            user: chat.users.filter((user) => user.id !== deletedUserId),
+          },
+        },
+      }).data.updateChat;
+    }
+  });
+
+  if (updatedChat.users.length === 0) {
+    const apiData = await client.graphql({
+      query: deleteChat,
+      variables: {
+        input: {
+          id: chat.id,
+        },
+      },
+    });
+    return apiData.data.deleteChat.id;
+  }
+  return null;
+}
+
+// Player Post API Calls
+export async function GetPlayerPosts() {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: listPlayerPosts,
+  });
+
+  let data = apiData.data.listPlayerPosts.items;
+
+  data.forEach((playerPost) => {
+    playerPost.interestedUsers = playerPost.interestedUsers.items;
+    playerPost.registeredPlayers = playerPost.registeredPlayers.items;
+  });
+  return data;
+}
+
+export async function DeletePlayerPost(playerPost) {
+  const client = generateClient();
+
+  playerPost.interestedUsers.forEach(async (interestedUser) => {
+    await client.graphql({
+      query: deleteProfilePlayerPost,
+      variables: {
+        input: {
+          id: interestedUser.id,
+        },
+      },
+    });
+  });
+
+  const apiData = await client.graphql({
+    query: deletePlayerPost,
+    variables: {
+      input: {
+        id: playerPost.id,
+      },
+    },
+  });
+
+  return apiData.data.deletePlayerPost.id;
+}
+
+export async function AddPlayerPostInterestedUser(profileId, playerPostId) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: createProfilePlayerPost,
+    variables: {
+      input: {
+        profileId: profileId,
+        playerPostId: playerPostId,
+      },
+    },
+  });
+
+  return apiData.data.createProfilePlayerPost;
+}
+
+export async function RemovePlayerPostInterestedUser(interestedUserId) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: deleteProfilePlayerPost,
+    variables: {
+      input: {
+        id: interestedUserId,
+      },
+    },
+  });
+
+  return apiData.data.deleteProfilePlayerPost;
+}
+
+export async function SelectPlayerPostPlayer(playerPostId) {
+  const client = generateClient();
+
+  // TODO:
+
+  const apiData = await client.graphql({
+    query: updatePlayerPost,
+    variables: {
+      input: {
+        id: playerPostId,
+        isActive: false,
+      },
+    },
+  });
+
+  return apiData.data.updatePlayerPost;
+}
+
+export async function ReactivatePlayerPost(playerPostId) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: updatePlayerPost,
+    variables: {
+      input: {
+        id: playerPostId,
+        selectedPlayers: [],
+        isActive: true,
+      },
+    },
+  });
+
+  let data = apiData.data.updatePlayerPost;
+  data.interestedUsers = data.interestedUsers.items;
+  data.registeredPlayers = data.registeredPlayers.items;
   return data;
 }
