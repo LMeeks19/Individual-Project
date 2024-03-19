@@ -36,8 +36,6 @@ export declare type MatchPostUpdateFormInputValues = {
     townCity?: string;
     county?: string;
     postcode?: string;
-    teamName?: string;
-    selectedOpponent?: string;
 };
 export declare type MatchPostUpdateFormValidationValues = {
     title?: ValidationFunction<string>;
@@ -54,8 +52,6 @@ export declare type MatchPostUpdateFormValidationValues = {
     townCity?: ValidationFunction<string>;
     county?: ValidationFunction<string>;
     postcode?: ValidationFunction<string>;
-    teamName?: ValidationFunction<string>;
-    selectedOpponent?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type MatchPostUpdateFormOverridesProps = {
@@ -74,8 +70,6 @@ export declare type MatchPostUpdateFormOverridesProps = {
     townCity?: PrimitiveOverrideProps<TextFieldProps>;
     county?: PrimitiveOverrideProps<TextFieldProps>;
     postcode?: PrimitiveOverrideProps<TextFieldProps>;
-    teamName?: PrimitiveOverrideProps<TextFieldProps>;
-    selectedOpponent?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type MatchPostUpdateFormProps = React.PropsWithChildren<{
     overrides?: MatchPostUpdateFormOverridesProps | undefined | null;

@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, GridProps, SelectFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SelectFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -27,7 +27,6 @@ export declare type PlayerCreateFormInputValues = {
     ageGroup?: string;
     skillLevel?: string;
     positions?: string[];
-    registeredPlayerPosts?: any[];
 };
 export declare type PlayerCreateFormValidationValues = {
     name?: ValidationFunction<string>;
@@ -35,7 +34,6 @@ export declare type PlayerCreateFormValidationValues = {
     ageGroup?: ValidationFunction<string>;
     skillLevel?: ValidationFunction<string>;
     positions?: ValidationFunction<string>;
-    registeredPlayerPosts?: ValidationFunction<any>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type PlayerCreateFormOverridesProps = {
@@ -45,7 +43,6 @@ export declare type PlayerCreateFormOverridesProps = {
     ageGroup?: PrimitiveOverrideProps<SelectFieldProps>;
     skillLevel?: PrimitiveOverrideProps<SelectFieldProps>;
     positions?: PrimitiveOverrideProps<SelectFieldProps>;
-    registeredPlayerPosts?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type PlayerCreateFormProps = React.PropsWithChildren<{
     overrides?: PlayerCreateFormOverridesProps | undefined | null;

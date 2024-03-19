@@ -6,7 +6,6 @@ import {
   TableHead,
   TableRow,
   Text,
-  View,
 } from "@aws-amplify/ui-react";
 import { CircularProgress, TablePagination, Tooltip } from "@mui/material";
 import { modalState, matchPostsState } from "../../Functions/GlobalState";

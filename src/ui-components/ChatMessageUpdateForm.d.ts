@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -22,20 +22,14 @@ export declare type ValidationResponse = {
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type ChatMessageUpdateFormInputValues = {
-    chatID?: string;
-    senderUserID?: string;
     message?: string;
 };
 export declare type ChatMessageUpdateFormValidationValues = {
-    chatID?: ValidationFunction<string>;
-    senderUserID?: ValidationFunction<string>;
     message?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type ChatMessageUpdateFormOverridesProps = {
     ChatMessageUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
-    chatID?: PrimitiveOverrideProps<AutocompleteProps>;
-    senderUserID?: PrimitiveOverrideProps<TextFieldProps>;
     message?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type ChatMessageUpdateFormProps = React.PropsWithChildren<{

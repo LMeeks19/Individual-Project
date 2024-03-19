@@ -10,7 +10,7 @@ import { modalState } from "../../Functions/GlobalState";
 import { Add } from "@mui/icons-material";
 import "./PlayerPosts.css";
 import { GetPlayerPosts } from "../../Functions/Server";
-import SnackbarAlert from "../../Components/Snackbar";
+import CreatePlayerPostModal from "../../Modals/PlayerPostModals/CreatePlayerPostsModal";
 
 export default function MatchPosts() {
   const currentUser = useRecoilValue(currentUserState);
@@ -40,7 +40,13 @@ export default function MatchPosts() {
         alignItems="center"
       >
         <Heading level={3}>Player Posts</Heading>
-        <Button className="custom-button" variation="primary">
+        <Button
+          className="custom-button"
+          variation="primary"
+          onClick={() =>
+            openModal(<CreatePlayerPostModal />, "Create Player Post")
+          }
+        >
           <Text display="flex">
             <Add fontSize="small" className="icon" />
             Create
@@ -103,7 +109,11 @@ export default function MatchPosts() {
             currentUser={currentUser}
             playerPosts={playerPosts.filter(
               (post) =>
-                !post.isActive && post.createdByProfileID === currentUser.id
+                !post.isActive &&
+                (post.createdByProfileID === currentUser.id ||
+                  post.selectedPlayers.some((id) =>
+                    currentUser.players.some((player) => player.id === id)
+                  ))
             )}
           />
         </Tabs.Panel>

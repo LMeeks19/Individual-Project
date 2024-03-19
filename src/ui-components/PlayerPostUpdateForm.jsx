@@ -7,7 +7,6 @@
 /* eslint-disable */
 import * as React from "react";
 import {
-  Autocomplete,
   Badge,
   Button,
   Divider,
@@ -16,30 +15,14 @@ import {
   Icon,
   ScrollView,
   SelectField,
-  SwitchField,
   Text,
   TextField,
   useTheme,
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
-import {
-  getPlayerPost,
-  getProfile,
-  listPlayerPlayerPosts,
-  listPlayers,
-  listProfilePlayerPosts,
-  listProfiles,
-  playerPlayerPostsByPlayerPostId,
-  profilePlayerPostsByPlayerPostId,
-} from "../graphql/queries";
-import {
-  createPlayerPlayerPost,
-  createProfilePlayerPost,
-  deletePlayerPlayerPost,
-  deleteProfilePlayerPost,
-  updatePlayerPost,
-} from "../graphql/mutations";
+import { getPlayerPost } from "../graphql/queries";
+import { updatePlayerPost } from "../graphql/mutations";
 const client = generateClient();
 function ArrayField({
   items = [],
@@ -211,8 +194,6 @@ export default function PlayerPostUpdateForm(props) {
   const initialValues = {
     title: "",
     description: "",
-    createdByName: "",
-    createdByProfileID: undefined,
     ageGroup: "",
     positionsNeeded: [],
     numOfPlayersNeeded: "",
@@ -222,29 +203,11 @@ export default function PlayerPostUpdateForm(props) {
     townCity: "",
     county: "",
     postcode: "",
-    isActive: false,
-    interestedUsers: [],
-    registeredPlayers: [],
-    selectedPlayers: [],
   };
   const [title, setTitle] = React.useState(initialValues.title);
   const [description, setDescription] = React.useState(
     initialValues.description
   );
-  const [createdByName, setCreatedByName] = React.useState(
-    initialValues.createdByName
-  );
-  const [createdByProfileID, setCreatedByProfileID] = React.useState(
-    initialValues.createdByProfileID
-  );
-  const [createdByProfileIDLoading, setCreatedByProfileIDLoading] =
-    React.useState(false);
-  const [createdByProfileIDRecords, setCreatedByProfileIDRecords] =
-    React.useState([]);
-  const [
-    selectedCreatedByProfileIDRecords,
-    setSelectedCreatedByProfileIDRecords,
-  ] = React.useState([]);
   const [ageGroup, setAgeGroup] = React.useState(initialValues.ageGroup);
   const [positionsNeeded, setPositionsNeeded] = React.useState(
     initialValues.positionsNeeded
@@ -258,43 +221,13 @@ export default function PlayerPostUpdateForm(props) {
   const [townCity, setTownCity] = React.useState(initialValues.townCity);
   const [county, setCounty] = React.useState(initialValues.county);
   const [postcode, setPostcode] = React.useState(initialValues.postcode);
-  const [isActive, setIsActive] = React.useState(initialValues.isActive);
-  const [interestedUsers, setInterestedUsers] = React.useState(
-    initialValues.interestedUsers
-  );
-  const [interestedUsersLoading, setInterestedUsersLoading] =
-    React.useState(false);
-  const [interestedUsersRecords, setInterestedUsersRecords] = React.useState(
-    []
-  );
-  const [registeredPlayers, setRegisteredPlayers] = React.useState(
-    initialValues.registeredPlayers
-  );
-  const [registeredPlayersLoading, setRegisteredPlayersLoading] =
-    React.useState(false);
-  const [registeredPlayersRecords, setRegisteredPlayersRecords] =
-    React.useState([]);
-  const [selectedPlayers, setSelectedPlayers] = React.useState(
-    initialValues.selectedPlayers
-  );
-  const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = playerPostRecord
-      ? {
-          ...initialValues,
-          ...playerPostRecord,
-          createdByProfileID,
-          interestedUsers: linkedInterestedUsers,
-          registeredPlayers: linkedRegisteredPlayers,
-        }
+      ? { ...initialValues, ...playerPostRecord }
       : initialValues;
     setTitle(cleanValues.title);
     setDescription(cleanValues.description);
-    setCreatedByName(cleanValues.createdByName);
-    setCreatedByProfileID(cleanValues.createdByProfileID);
-    setCurrentCreatedByProfileIDValue(undefined);
-    setCurrentCreatedByProfileIDDisplayValue("");
     setAgeGroup(cleanValues.ageGroup);
     setPositionsNeeded(cleanValues.positionsNeeded ?? []);
     setCurrentPositionsNeededValue("");
@@ -305,25 +238,10 @@ export default function PlayerPostUpdateForm(props) {
     setTownCity(cleanValues.townCity);
     setCounty(cleanValues.county);
     setPostcode(cleanValues.postcode);
-    setIsActive(cleanValues.isActive);
-    setInterestedUsers(cleanValues.interestedUsers ?? []);
-    setCurrentInterestedUsersValue(undefined);
-    setCurrentInterestedUsersDisplayValue("");
-    setRegisteredPlayers(cleanValues.registeredPlayers ?? []);
-    setCurrentRegisteredPlayersValue(undefined);
-    setCurrentRegisteredPlayersDisplayValue("");
-    setSelectedPlayers(cleanValues.selectedPlayers ?? []);
-    setCurrentSelectedPlayersValue("");
     setErrors({});
   };
   const [playerPostRecord, setPlayerPostRecord] =
     React.useState(playerPostModelProp);
-  const [linkedInterestedUsers, setLinkedInterestedUsers] = React.useState([]);
-  const canUnlinkInterestedUsers = false;
-  const [linkedRegisteredPlayers, setLinkedRegisteredPlayers] = React.useState(
-    []
-  );
-  const canUnlinkRegisteredPlayers = false;
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp
@@ -334,101 +252,15 @@ export default function PlayerPostUpdateForm(props) {
             })
           )?.data?.getPlayerPost
         : playerPostModelProp;
-      const createdByProfileIDRecord = record
-        ? record.createdByProfileID
-        : undefined;
-      const profileRecord = createdByProfileIDRecord
-        ? (
-            await client.graphql({
-              query: getProfile.replaceAll("__typename", ""),
-              variables: { id: createdByProfileIDRecord },
-            })
-          )?.data?.getProfile
-        : undefined;
-      setCreatedByProfileID(createdByProfileIDRecord);
-      setSelectedCreatedByProfileIDRecords([profileRecord]);
-      const linkedInterestedUsers = record
-        ? (
-            await client.graphql({
-              query: profilePlayerPostsByPlayerPostId.replaceAll(
-                "__typename",
-                ""
-              ),
-              variables: {
-                playerPostId: record.id,
-              },
-            })
-          ).data.profilePlayerPostsByPlayerPostId.items.map((t) => t.profile)
-        : [];
-      setLinkedInterestedUsers(linkedInterestedUsers);
-      const linkedRegisteredPlayers = record
-        ? (
-            await client.graphql({
-              query: playerPlayerPostsByPlayerPostId.replaceAll(
-                "__typename",
-                ""
-              ),
-              variables: {
-                playerPostId: record.id,
-              },
-            })
-          ).data.playerPlayerPostsByPlayerPostId.items.map((t) => t.player)
-        : [];
-      setLinkedRegisteredPlayers(linkedRegisteredPlayers);
       setPlayerPostRecord(record);
     };
     queryData();
   }, [idProp, playerPostModelProp]);
-  React.useEffect(resetStateValues, [
-    playerPostRecord,
-    createdByProfileID,
-    linkedInterestedUsers,
-    linkedRegisteredPlayers,
-  ]);
-  const [
-    currentCreatedByProfileIDDisplayValue,
-    setCurrentCreatedByProfileIDDisplayValue,
-  ] = React.useState("");
-  const [currentCreatedByProfileIDValue, setCurrentCreatedByProfileIDValue] =
-    React.useState(undefined);
-  const createdByProfileIDRef = React.createRef();
+  React.useEffect(resetStateValues, [playerPostRecord]);
   const [currentPositionsNeededValue, setCurrentPositionsNeededValue] =
     React.useState("");
   const positionsNeededRef = React.createRef();
-  const [
-    currentInterestedUsersDisplayValue,
-    setCurrentInterestedUsersDisplayValue,
-  ] = React.useState("");
-  const [currentInterestedUsersValue, setCurrentInterestedUsersValue] =
-    React.useState(undefined);
-  const interestedUsersRef = React.createRef();
-  const [
-    currentRegisteredPlayersDisplayValue,
-    setCurrentRegisteredPlayersDisplayValue,
-  ] = React.useState("");
-  const [currentRegisteredPlayersValue, setCurrentRegisteredPlayersValue] =
-    React.useState(undefined);
-  const registeredPlayersRef = React.createRef();
-  const [currentSelectedPlayersValue, setCurrentSelectedPlayersValue] =
-    React.useState("");
-  const selectedPlayersRef = React.createRef();
-  const getIDValue = {
-    interestedUsers: (r) => JSON.stringify({ id: r?.id }),
-    registeredPlayers: (r) => JSON.stringify({ id: r?.id }),
-  };
-  const interestedUsersIdSet = new Set(
-    Array.isArray(interestedUsers)
-      ? interestedUsers.map((r) => getIDValue.interestedUsers?.(r))
-      : getIDValue.interestedUsers?.(interestedUsers)
-  );
-  const registeredPlayersIdSet = new Set(
-    Array.isArray(registeredPlayers)
-      ? registeredPlayers.map((r) => getIDValue.registeredPlayers?.(r))
-      : getIDValue.registeredPlayers?.(registeredPlayers)
-  );
   const getDisplayValue = {
-    createdByProfileID: (r) =>
-      `${r?.username ? r?.username + " - " : ""}${r?.id}`,
     positionsNeeded: (r) => {
       const enumDisplayValueMap = {
         GK: "Gk",
@@ -442,14 +274,10 @@ export default function PlayerPostUpdateForm(props) {
       };
       return enumDisplayValueMap[r];
     },
-    interestedUsers: (r) => `${r?.username ? r?.username + " - " : ""}${r?.id}`,
-    registeredPlayers: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
   };
   const validations = {
     title: [{ type: "Required" }],
     description: [{ type: "Required" }],
-    createdByName: [{ type: "Required" }],
-    createdByProfileID: [{ type: "Required" }],
     ageGroup: [{ type: "Required" }],
     positionsNeeded: [{ type: "Required" }],
     numOfPlayersNeeded: [{ type: "Required" }],
@@ -459,10 +287,6 @@ export default function PlayerPostUpdateForm(props) {
     townCity: [{ type: "Required" }],
     county: [{ type: "Required" }],
     postcode: [{ type: "Required" }],
-    isActive: [{ type: "Required" }],
-    interestedUsers: [],
-    registeredPlayers: [],
-    selectedPlayers: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -498,97 +322,6 @@ export default function PlayerPostUpdateForm(props) {
     }, {});
     return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
   };
-  const fetchCreatedByProfileIDRecords = async (value) => {
-    setCreatedByProfileIDLoading(true);
-    const newOptions = [];
-    let newNext = "";
-    while (newOptions.length < autocompleteLength && newNext != null) {
-      const variables = {
-        limit: autocompleteLength * 5,
-        filter: {
-          or: [{ username: { contains: value } }, { id: { contains: value } }],
-        },
-      };
-      if (newNext) {
-        variables["nextToken"] = newNext;
-      }
-      const result = (
-        await client.graphql({
-          query: listProfiles.replaceAll("__typename", ""),
-          variables,
-        })
-      )?.data?.listProfiles?.items;
-      var loaded = result.filter((item) => createdByProfileID !== item.id);
-      newOptions.push(...loaded);
-      newNext = result.nextToken;
-    }
-    setCreatedByProfileIDRecords(newOptions.slice(0, autocompleteLength));
-    setCreatedByProfileIDLoading(false);
-  };
-  const fetchInterestedUsersRecords = async (value) => {
-    setInterestedUsersLoading(true);
-    const newOptions = [];
-    let newNext = "";
-    while (newOptions.length < autocompleteLength && newNext != null) {
-      const variables = {
-        limit: autocompleteLength * 5,
-        filter: {
-          or: [{ username: { contains: value } }, { id: { contains: value } }],
-        },
-      };
-      if (newNext) {
-        variables["nextToken"] = newNext;
-      }
-      const result = (
-        await client.graphql({
-          query: listProfiles.replaceAll("__typename", ""),
-          variables,
-        })
-      )?.data?.listProfiles?.items;
-      var loaded = result.filter(
-        (item) => !interestedUsersIdSet.has(getIDValue.interestedUsers?.(item))
-      );
-      newOptions.push(...loaded);
-      newNext = result.nextToken;
-    }
-    setInterestedUsersRecords(newOptions.slice(0, autocompleteLength));
-    setInterestedUsersLoading(false);
-  };
-  const fetchRegisteredPlayersRecords = async (value) => {
-    setRegisteredPlayersLoading(true);
-    const newOptions = [];
-    let newNext = "";
-    while (newOptions.length < autocompleteLength && newNext != null) {
-      const variables = {
-        limit: autocompleteLength * 5,
-        filter: {
-          or: [{ name: { contains: value } }, { id: { contains: value } }],
-        },
-      };
-      if (newNext) {
-        variables["nextToken"] = newNext;
-      }
-      const result = (
-        await client.graphql({
-          query: listPlayers.replaceAll("__typename", ""),
-          variables,
-        })
-      )?.data?.listPlayers?.items;
-      var loaded = result.filter(
-        (item) =>
-          !registeredPlayersIdSet.has(getIDValue.registeredPlayers?.(item))
-      );
-      newOptions.push(...loaded);
-      newNext = result.nextToken;
-    }
-    setRegisteredPlayersRecords(newOptions.slice(0, autocompleteLength));
-    setRegisteredPlayersLoading(false);
-  };
-  React.useEffect(() => {
-    fetchCreatedByProfileIDRecords("");
-    fetchInterestedUsersRecords("");
-    fetchRegisteredPlayersRecords("");
-  }, []);
   return (
     <Grid
       as="form"
@@ -600,8 +333,6 @@ export default function PlayerPostUpdateForm(props) {
         let modelFields = {
           title,
           description,
-          createdByName,
-          createdByProfileID,
           ageGroup,
           positionsNeeded,
           numOfPlayersNeeded,
@@ -611,31 +342,19 @@ export default function PlayerPostUpdateForm(props) {
           townCity,
           county,
           postcode,
-          isActive,
-          interestedUsers: interestedUsers ?? null,
-          registeredPlayers: registeredPlayers ?? null,
-          selectedPlayers: selectedPlayers ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
             if (Array.isArray(modelFields[fieldName])) {
               promises.push(
                 ...modelFields[fieldName].map((item) =>
-                  runValidationTasks(
-                    fieldName,
-                    item,
-                    getDisplayValue[fieldName]
-                  )
+                  runValidationTasks(fieldName, item)
                 )
               );
               return promises;
             }
             promises.push(
-              runValidationTasks(
-                fieldName,
-                modelFields[fieldName],
-                getDisplayValue[fieldName]
-              )
+              runValidationTasks(fieldName, modelFields[fieldName])
             );
             return promises;
           }, [])
@@ -652,221 +371,15 @@ export default function PlayerPostUpdateForm(props) {
               modelFields[key] = null;
             }
           });
-          const promises = [];
-          const interestedUsersToLinkMap = new Map();
-          const interestedUsersToUnLinkMap = new Map();
-          const interestedUsersMap = new Map();
-          const linkedInterestedUsersMap = new Map();
-          interestedUsers.forEach((r) => {
-            const count = interestedUsersMap.get(
-              getIDValue.interestedUsers?.(r)
-            );
-            const newCount = count ? count + 1 : 1;
-            interestedUsersMap.set(getIDValue.interestedUsers?.(r), newCount);
-          });
-          linkedInterestedUsers.forEach((r) => {
-            const count = linkedInterestedUsersMap.get(
-              getIDValue.interestedUsers?.(r)
-            );
-            const newCount = count ? count + 1 : 1;
-            linkedInterestedUsersMap.set(
-              getIDValue.interestedUsers?.(r),
-              newCount
-            );
-          });
-          linkedInterestedUsersMap.forEach((count, id) => {
-            const newCount = interestedUsersMap.get(id);
-            if (newCount) {
-              const diffCount = count - newCount;
-              if (diffCount > 0) {
-                interestedUsersToUnLinkMap.set(id, diffCount);
-              }
-            } else {
-              interestedUsersToUnLinkMap.set(id, count);
-            }
-          });
-          interestedUsersMap.forEach((count, id) => {
-            const originalCount = linkedInterestedUsersMap.get(id);
-            if (originalCount) {
-              const diffCount = count - originalCount;
-              if (diffCount > 0) {
-                interestedUsersToLinkMap.set(id, diffCount);
-              }
-            } else {
-              interestedUsersToLinkMap.set(id, count);
-            }
-          });
-          interestedUsersToUnLinkMap.forEach(async (count, id) => {
-            const recordKeys = JSON.parse(id);
-            const profilePlayerPostRecords = (
-              await client.graphql({
-                query: listProfilePlayerPosts.replaceAll("__typename", ""),
-                variables: {
-                  filter: {
-                    and: [
-                      { profileId: { eq: recordKeys.id } },
-                      { playerPostId: { eq: playerPostRecord.id } },
-                    ],
-                  },
-                },
-              })
-            )?.data?.listProfilePlayerPosts?.items;
-            for (let i = 0; i < count; i++) {
-              promises.push(
-                client.graphql({
-                  query: deleteProfilePlayerPost.replaceAll("__typename", ""),
-                  variables: {
-                    input: {
-                      id: profilePlayerPostRecords[i].id,
-                    },
-                  },
-                })
-              );
-            }
-          });
-          interestedUsersToLinkMap.forEach((count, id) => {
-            const profileToLink = interestedUsersRecords.find((r) =>
-              Object.entries(JSON.parse(id)).every(
-                ([key, value]) => r[key] === value
-              )
-            );
-            for (let i = count; i > 0; i--) {
-              promises.push(
-                client.graphql({
-                  query: createProfilePlayerPost.replaceAll("__typename", ""),
-                  variables: {
-                    input: {
-                      playerPostId: playerPostRecord.id,
-                      profileId: profileToLink.id,
-                    },
-                  },
-                })
-              );
-            }
-          });
-          const registeredPlayersToLinkMap = new Map();
-          const registeredPlayersToUnLinkMap = new Map();
-          const registeredPlayersMap = new Map();
-          const linkedRegisteredPlayersMap = new Map();
-          registeredPlayers.forEach((r) => {
-            const count = registeredPlayersMap.get(
-              getIDValue.registeredPlayers?.(r)
-            );
-            const newCount = count ? count + 1 : 1;
-            registeredPlayersMap.set(
-              getIDValue.registeredPlayers?.(r),
-              newCount
-            );
-          });
-          linkedRegisteredPlayers.forEach((r) => {
-            const count = linkedRegisteredPlayersMap.get(
-              getIDValue.registeredPlayers?.(r)
-            );
-            const newCount = count ? count + 1 : 1;
-            linkedRegisteredPlayersMap.set(
-              getIDValue.registeredPlayers?.(r),
-              newCount
-            );
-          });
-          linkedRegisteredPlayersMap.forEach((count, id) => {
-            const newCount = registeredPlayersMap.get(id);
-            if (newCount) {
-              const diffCount = count - newCount;
-              if (diffCount > 0) {
-                registeredPlayersToUnLinkMap.set(id, diffCount);
-              }
-            } else {
-              registeredPlayersToUnLinkMap.set(id, count);
-            }
-          });
-          registeredPlayersMap.forEach((count, id) => {
-            const originalCount = linkedRegisteredPlayersMap.get(id);
-            if (originalCount) {
-              const diffCount = count - originalCount;
-              if (diffCount > 0) {
-                registeredPlayersToLinkMap.set(id, diffCount);
-              }
-            } else {
-              registeredPlayersToLinkMap.set(id, count);
-            }
-          });
-          registeredPlayersToUnLinkMap.forEach(async (count, id) => {
-            const recordKeys = JSON.parse(id);
-            const playerPlayerPostRecords = (
-              await client.graphql({
-                query: listPlayerPlayerPosts.replaceAll("__typename", ""),
-                variables: {
-                  filter: {
-                    and: [
-                      { playerId: { eq: recordKeys.id } },
-                      { playerPostId: { eq: playerPostRecord.id } },
-                    ],
-                  },
-                },
-              })
-            )?.data?.listPlayerPlayerPosts?.items;
-            for (let i = 0; i < count; i++) {
-              promises.push(
-                client.graphql({
-                  query: deletePlayerPlayerPost.replaceAll("__typename", ""),
-                  variables: {
-                    input: {
-                      id: playerPlayerPostRecords[i].id,
-                    },
-                  },
-                })
-              );
-            }
-          });
-          registeredPlayersToLinkMap.forEach((count, id) => {
-            const playerToLink = registeredPlayersRecords.find((r) =>
-              Object.entries(JSON.parse(id)).every(
-                ([key, value]) => r[key] === value
-              )
-            );
-            for (let i = count; i > 0; i--) {
-              promises.push(
-                client.graphql({
-                  query: createPlayerPlayerPost.replaceAll("__typename", ""),
-                  variables: {
-                    input: {
-                      playerPostId: playerPostRecord.id,
-                      playerId: playerToLink.id,
-                    },
-                  },
-                })
-              );
-            }
-          });
-          const modelFieldsToSave = {
-            title: modelFields.title,
-            description: modelFields.description,
-            createdByName: modelFields.createdByName,
-            createdByProfileID: modelFields.createdByProfileID,
-            ageGroup: modelFields.ageGroup,
-            positionsNeeded: modelFields.positionsNeeded,
-            numOfPlayersNeeded: modelFields.numOfPlayersNeeded,
-            skillLevel: modelFields.skillLevel,
-            kickOff: modelFields.kickOff,
-            street: modelFields.street,
-            townCity: modelFields.townCity,
-            county: modelFields.county,
-            postcode: modelFields.postcode,
-            isActive: modelFields.isActive,
-            selectedPlayers: modelFields.selectedPlayers ?? null,
-          };
-          promises.push(
-            client.graphql({
-              query: updatePlayerPost.replaceAll("__typename", ""),
-              variables: {
-                input: {
-                  id: playerPostRecord.id,
-                  ...modelFieldsToSave,
-                },
+          await client.graphql({
+            query: updatePlayerPost.replaceAll("__typename", ""),
+            variables: {
+              input: {
+                id: playerPostRecord.id,
+                ...modelFields,
               },
-            })
-          );
-          await Promise.all(promises);
+            },
+          });
           if (onSuccess) {
             onSuccess(modelFields);
           }
@@ -891,8 +404,6 @@ export default function PlayerPostUpdateForm(props) {
             const modelFields = {
               title: value,
               description,
-              createdByName,
-              createdByProfileID,
               ageGroup,
               positionsNeeded,
               numOfPlayersNeeded,
@@ -902,10 +413,6 @@ export default function PlayerPostUpdateForm(props) {
               townCity,
               county,
               postcode,
-              isActive,
-              interestedUsers,
-              registeredPlayers,
-              selectedPlayers,
             };
             const result = onChange(modelFields);
             value = result?.title ?? value;
@@ -931,8 +438,6 @@ export default function PlayerPostUpdateForm(props) {
             const modelFields = {
               title,
               description: value,
-              createdByName,
-              createdByProfileID,
               ageGroup,
               positionsNeeded,
               numOfPlayersNeeded,
@@ -942,10 +447,6 @@ export default function PlayerPostUpdateForm(props) {
               townCity,
               county,
               postcode,
-              isActive,
-              interestedUsers,
-              registeredPlayers,
-              selectedPlayers,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -960,164 +461,6 @@ export default function PlayerPostUpdateForm(props) {
         hasError={errors.description?.hasError}
         {...getOverrideProps(overrides, "description")}
       ></TextField>
-      <TextField
-        label="Created by name"
-        isRequired={true}
-        isReadOnly={false}
-        value={createdByName}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              title,
-              description,
-              createdByName: value,
-              createdByProfileID,
-              ageGroup,
-              positionsNeeded,
-              numOfPlayersNeeded,
-              skillLevel,
-              kickOff,
-              street,
-              townCity,
-              county,
-              postcode,
-              isActive,
-              interestedUsers,
-              registeredPlayers,
-              selectedPlayers,
-            };
-            const result = onChange(modelFields);
-            value = result?.createdByName ?? value;
-          }
-          if (errors.createdByName?.hasError) {
-            runValidationTasks("createdByName", value);
-          }
-          setCreatedByName(value);
-        }}
-        onBlur={() => runValidationTasks("createdByName", createdByName)}
-        errorMessage={errors.createdByName?.errorMessage}
-        hasError={errors.createdByName?.hasError}
-        {...getOverrideProps(overrides, "createdByName")}
-      ></TextField>
-      <ArrayField
-        lengthLimit={1}
-        onChange={async (items) => {
-          let value = items[0];
-          if (onChange) {
-            const modelFields = {
-              title,
-              description,
-              createdByName,
-              createdByProfileID: value,
-              ageGroup,
-              positionsNeeded,
-              numOfPlayersNeeded,
-              skillLevel,
-              kickOff,
-              street,
-              townCity,
-              county,
-              postcode,
-              isActive,
-              interestedUsers,
-              registeredPlayers,
-              selectedPlayers,
-            };
-            const result = onChange(modelFields);
-            value = result?.createdByProfileID ?? value;
-          }
-          setCreatedByProfileID(value);
-          setCurrentCreatedByProfileIDValue(undefined);
-        }}
-        currentFieldValue={currentCreatedByProfileIDValue}
-        label={"Created by profile id"}
-        items={createdByProfileID ? [createdByProfileID] : []}
-        hasError={errors?.createdByProfileID?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks(
-            "createdByProfileID",
-            currentCreatedByProfileIDValue
-          )
-        }
-        errorMessage={errors?.createdByProfileID?.errorMessage}
-        getBadgeText={(value) =>
-          value
-            ? getDisplayValue.createdByProfileID(
-                createdByProfileIDRecords.find((r) => r.id === value) ??
-                  selectedCreatedByProfileIDRecords.find((r) => r.id === value)
-              )
-            : ""
-        }
-        setFieldValue={(value) => {
-          setCurrentCreatedByProfileIDDisplayValue(
-            value
-              ? getDisplayValue.createdByProfileID(
-                  createdByProfileIDRecords.find((r) => r.id === value) ??
-                    selectedCreatedByProfileIDRecords.find(
-                      (r) => r.id === value
-                    )
-                )
-              : ""
-          );
-          setCurrentCreatedByProfileIDValue(value);
-          const selectedRecord = createdByProfileIDRecords.find(
-            (r) => r.id === value
-          );
-          if (selectedRecord) {
-            setSelectedCreatedByProfileIDRecords([selectedRecord]);
-          }
-        }}
-        inputFieldRef={createdByProfileIDRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Created by profile id"
-          isRequired={true}
-          isReadOnly={false}
-          placeholder="Search Profile"
-          value={currentCreatedByProfileIDDisplayValue}
-          options={createdByProfileIDRecords
-            .filter(
-              (r, i, arr) =>
-                arr.findIndex((member) => member?.id === r?.id) === i
-            )
-            .map((r) => ({
-              id: r?.id,
-              label: getDisplayValue.createdByProfileID?.(r),
-            }))}
-          isLoading={createdByProfileIDLoading}
-          onSelect={({ id, label }) => {
-            setCurrentCreatedByProfileIDValue(id);
-            setCurrentCreatedByProfileIDDisplayValue(label);
-            runValidationTasks("createdByProfileID", label);
-          }}
-          onClear={() => {
-            setCurrentCreatedByProfileIDDisplayValue("");
-          }}
-          defaultValue={createdByProfileID}
-          onChange={(e) => {
-            let { value } = e.target;
-            fetchCreatedByProfileIDRecords(value);
-            if (errors.createdByProfileID?.hasError) {
-              runValidationTasks("createdByProfileID", value);
-            }
-            setCurrentCreatedByProfileIDDisplayValue(value);
-            setCurrentCreatedByProfileIDValue(undefined);
-          }}
-          onBlur={() =>
-            runValidationTasks(
-              "createdByProfileID",
-              currentCreatedByProfileIDValue
-            )
-          }
-          errorMessage={errors.createdByProfileID?.errorMessage}
-          hasError={errors.createdByProfileID?.hasError}
-          ref={createdByProfileIDRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "createdByProfileID")}
-        ></Autocomplete>
-      </ArrayField>
       <SelectField
         label="Age group"
         placeholder="Please select an option"
@@ -1129,8 +472,6 @@ export default function PlayerPostUpdateForm(props) {
             const modelFields = {
               title,
               description,
-              createdByName,
-              createdByProfileID,
               ageGroup: value,
               positionsNeeded,
               numOfPlayersNeeded,
@@ -1140,10 +481,6 @@ export default function PlayerPostUpdateForm(props) {
               townCity,
               county,
               postcode,
-              isActive,
-              interestedUsers,
-              registeredPlayers,
-              selectedPlayers,
             };
             const result = onChange(modelFields);
             value = result?.ageGroup ?? value;
@@ -1241,8 +578,6 @@ export default function PlayerPostUpdateForm(props) {
             const modelFields = {
               title,
               description,
-              createdByName,
-              createdByProfileID,
               ageGroup,
               positionsNeeded: values,
               numOfPlayersNeeded,
@@ -1252,10 +587,6 @@ export default function PlayerPostUpdateForm(props) {
               townCity,
               county,
               postcode,
-              isActive,
-              interestedUsers,
-              registeredPlayers,
-              selectedPlayers,
             };
             const result = onChange(modelFields);
             values = result?.positionsNeeded ?? values;
@@ -1357,8 +688,6 @@ export default function PlayerPostUpdateForm(props) {
             const modelFields = {
               title,
               description,
-              createdByName,
-              createdByProfileID,
               ageGroup,
               positionsNeeded,
               numOfPlayersNeeded: value,
@@ -1368,10 +697,6 @@ export default function PlayerPostUpdateForm(props) {
               townCity,
               county,
               postcode,
-              isActive,
-              interestedUsers,
-              registeredPlayers,
-              selectedPlayers,
             };
             const result = onChange(modelFields);
             value = result?.numOfPlayersNeeded ?? value;
@@ -1399,8 +724,6 @@ export default function PlayerPostUpdateForm(props) {
             const modelFields = {
               title,
               description,
-              createdByName,
-              createdByProfileID,
               ageGroup,
               positionsNeeded,
               numOfPlayersNeeded,
@@ -1410,10 +733,6 @@ export default function PlayerPostUpdateForm(props) {
               townCity,
               county,
               postcode,
-              isActive,
-              interestedUsers,
-              registeredPlayers,
-              selectedPlayers,
             };
             const result = onChange(modelFields);
             value = result?.skillLevel ?? value;
@@ -1457,8 +776,6 @@ export default function PlayerPostUpdateForm(props) {
             const modelFields = {
               title,
               description,
-              createdByName,
-              createdByProfileID,
               ageGroup,
               positionsNeeded,
               numOfPlayersNeeded,
@@ -1468,10 +785,6 @@ export default function PlayerPostUpdateForm(props) {
               townCity,
               county,
               postcode,
-              isActive,
-              interestedUsers,
-              registeredPlayers,
-              selectedPlayers,
             };
             const result = onChange(modelFields);
             value = result?.kickOff ?? value;
@@ -1497,8 +810,6 @@ export default function PlayerPostUpdateForm(props) {
             const modelFields = {
               title,
               description,
-              createdByName,
-              createdByProfileID,
               ageGroup,
               positionsNeeded,
               numOfPlayersNeeded,
@@ -1508,10 +819,6 @@ export default function PlayerPostUpdateForm(props) {
               townCity,
               county,
               postcode,
-              isActive,
-              interestedUsers,
-              registeredPlayers,
-              selectedPlayers,
             };
             const result = onChange(modelFields);
             value = result?.street ?? value;
@@ -1537,8 +844,6 @@ export default function PlayerPostUpdateForm(props) {
             const modelFields = {
               title,
               description,
-              createdByName,
-              createdByProfileID,
               ageGroup,
               positionsNeeded,
               numOfPlayersNeeded,
@@ -1548,10 +853,6 @@ export default function PlayerPostUpdateForm(props) {
               townCity: value,
               county,
               postcode,
-              isActive,
-              interestedUsers,
-              registeredPlayers,
-              selectedPlayers,
             };
             const result = onChange(modelFields);
             value = result?.townCity ?? value;
@@ -1577,8 +878,6 @@ export default function PlayerPostUpdateForm(props) {
             const modelFields = {
               title,
               description,
-              createdByName,
-              createdByProfileID,
               ageGroup,
               positionsNeeded,
               numOfPlayersNeeded,
@@ -1588,10 +887,6 @@ export default function PlayerPostUpdateForm(props) {
               townCity,
               county: value,
               postcode,
-              isActive,
-              interestedUsers,
-              registeredPlayers,
-              selectedPlayers,
             };
             const result = onChange(modelFields);
             value = result?.county ?? value;
@@ -1617,8 +912,6 @@ export default function PlayerPostUpdateForm(props) {
             const modelFields = {
               title,
               description,
-              createdByName,
-              createdByProfileID,
               ageGroup,
               positionsNeeded,
               numOfPlayersNeeded,
@@ -1628,10 +921,6 @@ export default function PlayerPostUpdateForm(props) {
               townCity,
               county,
               postcode: value,
-              isActive,
-              interestedUsers,
-              registeredPlayers,
-              selectedPlayers,
             };
             const result = onChange(modelFields);
             value = result?.postcode ?? value;
@@ -1646,308 +935,6 @@ export default function PlayerPostUpdateForm(props) {
         hasError={errors.postcode?.hasError}
         {...getOverrideProps(overrides, "postcode")}
       ></TextField>
-      <SwitchField
-        label="Is active"
-        defaultChecked={false}
-        isDisabled={false}
-        isChecked={isActive}
-        onChange={(e) => {
-          let value = e.target.checked;
-          if (onChange) {
-            const modelFields = {
-              title,
-              description,
-              createdByName,
-              createdByProfileID,
-              ageGroup,
-              positionsNeeded,
-              numOfPlayersNeeded,
-              skillLevel,
-              kickOff,
-              street,
-              townCity,
-              county,
-              postcode,
-              isActive: value,
-              interestedUsers,
-              registeredPlayers,
-              selectedPlayers,
-            };
-            const result = onChange(modelFields);
-            value = result?.isActive ?? value;
-          }
-          if (errors.isActive?.hasError) {
-            runValidationTasks("isActive", value);
-          }
-          setIsActive(value);
-        }}
-        onBlur={() => runValidationTasks("isActive", isActive)}
-        errorMessage={errors.isActive?.errorMessage}
-        hasError={errors.isActive?.hasError}
-        {...getOverrideProps(overrides, "isActive")}
-      ></SwitchField>
-      <ArrayField
-        onChange={async (items) => {
-          let values = items;
-          if (onChange) {
-            const modelFields = {
-              title,
-              description,
-              createdByName,
-              createdByProfileID,
-              ageGroup,
-              positionsNeeded,
-              numOfPlayersNeeded,
-              skillLevel,
-              kickOff,
-              street,
-              townCity,
-              county,
-              postcode,
-              isActive,
-              interestedUsers: values,
-              registeredPlayers,
-              selectedPlayers,
-            };
-            const result = onChange(modelFields);
-            values = result?.interestedUsers ?? values;
-          }
-          setInterestedUsers(values);
-          setCurrentInterestedUsersValue(undefined);
-          setCurrentInterestedUsersDisplayValue("");
-        }}
-        currentFieldValue={currentInterestedUsersValue}
-        label={"Interested users"}
-        items={interestedUsers}
-        hasError={errors?.interestedUsers?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks(
-            "interestedUsers",
-            currentInterestedUsersValue
-          )
-        }
-        errorMessage={errors?.interestedUsers?.errorMessage}
-        getBadgeText={getDisplayValue.interestedUsers}
-        setFieldValue={(model) => {
-          setCurrentInterestedUsersDisplayValue(
-            model ? getDisplayValue.interestedUsers(model) : ""
-          );
-          setCurrentInterestedUsersValue(model);
-        }}
-        inputFieldRef={interestedUsersRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Interested users"
-          isRequired={false}
-          isReadOnly={false}
-          placeholder="Search Profile"
-          value={currentInterestedUsersDisplayValue}
-          options={interestedUsersRecords.map((r) => ({
-            id: getIDValue.interestedUsers?.(r),
-            label: getDisplayValue.interestedUsers?.(r),
-          }))}
-          isLoading={interestedUsersLoading}
-          onSelect={({ id, label }) => {
-            setCurrentInterestedUsersValue(
-              interestedUsersRecords.find((r) =>
-                Object.entries(JSON.parse(id)).every(
-                  ([key, value]) => r[key] === value
-                )
-              )
-            );
-            setCurrentInterestedUsersDisplayValue(label);
-            runValidationTasks("interestedUsers", label);
-          }}
-          onClear={() => {
-            setCurrentInterestedUsersDisplayValue("");
-          }}
-          onChange={(e) => {
-            let { value } = e.target;
-            fetchInterestedUsersRecords(value);
-            if (errors.interestedUsers?.hasError) {
-              runValidationTasks("interestedUsers", value);
-            }
-            setCurrentInterestedUsersDisplayValue(value);
-            setCurrentInterestedUsersValue(undefined);
-          }}
-          onBlur={() =>
-            runValidationTasks(
-              "interestedUsers",
-              currentInterestedUsersDisplayValue
-            )
-          }
-          errorMessage={errors.interestedUsers?.errorMessage}
-          hasError={errors.interestedUsers?.hasError}
-          ref={interestedUsersRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "interestedUsers")}
-        ></Autocomplete>
-      </ArrayField>
-      <ArrayField
-        onChange={async (items) => {
-          let values = items;
-          if (onChange) {
-            const modelFields = {
-              title,
-              description,
-              createdByName,
-              createdByProfileID,
-              ageGroup,
-              positionsNeeded,
-              numOfPlayersNeeded,
-              skillLevel,
-              kickOff,
-              street,
-              townCity,
-              county,
-              postcode,
-              isActive,
-              interestedUsers,
-              registeredPlayers: values,
-              selectedPlayers,
-            };
-            const result = onChange(modelFields);
-            values = result?.registeredPlayers ?? values;
-          }
-          setRegisteredPlayers(values);
-          setCurrentRegisteredPlayersValue(undefined);
-          setCurrentRegisteredPlayersDisplayValue("");
-        }}
-        currentFieldValue={currentRegisteredPlayersValue}
-        label={"Registered players"}
-        items={registeredPlayers}
-        hasError={errors?.registeredPlayers?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks(
-            "registeredPlayers",
-            currentRegisteredPlayersValue
-          )
-        }
-        errorMessage={errors?.registeredPlayers?.errorMessage}
-        getBadgeText={getDisplayValue.registeredPlayers}
-        setFieldValue={(model) => {
-          setCurrentRegisteredPlayersDisplayValue(
-            model ? getDisplayValue.registeredPlayers(model) : ""
-          );
-          setCurrentRegisteredPlayersValue(model);
-        }}
-        inputFieldRef={registeredPlayersRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Registered players"
-          isRequired={false}
-          isReadOnly={false}
-          placeholder="Search Player"
-          value={currentRegisteredPlayersDisplayValue}
-          options={registeredPlayersRecords.map((r) => ({
-            id: getIDValue.registeredPlayers?.(r),
-            label: getDisplayValue.registeredPlayers?.(r),
-          }))}
-          isLoading={registeredPlayersLoading}
-          onSelect={({ id, label }) => {
-            setCurrentRegisteredPlayersValue(
-              registeredPlayersRecords.find((r) =>
-                Object.entries(JSON.parse(id)).every(
-                  ([key, value]) => r[key] === value
-                )
-              )
-            );
-            setCurrentRegisteredPlayersDisplayValue(label);
-            runValidationTasks("registeredPlayers", label);
-          }}
-          onClear={() => {
-            setCurrentRegisteredPlayersDisplayValue("");
-          }}
-          onChange={(e) => {
-            let { value } = e.target;
-            fetchRegisteredPlayersRecords(value);
-            if (errors.registeredPlayers?.hasError) {
-              runValidationTasks("registeredPlayers", value);
-            }
-            setCurrentRegisteredPlayersDisplayValue(value);
-            setCurrentRegisteredPlayersValue(undefined);
-          }}
-          onBlur={() =>
-            runValidationTasks(
-              "registeredPlayers",
-              currentRegisteredPlayersDisplayValue
-            )
-          }
-          errorMessage={errors.registeredPlayers?.errorMessage}
-          hasError={errors.registeredPlayers?.hasError}
-          ref={registeredPlayersRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "registeredPlayers")}
-        ></Autocomplete>
-      </ArrayField>
-      <ArrayField
-        onChange={async (items) => {
-          let values = items;
-          if (onChange) {
-            const modelFields = {
-              title,
-              description,
-              createdByName,
-              createdByProfileID,
-              ageGroup,
-              positionsNeeded,
-              numOfPlayersNeeded,
-              skillLevel,
-              kickOff,
-              street,
-              townCity,
-              county,
-              postcode,
-              isActive,
-              interestedUsers,
-              registeredPlayers,
-              selectedPlayers: values,
-            };
-            const result = onChange(modelFields);
-            values = result?.selectedPlayers ?? values;
-          }
-          setSelectedPlayers(values);
-          setCurrentSelectedPlayersValue("");
-        }}
-        currentFieldValue={currentSelectedPlayersValue}
-        label={"Selected players"}
-        items={selectedPlayers}
-        hasError={errors?.selectedPlayers?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks(
-            "selectedPlayers",
-            currentSelectedPlayersValue
-          )
-        }
-        errorMessage={errors?.selectedPlayers?.errorMessage}
-        setFieldValue={setCurrentSelectedPlayersValue}
-        inputFieldRef={selectedPlayersRef}
-        defaultFieldValue={""}
-      >
-        <TextField
-          label="Selected players"
-          isRequired={false}
-          isReadOnly={false}
-          value={currentSelectedPlayersValue}
-          onChange={(e) => {
-            let { value } = e.target;
-            if (errors.selectedPlayers?.hasError) {
-              runValidationTasks("selectedPlayers", value);
-            }
-            setCurrentSelectedPlayersValue(value);
-          }}
-          onBlur={() =>
-            runValidationTasks("selectedPlayers", currentSelectedPlayersValue)
-          }
-          errorMessage={errors.selectedPlayers?.errorMessage}
-          hasError={errors.selectedPlayers?.hasError}
-          ref={selectedPlayersRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "selectedPlayers")}
-        ></TextField>
-      </ArrayField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

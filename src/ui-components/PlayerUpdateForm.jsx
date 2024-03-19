@@ -7,7 +7,6 @@
 /* eslint-disable */
 import * as React from "react";
 import {
-  Autocomplete,
   Badge,
   Button,
   Divider,
@@ -21,18 +20,9 @@ import {
   useTheme,
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
-import {
-  getPlayer,
-  listPlayerPlayerPosts,
-  listPlayerPosts,
-  playerPlayerPostsByPlayerId,
-} from "../graphql/queries";
 import { generateClient } from "aws-amplify/api";
-import {
-  createPlayerPlayerPost,
-  deletePlayerPlayerPost,
-  updatePlayer,
-} from "../graphql/mutations";
+import { getPlayer } from "../graphql/queries";
+import { updatePlayer } from "../graphql/mutations";
 const client = generateClient();
 function ArrayField({
   items = [],
@@ -207,29 +197,16 @@ export default function PlayerUpdateForm(props) {
     ageGroup: "",
     skillLevel: "",
     positions: [],
-    registeredPlayerPosts: [],
   };
   const [name, setName] = React.useState(initialValues.name);
   const [dob, setDob] = React.useState(initialValues.dob);
   const [ageGroup, setAgeGroup] = React.useState(initialValues.ageGroup);
   const [skillLevel, setSkillLevel] = React.useState(initialValues.skillLevel);
   const [positions, setPositions] = React.useState(initialValues.positions);
-  const [registeredPlayerPosts, setRegisteredPlayerPosts] = React.useState(
-    initialValues.registeredPlayerPosts
-  );
-  const [registeredPlayerPostsLoading, setRegisteredPlayerPostsLoading] =
-    React.useState(false);
-  const [registeredPlayerPostsRecords, setRegisteredPlayerPostsRecords] =
-    React.useState([]);
-  const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = playerRecord
-      ? {
-          ...initialValues,
-          ...playerRecord,
-          registeredPlayerPosts: linkedRegisteredPlayerPosts,
-        }
+      ? { ...initialValues, ...playerRecord }
       : initialValues;
     setName(cleanValues.name);
     setDob(cleanValues.dob);
@@ -237,15 +214,9 @@ export default function PlayerUpdateForm(props) {
     setSkillLevel(cleanValues.skillLevel);
     setPositions(cleanValues.positions ?? []);
     setCurrentPositionsValue("");
-    setRegisteredPlayerPosts(cleanValues.registeredPlayerPosts ?? []);
-    setCurrentRegisteredPlayerPostsValue(undefined);
-    setCurrentRegisteredPlayerPostsDisplayValue("");
     setErrors({});
   };
   const [playerRecord, setPlayerRecord] = React.useState(playerModelProp);
-  const [linkedRegisteredPlayerPosts, setLinkedRegisteredPlayerPosts] =
-    React.useState([]);
-  const canUnlinkRegisteredPlayerPosts = false;
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp
@@ -256,44 +227,13 @@ export default function PlayerUpdateForm(props) {
             })
           )?.data?.getPlayer
         : playerModelProp;
-      const linkedRegisteredPlayerPosts = record
-        ? (
-            await client.graphql({
-              query: playerPlayerPostsByPlayerId.replaceAll("__typename", ""),
-              variables: {
-                playerId: record.id,
-              },
-            })
-          ).data.playerPlayerPostsByPlayerId.items.map((t) => t.playerPost)
-        : [];
-      setLinkedRegisteredPlayerPosts(linkedRegisteredPlayerPosts);
       setPlayerRecord(record);
     };
     queryData();
   }, [idProp, playerModelProp]);
-  React.useEffect(resetStateValues, [
-    playerRecord,
-    linkedRegisteredPlayerPosts,
-  ]);
+  React.useEffect(resetStateValues, [playerRecord]);
   const [currentPositionsValue, setCurrentPositionsValue] = React.useState("");
   const positionsRef = React.createRef();
-  const [
-    currentRegisteredPlayerPostsDisplayValue,
-    setCurrentRegisteredPlayerPostsDisplayValue,
-  ] = React.useState("");
-  const [
-    currentRegisteredPlayerPostsValue,
-    setCurrentRegisteredPlayerPostsValue,
-  ] = React.useState(undefined);
-  const registeredPlayerPostsRef = React.createRef();
-  const getIDValue = {
-    registeredPlayerPosts: (r) => JSON.stringify({ id: r?.id }),
-  };
-  const registeredPlayerPostsIdSet = new Set(
-    Array.isArray(registeredPlayerPosts)
-      ? registeredPlayerPosts.map((r) => getIDValue.registeredPlayerPosts?.(r))
-      : getIDValue.registeredPlayerPosts?.(registeredPlayerPosts)
-  );
   const getDisplayValue = {
     positions: (r) => {
       const enumDisplayValueMap = {
@@ -308,7 +248,6 @@ export default function PlayerUpdateForm(props) {
       };
       return enumDisplayValueMap[r];
     },
-    registeredPlayerPosts: (r) => `${r?.title ? r?.title + " - " : ""}${r?.id}`,
   };
   const validations = {
     name: [{ type: "Required" }],
@@ -316,7 +255,6 @@ export default function PlayerUpdateForm(props) {
     ageGroup: [{ type: "Required" }],
     skillLevel: [{ type: "Required" }],
     positions: [{ type: "Required" }],
-    registeredPlayerPosts: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -335,41 +273,6 @@ export default function PlayerUpdateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
-  const fetchRegisteredPlayerPostsRecords = async (value) => {
-    setRegisteredPlayerPostsLoading(true);
-    const newOptions = [];
-    let newNext = "";
-    while (newOptions.length < autocompleteLength && newNext != null) {
-      const variables = {
-        limit: autocompleteLength * 5,
-        filter: {
-          or: [{ title: { contains: value } }, { id: { contains: value } }],
-        },
-      };
-      if (newNext) {
-        variables["nextToken"] = newNext;
-      }
-      const result = (
-        await client.graphql({
-          query: listPlayerPosts.replaceAll("__typename", ""),
-          variables,
-        })
-      )?.data?.listPlayerPosts?.items;
-      var loaded = result.filter(
-        (item) =>
-          !registeredPlayerPostsIdSet.has(
-            getIDValue.registeredPlayerPosts?.(item)
-          )
-      );
-      newOptions.push(...loaded);
-      newNext = result.nextToken;
-    }
-    setRegisteredPlayerPostsRecords(newOptions.slice(0, autocompleteLength));
-    setRegisteredPlayerPostsLoading(false);
-  };
-  React.useEffect(() => {
-    fetchRegisteredPlayerPostsRecords("");
-  }, []);
   return (
     <Grid
       as="form"
@@ -384,28 +287,19 @@ export default function PlayerUpdateForm(props) {
           ageGroup,
           skillLevel,
           positions,
-          registeredPlayerPosts: registeredPlayerPosts ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
             if (Array.isArray(modelFields[fieldName])) {
               promises.push(
                 ...modelFields[fieldName].map((item) =>
-                  runValidationTasks(
-                    fieldName,
-                    item,
-                    getDisplayValue[fieldName]
-                  )
+                  runValidationTasks(fieldName, item)
                 )
               );
               return promises;
             }
             promises.push(
-              runValidationTasks(
-                fieldName,
-                modelFields[fieldName],
-                getDisplayValue[fieldName]
-              )
+              runValidationTasks(fieldName, modelFields[fieldName])
             );
             return promises;
           }, [])
@@ -422,120 +316,15 @@ export default function PlayerUpdateForm(props) {
               modelFields[key] = null;
             }
           });
-          const promises = [];
-          const registeredPlayerPostsToLinkMap = new Map();
-          const registeredPlayerPostsToUnLinkMap = new Map();
-          const registeredPlayerPostsMap = new Map();
-          const linkedRegisteredPlayerPostsMap = new Map();
-          registeredPlayerPosts.forEach((r) => {
-            const count = registeredPlayerPostsMap.get(
-              getIDValue.registeredPlayerPosts?.(r)
-            );
-            const newCount = count ? count + 1 : 1;
-            registeredPlayerPostsMap.set(
-              getIDValue.registeredPlayerPosts?.(r),
-              newCount
-            );
-          });
-          linkedRegisteredPlayerPosts.forEach((r) => {
-            const count = linkedRegisteredPlayerPostsMap.get(
-              getIDValue.registeredPlayerPosts?.(r)
-            );
-            const newCount = count ? count + 1 : 1;
-            linkedRegisteredPlayerPostsMap.set(
-              getIDValue.registeredPlayerPosts?.(r),
-              newCount
-            );
-          });
-          linkedRegisteredPlayerPostsMap.forEach((count, id) => {
-            const newCount = registeredPlayerPostsMap.get(id);
-            if (newCount) {
-              const diffCount = count - newCount;
-              if (diffCount > 0) {
-                registeredPlayerPostsToUnLinkMap.set(id, diffCount);
-              }
-            } else {
-              registeredPlayerPostsToUnLinkMap.set(id, count);
-            }
-          });
-          registeredPlayerPostsMap.forEach((count, id) => {
-            const originalCount = linkedRegisteredPlayerPostsMap.get(id);
-            if (originalCount) {
-              const diffCount = count - originalCount;
-              if (diffCount > 0) {
-                registeredPlayerPostsToLinkMap.set(id, diffCount);
-              }
-            } else {
-              registeredPlayerPostsToLinkMap.set(id, count);
-            }
-          });
-          registeredPlayerPostsToUnLinkMap.forEach(async (count, id) => {
-            const recordKeys = JSON.parse(id);
-            const playerPlayerPostRecords = (
-              await client.graphql({
-                query: listPlayerPlayerPosts.replaceAll("__typename", ""),
-                variables: {
-                  filter: {
-                    and: [
-                      { playerPostId: { eq: recordKeys.id } },
-                      { playerId: { eq: playerRecord.id } },
-                    ],
-                  },
-                },
-              })
-            )?.data?.listPlayerPlayerPosts?.items;
-            for (let i = 0; i < count; i++) {
-              promises.push(
-                client.graphql({
-                  query: deletePlayerPlayerPost.replaceAll("__typename", ""),
-                  variables: {
-                    input: {
-                      id: playerPlayerPostRecords[i].id,
-                    },
-                  },
-                })
-              );
-            }
-          });
-          registeredPlayerPostsToLinkMap.forEach((count, id) => {
-            const playerPostToLink = registeredPlayerPostsRecords.find((r) =>
-              Object.entries(JSON.parse(id)).every(
-                ([key, value]) => r[key] === value
-              )
-            );
-            for (let i = count; i > 0; i--) {
-              promises.push(
-                client.graphql({
-                  query: createPlayerPlayerPost.replaceAll("__typename", ""),
-                  variables: {
-                    input: {
-                      playerId: playerRecord.id,
-                      playerPostId: playerPostToLink.id,
-                    },
-                  },
-                })
-              );
-            }
-          });
-          const modelFieldsToSave = {
-            name: modelFields.name,
-            dob: modelFields.dob,
-            ageGroup: modelFields.ageGroup,
-            skillLevel: modelFields.skillLevel,
-            positions: modelFields.positions,
-          };
-          promises.push(
-            client.graphql({
-              query: updatePlayer.replaceAll("__typename", ""),
-              variables: {
-                input: {
-                  id: playerRecord.id,
-                  ...modelFieldsToSave,
-                },
+          await client.graphql({
+            query: updatePlayer.replaceAll("__typename", ""),
+            variables: {
+              input: {
+                id: playerRecord.id,
+                ...modelFields,
               },
-            })
-          );
-          await Promise.all(promises);
+            },
+          });
           if (onSuccess) {
             onSuccess(modelFields);
           }
@@ -563,7 +352,6 @@ export default function PlayerUpdateForm(props) {
               ageGroup,
               skillLevel,
               positions,
-              registeredPlayerPosts,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -593,7 +381,6 @@ export default function PlayerUpdateForm(props) {
               ageGroup,
               skillLevel,
               positions,
-              registeredPlayerPosts,
             };
             const result = onChange(modelFields);
             value = result?.dob ?? value;
@@ -622,7 +409,6 @@ export default function PlayerUpdateForm(props) {
               ageGroup: value,
               skillLevel,
               positions,
-              registeredPlayerPosts,
             };
             const result = onChange(modelFields);
             value = result?.ageGroup ?? value;
@@ -727,7 +513,6 @@ export default function PlayerUpdateForm(props) {
               ageGroup,
               skillLevel: value,
               positions,
-              registeredPlayerPosts,
             };
             const result = onChange(modelFields);
             value = result?.skillLevel ?? value;
@@ -768,7 +553,6 @@ export default function PlayerUpdateForm(props) {
               ageGroup,
               skillLevel,
               positions: values,
-              registeredPlayerPosts,
             };
             const result = onChange(modelFields);
             values = result?.positions ?? values;
@@ -849,93 +633,6 @@ export default function PlayerUpdateForm(props) {
             {...getOverrideProps(overrides, "positionsoption7")}
           ></option>
         </SelectField>
-      </ArrayField>
-      <ArrayField
-        onChange={async (items) => {
-          let values = items;
-          if (onChange) {
-            const modelFields = {
-              name,
-              dob,
-              ageGroup,
-              skillLevel,
-              positions,
-              registeredPlayerPosts: values,
-            };
-            const result = onChange(modelFields);
-            values = result?.registeredPlayerPosts ?? values;
-          }
-          setRegisteredPlayerPosts(values);
-          setCurrentRegisteredPlayerPostsValue(undefined);
-          setCurrentRegisteredPlayerPostsDisplayValue("");
-        }}
-        currentFieldValue={currentRegisteredPlayerPostsValue}
-        label={"Registered player posts"}
-        items={registeredPlayerPosts}
-        hasError={errors?.registeredPlayerPosts?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks(
-            "registeredPlayerPosts",
-            currentRegisteredPlayerPostsValue
-          )
-        }
-        errorMessage={errors?.registeredPlayerPosts?.errorMessage}
-        getBadgeText={getDisplayValue.registeredPlayerPosts}
-        setFieldValue={(model) => {
-          setCurrentRegisteredPlayerPostsDisplayValue(
-            model ? getDisplayValue.registeredPlayerPosts(model) : ""
-          );
-          setCurrentRegisteredPlayerPostsValue(model);
-        }}
-        inputFieldRef={registeredPlayerPostsRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Registered player posts"
-          isRequired={false}
-          isReadOnly={false}
-          placeholder="Search PlayerPost"
-          value={currentRegisteredPlayerPostsDisplayValue}
-          options={registeredPlayerPostsRecords.map((r) => ({
-            id: getIDValue.registeredPlayerPosts?.(r),
-            label: getDisplayValue.registeredPlayerPosts?.(r),
-          }))}
-          isLoading={registeredPlayerPostsLoading}
-          onSelect={({ id, label }) => {
-            setCurrentRegisteredPlayerPostsValue(
-              registeredPlayerPostsRecords.find((r) =>
-                Object.entries(JSON.parse(id)).every(
-                  ([key, value]) => r[key] === value
-                )
-              )
-            );
-            setCurrentRegisteredPlayerPostsDisplayValue(label);
-            runValidationTasks("registeredPlayerPosts", label);
-          }}
-          onClear={() => {
-            setCurrentRegisteredPlayerPostsDisplayValue("");
-          }}
-          onChange={(e) => {
-            let { value } = e.target;
-            fetchRegisteredPlayerPostsRecords(value);
-            if (errors.registeredPlayerPosts?.hasError) {
-              runValidationTasks("registeredPlayerPosts", value);
-            }
-            setCurrentRegisteredPlayerPostsDisplayValue(value);
-            setCurrentRegisteredPlayerPostsValue(undefined);
-          }}
-          onBlur={() =>
-            runValidationTasks(
-              "registeredPlayerPosts",
-              currentRegisteredPlayerPostsDisplayValue
-            )
-          }
-          errorMessage={errors.registeredPlayerPosts?.errorMessage}
-          hasError={errors.registeredPlayerPosts?.hasError}
-          ref={registeredPlayerPostsRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "registeredPlayerPosts")}
-        ></Autocomplete>
       </ArrayField>
       <Flex
         justifyContent="space-between"

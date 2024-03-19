@@ -49,8 +49,6 @@ export default function MatchPostUpdateForm(props) {
     townCity: "",
     county: "",
     postcode: "",
-    teamName: "",
-    selectedOpponent: "",
   };
   const [title, setTitle] = React.useState(initialValues.title);
   const [description, setDescription] = React.useState(
@@ -72,10 +70,6 @@ export default function MatchPostUpdateForm(props) {
   const [townCity, setTownCity] = React.useState(initialValues.townCity);
   const [county, setCounty] = React.useState(initialValues.county);
   const [postcode, setPostcode] = React.useState(initialValues.postcode);
-  const [teamName, setTeamName] = React.useState(initialValues.teamName);
-  const [selectedOpponent, setSelectedOpponent] = React.useState(
-    initialValues.selectedOpponent
-  );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = matchPostRecord
@@ -95,8 +89,6 @@ export default function MatchPostUpdateForm(props) {
     setTownCity(cleanValues.townCity);
     setCounty(cleanValues.county);
     setPostcode(cleanValues.postcode);
-    setTeamName(cleanValues.teamName);
-    setSelectedOpponent(cleanValues.selectedOpponent);
     setErrors({});
   };
   const [matchPostRecord, setMatchPostRecord] =
@@ -131,8 +123,6 @@ export default function MatchPostUpdateForm(props) {
     townCity: [{ type: "Required" }],
     county: [{ type: "Required" }],
     postcode: [{ type: "Required" }],
-    teamName: [{ type: "Required" }],
-    selectedOpponent: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -191,8 +181,6 @@ export default function MatchPostUpdateForm(props) {
           townCity,
           county,
           postcode,
-          teamName,
-          selectedOpponent: selectedOpponent ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -267,8 +255,6 @@ export default function MatchPostUpdateForm(props) {
               townCity,
               county,
               postcode,
-              teamName,
-              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.title ?? value;
@@ -306,8 +292,6 @@ export default function MatchPostUpdateForm(props) {
               townCity,
               county,
               postcode,
-              teamName,
-              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -345,8 +329,6 @@ export default function MatchPostUpdateForm(props) {
               townCity,
               county,
               postcode,
-              teamName,
-              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.gameType ?? value;
@@ -400,8 +382,6 @@ export default function MatchPostUpdateForm(props) {
               townCity,
               county,
               postcode,
-              teamName,
-              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.ageGroup ?? value;
@@ -519,8 +499,6 @@ export default function MatchPostUpdateForm(props) {
               townCity,
               county,
               postcode,
-              teamName,
-              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.teamSize ?? value;
@@ -558,8 +536,6 @@ export default function MatchPostUpdateForm(props) {
               townCity,
               county,
               postcode,
-              teamName,
-              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.substitutionLimit ?? value;
@@ -599,8 +575,6 @@ export default function MatchPostUpdateForm(props) {
               townCity,
               county,
               postcode,
-              teamName,
-              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.createdByName ?? value;
@@ -638,8 +612,6 @@ export default function MatchPostUpdateForm(props) {
               townCity,
               county,
               postcode,
-              teamName,
-              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.cards ?? value;
@@ -681,8 +653,6 @@ export default function MatchPostUpdateForm(props) {
               townCity,
               county,
               postcode,
-              teamName,
-              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.halfLength ?? value;
@@ -722,8 +692,6 @@ export default function MatchPostUpdateForm(props) {
               townCity,
               county,
               postcode,
-              teamName,
-              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.kickOff ?? value;
@@ -761,8 +729,6 @@ export default function MatchPostUpdateForm(props) {
               townCity,
               county,
               postcode,
-              teamName,
-              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.street ?? value;
@@ -800,8 +766,6 @@ export default function MatchPostUpdateForm(props) {
               townCity: value,
               county,
               postcode,
-              teamName,
-              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.townCity ?? value;
@@ -839,8 +803,6 @@ export default function MatchPostUpdateForm(props) {
               townCity,
               county: value,
               postcode,
-              teamName,
-              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.county ?? value;
@@ -878,8 +840,6 @@ export default function MatchPostUpdateForm(props) {
               townCity,
               county,
               postcode: value,
-              teamName,
-              selectedOpponent,
             };
             const result = onChange(modelFields);
             value = result?.postcode ?? value;
@@ -893,84 +853,6 @@ export default function MatchPostUpdateForm(props) {
         errorMessage={errors.postcode?.errorMessage}
         hasError={errors.postcode?.hasError}
         {...getOverrideProps(overrides, "postcode")}
-      ></TextField>
-      <TextField
-        label="Team name"
-        isRequired={true}
-        isReadOnly={false}
-        value={teamName}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              title,
-              description,
-              gameType,
-              ageGroup,
-              teamSize,
-              substitutionLimit,
-              createdByName,
-              cards,
-              halfLength,
-              kickOff,
-              street,
-              townCity,
-              county,
-              postcode,
-              teamName: value,
-              selectedOpponent,
-            };
-            const result = onChange(modelFields);
-            value = result?.teamName ?? value;
-          }
-          if (errors.teamName?.hasError) {
-            runValidationTasks("teamName", value);
-          }
-          setTeamName(value);
-        }}
-        onBlur={() => runValidationTasks("teamName", teamName)}
-        errorMessage={errors.teamName?.errorMessage}
-        hasError={errors.teamName?.hasError}
-        {...getOverrideProps(overrides, "teamName")}
-      ></TextField>
-      <TextField
-        label="Selected opponent"
-        isRequired={false}
-        isReadOnly={false}
-        value={selectedOpponent}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              title,
-              description,
-              gameType,
-              ageGroup,
-              teamSize,
-              substitutionLimit,
-              createdByName,
-              cards,
-              halfLength,
-              kickOff,
-              street,
-              townCity,
-              county,
-              postcode,
-              teamName,
-              selectedOpponent: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.selectedOpponent ?? value;
-          }
-          if (errors.selectedOpponent?.hasError) {
-            runValidationTasks("selectedOpponent", value);
-          }
-          setSelectedOpponent(value);
-        }}
-        onBlur={() => runValidationTasks("selectedOpponent", selectedOpponent)}
-        errorMessage={errors.selectedOpponent?.errorMessage}
-        hasError={errors.selectedOpponent?.hasError}
-        {...getOverrideProps(overrides, "selectedOpponent")}
       ></TextField>
       <Flex
         justifyContent="space-between"

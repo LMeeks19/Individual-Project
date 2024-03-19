@@ -109,8 +109,7 @@ export default function Chats() {
   function getChatNameFromUsers(chat) {
     let names = chat.users
       .map((user) => {
-        if (user.id !== currentUser.id) 
-          return user.name;
+        if (user.id !== currentUser.id) return user.name;
         return "";
       })
       .toString();
@@ -173,17 +172,21 @@ export default function Chats() {
                   <Heading className="text-overflow" level={4}>
                     {chat.name ?? getChatNameFromUsers(chat)}
                   </Heading>
-                  <Delete
-                    className="icon delete"
-                    onClick={() =>
-                      openModal(
-                        <ConfirmDeleteModal
-                          deleteFunction={() => deleteChat(chat)}
-                        />,
-                        "Confirm Delete Chat"
-                      )
-                    }
-                  />
+                  {selectedChat !== null && selectedChat.id === chat.id ? (
+                    <Delete
+                      className="icon delete"
+                      onClick={() =>
+                        openModal(
+                          <ConfirmDeleteModal
+                            deleteFunction={() => deleteChat(chat)}
+                          />,
+                          "Confirm Delete Chat"
+                        )
+                      }
+                    />
+                  ) : (
+                    <></>
+                  )}
                 </Flex>
               );
             })}

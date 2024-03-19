@@ -106,7 +106,10 @@ export default function MatchPosts() {
             currentUser={currentUser}
             matchPosts={matchPosts.filter(
               (post) =>
-                !post.isActive && post.createdByProfileID === currentUser.id
+                !post.isActive &&
+                (post.createdByProfileID === currentUser.id ||
+                  (post.selectedOpponent !== null &&
+                    post.selectedOpponent === currentUser.id))
             )}
           />
         </Tabs.Panel>

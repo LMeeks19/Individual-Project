@@ -31,6 +31,8 @@ import {
   ReactivatePlayerPost,
   RemovePlayerPostInterestedUser,
 } from "../../Functions/Server";
+import ViewPlayerPostModal from "../../Modals/PlayerPostModals/ViewPlayerPostModal";
+import UpdatePlayerPostModal from "../../Modals/PlayerPostModals/UpdatePlayerPostModal";
 
 export default function PlayerPostsTab(props) {
   const [page, setPage] = useState(0);
@@ -161,116 +163,125 @@ export default function PlayerPostsTab(props) {
                       <Text as="div">
                         {post.createdByProfileID === props.currentUser.id ? (
                           <Flex justifyContent="center">
-                            <Flex gap="4px" className="icon">
-                              <Tooltip title="View Player Post Details" arrow>
-                                <Visibility
-                                // TODO: OnClick Modal View
-                                />
-                              </Tooltip>
-                            </Flex>
+                            <Tooltip title="View Player Post Details" arrow>
+                              <Visibility
+                                className="icon"
+                                onClick={() =>
+                                  openModal(
+                                    <ViewPlayerPostModal post={post} />,
+                                    "View Player Post Details"
+                                  )
+                                }
+                              />
+                            </Tooltip>
                             <Divider orientation="vertical" />
-                            <Flex gap="4px" className="icon">
-                              <Tooltip title="Update Player Post Details" arrow>
-                                <Edit
-                                // TODO:SW OnClick Modal Edit
-                                />
-                              </Tooltip>
-                            </Flex>
+                            <Tooltip title="Update Player Post Details" arrow>
+                              <Edit
+                                className="icon"
+                                onClick={() =>
+                                  openModal(
+                                    <UpdatePlayerPostModal post={post} />,
+                                    "Update Player Post Details"
+                                  )
+                                }
+                              />
+                            </Tooltip>
                             <Divider orientation="vertical" />
-                            <Flex gap="4px" className="icon delete">
-                              <Tooltip title="Delete Player Post" arrow>
-                                <Delete
-                                  onClick={() =>
-                                    openModal(
-                                      <ConfirmDeleteModal
-                                        deleteFunction={() =>
-                                          deletePlayerPost(post)
-                                        }
-                                      />,
-                                      "Confirm Player Post Delete"
-                                    )
-                                  }
-                                />
-                              </Tooltip>
-                            </Flex>
+                            <Tooltip title="Delete Player Post" arrow>
+                              <Delete
+                                className="icon delete"
+                                onClick={() =>
+                                  openModal(
+                                    <ConfirmDeleteModal
+                                      deleteFunction={() =>
+                                        deletePlayerPost(post)
+                                      }
+                                    />,
+                                    "Confirm Player Post Delete"
+                                  )
+                                }
+                              />
+                            </Tooltip>
                           </Flex>
                         ) : (
                           <Flex justifyContent="center">
-                            <Flex gap="4px" className="icon">
-                              <Tooltip title="View Player Post Details" arrow>
-                                <Visibility
-                                // TODO: OnClick Modal View
-                                />
-                              </Tooltip>
-                            </Flex>
+                            <Tooltip title="View Player Post Details" arrow>
+                              <Visibility
+                                className="icon"
+                                onClick={() =>
+                                  openModal(
+                                    <ViewPlayerPostModal post={post} />,
+                                    "View Player Post Details"
+                                  )
+                                }
+                              />
+                            </Tooltip>
                             <Divider orientation="vertical" />
                             {!post.interestedUsers.some(
                               (interestedUser) =>
                                 interestedUser.profileId ===
                                 props.currentUser.id
                             ) ? (
-                              <Flex gap="4px" className="icon">
-                                <Tooltip title="Register Interest" arrow>
-                                  <ThumbUpOffAlt
-                                    onClick={() =>
-                                      registerInterest(
-                                        props.currentUser.id,
-                                        post.id
-                                      )
-                                    }
-                                  />
-                                </Tooltip>
-                              </Flex>
-                            ) : (
-                              <Flex gap="4px" className="icon">
-                                <Tooltip title="Unregister Interest" arrow>
-                                  <ThumbUpAlt
-                                    onClick={() =>
-                                      unRegisterInterest(
-                                        post.interestedUsers.find(
-                                          (interestedUser) =>
-                                            interestedUser.profileId ===
-                                            props.currentUser.id
-                                        ).id
-                                      )
-                                    }
-                                  />
-                                </Tooltip>
-                              </Flex>
-                            )}
-                            <Divider orientation="vertical" />
-                            <Flex gap="4px" className="icon">
-                              <Tooltip title="Message" arrow>
-                                <Message
-                                  onClick={() => navigate("/messages")}
+                              <Tooltip title="Register Interest" arrow>
+                                <ThumbUpOffAlt
+                                  className="icon"
+                                  onClick={() =>
+                                    registerInterest(
+                                      props.currentUser.id,
+                                      post.id
+                                    )
+                                  }
                                 />
                               </Tooltip>
-                            </Flex>
+                            ) : (
+                              <Tooltip title="Unregister Interest" arrow>
+                                <ThumbUpAlt
+                                  className="icon"
+                                  onClick={() =>
+                                    unRegisterInterest(
+                                      post.interestedUsers.find(
+                                        (interestedUser) =>
+                                          interestedUser.profileId ===
+                                          props.currentUser.id
+                                      ).id
+                                    )
+                                  }
+                                />
+                              </Tooltip>
+                            )}
+                            <Divider orientation="vertical" />
+                            <Tooltip title="Message" arrow>
+                              <Message
+                                className="icon"
+                                onClick={() => navigate("/messages")}
+                              />
+                            </Tooltip>
                           </Flex>
                         )}
                       </Text>
                     ) : (
                       <Text as="div">
                         <Flex justifyContent="center">
-                          <Flex gap="4px" className="icon">
-                            <Tooltip title="View PLayer Post Details" arrow>
-                              <Visibility
-                              // TODO: OnClick Modal View
-                              />
-                            </Tooltip>
-                          </Flex>
+                          <Tooltip title="View PLayer Post Details" arrow>
+                            <Visibility
+                              className="icon"
+                              onClick={() =>
+                                openModal(
+                                  <ViewPlayerPostModal post={post} />,
+                                  "View Player Post Details"
+                                )
+                              }
+                            />
+                          </Tooltip>
                           {post.createdByProfileID === props.currentUser.id ? (
                             <>
                               <Divider orientation="vertical" />
-                              <Flex gap="4px" className="icon">
-                                <Tooltip title="Reactivate Player Post" arrow>
-                                  <Replay
-                                    onClick={() =>
-                                      reActivatePlayerPost(post.id)
-                                    }
-                                  />
-                                </Tooltip>
-                              </Flex>
+                              <Tooltip title="Reactivate Player Post" arrow>
+                                <Replay
+                                  className="icon"
+                                  onClick={() => reActivatePlayerPost(post.id)}
+                                />
+                              </Tooltip>
                             </>
                           ) : (
                             <></>

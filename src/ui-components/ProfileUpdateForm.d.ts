@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -29,11 +29,6 @@ export declare type ProfileUpdateFormInputValues = {
     townCity?: string;
     county?: string;
     postcode?: string;
-    matchPosts?: any[];
-    interestedMatchPosts?: any[];
-    playerPosts?: any[];
-    interestedPlayerPosts?: any[];
-    chats?: any[];
 };
 export declare type ProfileUpdateFormValidationValues = {
     name?: ValidationFunction<string>;
@@ -43,11 +38,6 @@ export declare type ProfileUpdateFormValidationValues = {
     townCity?: ValidationFunction<string>;
     county?: ValidationFunction<string>;
     postcode?: ValidationFunction<string>;
-    matchPosts?: ValidationFunction<any>;
-    interestedMatchPosts?: ValidationFunction<any>;
-    playerPosts?: ValidationFunction<any>;
-    interestedPlayerPosts?: ValidationFunction<any>;
-    chats?: ValidationFunction<any>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type ProfileUpdateFormOverridesProps = {
@@ -59,11 +49,6 @@ export declare type ProfileUpdateFormOverridesProps = {
     townCity?: PrimitiveOverrideProps<TextFieldProps>;
     county?: PrimitiveOverrideProps<TextFieldProps>;
     postcode?: PrimitiveOverrideProps<TextFieldProps>;
-    matchPosts?: PrimitiveOverrideProps<AutocompleteProps>;
-    interestedMatchPosts?: PrimitiveOverrideProps<AutocompleteProps>;
-    playerPosts?: PrimitiveOverrideProps<AutocompleteProps>;
-    interestedPlayerPosts?: PrimitiveOverrideProps<AutocompleteProps>;
-    chats?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type ProfileUpdateFormProps = React.PropsWithChildren<{
     overrides?: ProfileUpdateFormOverridesProps | undefined | null;
