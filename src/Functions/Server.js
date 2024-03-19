@@ -423,6 +423,8 @@ export async function AddPlayerPostInterestedUser(profileId, playerPostId) {
 export async function RemovePlayerPostInterestedUser(interestedUserId) {
   const client = generateClient();
 
+  // TODO:
+
   const apiData = await client.graphql({
     query: deleteProfilePlayerPost,
     variables: {
@@ -435,7 +437,34 @@ export async function RemovePlayerPostInterestedUser(interestedUserId) {
   return apiData.data.deleteProfilePlayerPost;
 }
 
-export async function SelectPlayerPostPlayer(playerPostId) {
+export async function SelectPlayerPostPlayer(playerPost, selectedPlayerId) {
+  const client = generateClient();
+
+  // TODO:
+
+  let selectedPlayers = [...playerPost.selectedPlayers, selectedPlayerId];
+
+  const apiData = await client.graphql({
+    query: updatePlayerPost,
+    variables: {
+      input: {
+        id: playerPost.id,
+        selectedPlayers: selectedPlayers,
+        isActive:
+          playerPost.numOfPlayersNeeded === selectedPlayers.length
+            ? false
+            : true,
+      },
+    },
+  });
+
+  let data = apiData.data.updatePlayerPost;
+  data.interestedUsers = data.interestedUsers.items;
+  data.registeredPlayers = data.registeredPlayers.items;
+  return data;
+}
+
+export async function UnselectPlayerPostPlayer(playerPost, selectedPlayerId) {
   const client = generateClient();
 
   // TODO:
@@ -444,13 +473,19 @@ export async function SelectPlayerPostPlayer(playerPostId) {
     query: updatePlayerPost,
     variables: {
       input: {
-        id: playerPostId,
-        isActive: false,
+        id: playerPost.id,
+        selectedPlayers: playerPost.selectedPlayers.filter(
+          (id) => id !== selectedPlayerId
+        ),
+        isActive: true,
       },
     },
   });
 
-  return apiData.data.updatePlayerPost;
+  let data = apiData.data.updatePlayerPost;
+  data.interestedUsers = data.interestedUsers.items;
+  data.registeredPlayers = data.registeredPlayers.items;
+  return data;
 }
 
 export async function ReactivatePlayerPost(playerPostId) {
