@@ -79,12 +79,21 @@ export default function ViewMatchPostModal(props) {
     const removedInterestedUser = await RemoveMatchPostInterestedUser(
       interestedUserId
     );
-    setPost({
+
+    let updatedMatchPost = {
       ...post,
       interestedUsers: post.interestedUsers.filter(
         (interestedUser) => interestedUser.id !== removedInterestedUser.id
       ),
+    };
+    setPost(updatedMatchPost);
+    let updatedMatchPosts = [...matchPosts].map((playerPost) => {
+      if (playerPost.id === updatedMatchPost.id) {
+        return updatedMatchPost;
+      }
+      return post;
     });
+    setMatchPosts(updatedMatchPosts);
   }
 
   function openModal(component, title) {
@@ -154,11 +163,7 @@ export default function ViewMatchPostModal(props) {
       </Flex>
       {post.createdByProfileID === currentUser.id ? (
         <Flex width="100%" direction="column" marginTop="40px">
-          <Heading level={4}>
-            {post.selectedOpponent !== null && !post.isActive
-              ? "Selected Opponent"
-              : "Interested Coaches"}
-          </Heading>
+          <Heading level={4}>Interested Coaches</Heading>
           <Divider />
           <Table className="table" size="small" variation="striped">
             <TableHead>
@@ -182,7 +187,8 @@ export default function ViewMatchPostModal(props) {
                   <TableRow>
                     <TableCell
                       backgroundColor={
-                        post.selectedOpponent !== null
+                        post.selectedOpponent !== null &&
+                        post.selectedOpponent === interestedUser.id
                           ? "#D4AF37 "
                           : interestedUser.isCoachShown
                           ? "#008080"
@@ -223,7 +229,8 @@ export default function ViewMatchPostModal(props) {
                     </TableCell>
                     <TableCell
                       backgroundColor={
-                        post.selectedOpponent !== null
+                        post.selectedOpponent !== null &&
+                        post.selectedOpponent === interestedUser.id
                           ? "#D4AF37 "
                           : interestedUser.isTeamShown
                           ? "#008080"
@@ -262,7 +269,10 @@ export default function ViewMatchPostModal(props) {
                     </TableCell>
                     <TableCell
                       backgroundColor={
-                        post.selectedOpponent !== null ? "#D4AF37 " : ""
+                        post.selectedOpponent !== null &&
+                        post.selectedOpponent === interestedUser.id
+                          ? "#D4AF37 "
+                          : ""
                       }
                       opacity={
                         post.selectedOpponent !== null &&

@@ -26,6 +26,8 @@ import {
   deletePlayerPost,
   updatePlayerPost,
   createProfilePlayerPost,
+  createPlayerPlayerPost,
+  deletePlayerPlayerPost,
 } from "../graphql/mutations";
 import { fetchUserAttributes } from "aws-amplify/auth";
 
@@ -183,7 +185,7 @@ export async function DeleteMatchPost(matchPost) {
   const client = generateClient();
 
   matchPost.interestedUsers.forEach(async (interestedUser) => {
-    const deletedUserData = await client.graphql({
+    await client.graphql({
       query: deleteProfileMatchPost,
       variables: {
         input: {
@@ -420,10 +422,39 @@ export async function AddPlayerPostInterestedUser(profileId, playerPostId) {
   return apiData.data.createProfilePlayerPost;
 }
 
-export async function RemovePlayerPostInterestedUser(interestedUserId) {
+export async function AddPlayerPostRegisteredPlayer(playerId, playerPostId) {
   const client = generateClient();
 
-  // TODO:
+  const apiData = await client.graphql({
+    query: createPlayerPlayerPost,
+    variables: {
+      input: {
+        playerId: playerId,
+        playerPostId: playerPostId,
+      },
+    },
+  });
+
+  return apiData.data.createProfilePlayerPost;
+}
+
+export async function RemovePlayerPostRegisteredPlayer(registeredPlayerId) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: deletePlayerPlayerPost,
+    variables: {
+      input: {
+        id: registeredPlayerId,
+      },
+    },
+  });
+
+  return apiData.data.deletePlayerPlayerPost;
+}
+
+export async function RemovePlayerPostInterestedUser(interestedUserId) {
+  const client = generateClient();
 
   const apiData = await client.graphql({
     query: deleteProfilePlayerPost,
@@ -434,13 +465,11 @@ export async function RemovePlayerPostInterestedUser(interestedUserId) {
     },
   });
 
-  return apiData.data.deleteProfilePlayerPost;
+  return apiData.data.deleteProfilePlayerPost.id;
 }
 
 export async function SelectPlayerPostPlayer(playerPost, selectedPlayerId) {
   const client = generateClient();
-
-  // TODO:
 
   let selectedPlayers = [...playerPost.selectedPlayers, selectedPlayerId];
 
@@ -466,8 +495,6 @@ export async function SelectPlayerPostPlayer(playerPost, selectedPlayerId) {
 
 export async function UnselectPlayerPostPlayer(playerPost, selectedPlayerId) {
   const client = generateClient();
-
-  // TODO:
 
   const apiData = await client.graphql({
     query: updatePlayerPost,

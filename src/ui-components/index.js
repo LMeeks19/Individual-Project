@@ -16,6 +16,7 @@ export { default as PlayerPostUpdateForm } from "./PlayerPostUpdateForm";
 export { default as PlayerUpdateForm } from "./PlayerUpdateForm";
 export { default as ProfileCreateForm } from "./ProfileCreateForm";
 export { default as ProfileUpdateForm } from "./ProfileUpdateForm";
+export { default as RegisterPlayerPostPlayerForm } from "./RegisterPlayerPostPlayerForm";
 export { default as TeamCreateForm } from "./TeamCreateForm";
 export { default as TeamPlayerCreateForm } from "./TeamPlayerCreateForm";
 export { default as TeamPlayerUpdateForm } from "./TeamPlayerUpdateForm";

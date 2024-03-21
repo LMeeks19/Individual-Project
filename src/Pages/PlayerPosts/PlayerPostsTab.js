@@ -33,6 +33,7 @@ import {
 } from "../../Functions/Server";
 import ViewPlayerPostModal from "../../Modals/PlayerPostModals/ViewPlayerPostModal";
 import UpdatePlayerPostModal from "../../Modals/PlayerPostModals/UpdatePlayerPostModal";
+import RegisterPlayerModal from "../../Modals/PlayerPostModals/RegisterPlayerModal";
 
 export default function PlayerPostsTab(props) {
   const [page, setPage] = useState(0);
@@ -71,41 +72,6 @@ export default function PlayerPostsTab(props) {
       return post;
     });
     setPlayerPosts(updatedPlayerPosts);
-  }
-
-  async function registerInterest(profileId, playerPostId) {
-    let addedInterestedUser = await AddPlayerPostInterestedUser(
-      profileId,
-      playerPostId
-    );
-    let updatedPosts = playerPosts.map((post) => {
-      if (post.id === addedInterestedUser.playerPostId) {
-        return {
-          ...post,
-          interestedUsers: [...post.interestedUsers, addedInterestedUser],
-        };
-      }
-      return post;
-    });
-    setPlayerPosts(updatedPosts);
-  }
-
-  async function unRegisterInterest(interestedUserId) {
-    let removedInterestedUser = await RemovePlayerPostInterestedUser(
-      interestedUserId
-    );
-    let updatedPosts = playerPosts.map((post) => {
-      if (post.id === removedInterestedUser.playerPostId) {
-        return {
-          ...post,
-          interestedUsers: post.interestedUsers.filter(
-            (interestedUser) => interestedUser.id !== removedInterestedUser.id
-          ),
-        };
-      }
-      return post;
-    });
-    setPlayerPosts(updatedPosts);
   }
 
   function openModal(component, title) {
@@ -217,33 +183,25 @@ export default function PlayerPostsTab(props) {
                               />
                             </Tooltip>
                             <Divider orientation="vertical" />
-                            {!post.interestedUsers.some(
+                            {post.interestedUsers.some(
                               (interestedUser) =>
                                 interestedUser.profileId ===
                                 props.currentUser.id
                             ) ? (
+                              <Tooltip title="Unregister Interest" arrow>
+                                <ThumbUpAlt
+                                  className="icon"
+                                  // TODO: Unregister Interest
+                                />
+                              </Tooltip>
+                            ) : (
                               <Tooltip title="Register Interest" arrow>
                                 <ThumbUpOffAlt
                                   className="icon"
                                   onClick={() =>
-                                    registerInterest(
-                                      props.currentUser.id,
-                                      post.id
-                                    )
-                                  }
-                                />
-                              </Tooltip>
-                            ) : (
-                              <Tooltip title="Unregister Interest" arrow>
-                                <ThumbUpAlt
-                                  className="icon"
-                                  onClick={() =>
-                                    unRegisterInterest(
-                                      post.interestedUsers.find(
-                                        (interestedUser) =>
-                                          interestedUser.profileId ===
-                                          props.currentUser.id
-                                      ).id
+                                    openModal(
+                                      <RegisterPlayerModal playerPost={post} />,
+                                      "Register Player"
                                     )
                                   }
                                 />

@@ -9,6 +9,7 @@ import {
   TableRow,
   Text,
   View,
+  Badge,
 } from "@aws-amplify/ui-react";
 import { format } from "date-fns";
 import "./ViewPlayerPostModal.css";
@@ -18,6 +19,7 @@ import {
   KeyboardArrowDown,
   KeyboardArrowUp,
   Message,
+  Replay,
 } from "@mui/icons-material";
 import { Tooltip } from "@mui/material";
 import { useState } from "react";
@@ -30,15 +32,13 @@ import {
 import { useNavigate } from "react-router-dom";
 import {
   RemovePlayerPostInterestedUser,
+  RemovePlayerPostRegisteredPlayer,
   SelectPlayerPostPlayer,
-  UnselectPlayerPostPlayer
+  UnselectPlayerPostPlayer,
 } from "../../Functions/Server";
 import ConfirmModal from "../ConfirmModal";
 
 export default function ViewPlayerPostModal(props) {
-
-  // TODO: Update Modal
-
   const currentUser = useRecoilValue(currentUserState);
   const navigate = useNavigate();
   const setModal = useSetRecoilState(modalState);
@@ -49,11 +49,89 @@ export default function ViewPlayerPostModal(props) {
     return format(new Date(date), "do MMMM yyyy @ H:mm a");
   }
 
-  function updateIsShown(id, field) {}
+  function updateIsShown(id, field) {
+    let updatedList = [...post.registeredPlayers].map((item) => {
+      if (item.id === id && field === "parent")
+        return { ...item, isParentShown: !item.isParentShown };
+      else if (item.id === id && field === "player")
+        return { ...item, isPlayerShown: !item.isPlayerShown };
+      else return item;
+    });
 
-  async function acceptCoach(interestedUserId) {}
+    setPost({
+      ...post,
+      registeredPlayers: updatedList,
+    });
+  }
 
-  async function rejectCoach(interestedUserId) {}
+  async function acceptPlayer(registeredPlayerId) {
+    const updatedPlayerPost = await SelectPlayerPostPlayer(
+      post,
+      registeredPlayerId
+    );
+    setPost(updatedPlayerPost);
+    let updatedPlayerPosts = [...playerPosts].map((post) => {
+      if (post.id === updatedPlayerPost.id) {
+        return updatedPlayerPost;
+      }
+      return post;
+    });
+    setPlayerPosts(updatedPlayerPosts);
+  }
+
+  async function undoPlayerSelection(registeredPlayerId) {
+    const updatedPlayerPost = await UnselectPlayerPostPlayer(
+      post,
+      registeredPlayerId
+    );
+    setPost(updatedPlayerPost);
+    let updatedPlayerPosts = [...playerPosts].map((post) => {
+      if (post.id === updatedPlayerPost.id) {
+        return updatedPlayerPost;
+      }
+      return post;
+    });
+    setPlayerPosts(updatedPlayerPosts);
+  }
+
+  async function rejectPlayer(registeredPlayerId) {
+    const removedRegisteredPlayer = await RemovePlayerPostRegisteredPlayer(
+      registeredPlayerId
+    );
+    let updatedRegisteredPlayers = post.registeredPlayers.filter(
+      (registeredPlayer) => registeredPlayer.id !== removedRegisteredPlayer.id
+    );
+
+    let removedInterestedUserIds = [...post.interestedUsers].map(
+      async (interestedUser) => {
+        if (
+          updatedRegisteredPlayers.some(
+            (rp) => rp.player.profileID === interestedUser.profileId
+          )
+        ) {
+          return;
+        }
+        return await RemovePlayerPostInterestedUser(interestedUser.id);
+      }
+    );
+
+    let updatedPlayerPost = {
+      ...post,
+      interestedUsers: post.interestedUsers.filter(
+        (iu) => !removedInterestedUserIds.includes(iu.id)
+      ),
+      registeredPlayers: updatedRegisteredPlayers,
+    };
+    setPost(updatedPlayerPost);
+
+    let updatedPlayerPosts = [...playerPosts].map((playerPost) => {
+      if (playerPost.id === updatedPlayerPost.id) {
+        return updatedPlayerPost;
+      }
+      return post;
+    });
+    setPlayerPosts(updatedPlayerPosts);
+  }
 
   function openModal(component, title) {
     setModal({ component: component, title: title, isShown: true });
@@ -63,7 +141,7 @@ export default function ViewPlayerPostModal(props) {
     <View className="content">
       <Flex direction="row" justifyContent="space-evenly" gap="80px">
         <Flex width="50%" direction="column">
-          <Heading level={4}>Post Details</Heading>
+          <Heading level={4}>Player Post Details</Heading>
           <Divider />
           <Text>
             <b>Title:</b> {post.title}
@@ -71,15 +149,14 @@ export default function ViewPlayerPostModal(props) {
           <Text>
             <b>CreatedBy:</b> {post.createdByName}
           </Text>
-          <Text>
-            <b>Created On:</b> {formatDateTime(post.createdAt)}
-          </Text>
           {post.updatedAt !== post.createdAt ? (
             <Text>
               <b>Last Updated On:</b> {formatDateTime(post.updatedAt)}
             </Text>
           ) : (
-            <></>
+            <Text>
+              <b>Created On:</b> {formatDateTime(post.createdAt)}
+            </Text>
           )}
           <Text>
             <b>Description:</b> {post.description}
@@ -91,87 +168,81 @@ export default function ViewPlayerPostModal(props) {
           </Heading>
           <Divider />
           <Text>
-            <b>Team:</b> {post.teamName}
+            <b>Positions Needed:</b>
+            {post.positionsNeeded.map((position) => {
+              return (
+                <Badge marginLeft="5px" marginRight="5px" key={position}>
+                  {position}
+                </Badge>
+              );
+            })}
           </Text>
           <Text>
-            <b>Game Type:</b> {post.gameType}
+            <b>No. Players Needed:</b> {post.numOfPlayersNeeded}
           </Text>
           <Text>
             <b>Age Group:</b> {post.ageGroup}
           </Text>
           <Text>
-            <b>Team Size:</b> {post.teamSize} a side
-          </Text>
-          <Text>
-            <b>Limit Substitutions:</b> {post.substitutionLimit ? "Yes" : "No"}
-          </Text>
-          <Text>
-            <b>Cards:</b> {post.cards ? "Yes" : "No"}
-          </Text>
-          <Text>
-            <b>Half Length:</b> {post.halfLength} minutes
+            <b>Skill Level:</b> {post.skillLevel}
           </Text>
           <Text>
             <b>Kick Off:</b> {formatDateTime(post.kickOff)}
           </Text>
           <Text>
-            <b>Venue:</b> {post.street}, {post.townCity}, {post.county},{" "}
+            <b>Venue:</b> {post.street}, {post.townCity}, {post.county},
             {post.postcode}
           </Text>
         </Flex>
       </Flex>
       {post.createdByProfileID === currentUser.id ? (
         <Flex width="100%" direction="column" marginTop="40px">
-          <Heading level={4}>
-            {post.selectedOpponent !== null && !post.isActive
-              ? "Selected Opponent"
-              : "Interested Coaches"}
-          </Heading>
+          <Heading level={4}>Interested Parents</Heading>
           <Divider />
           <Table className="table" size="small" variation="striped">
             <TableHead>
-              {post.interestedUsers?.length > 0 ? (
+              {post.registeredPlayers?.length > 0 ? (
                 <TableRow>
-                  <TableCell as="th">Coach</TableCell>
-                  <TableCell as="th">Team</TableCell>
+                  <TableCell as="th">Parent</TableCell>
+                  <TableCell as="th">Player</TableCell>
                   <TableCell as="th">Actions</TableCell>
                 </TableRow>
               ) : (
                 <TableRow>
                   <TableCell textAlign="center" colSpan={4}>
-                    No Coaches Interested
+                    No Parents Interested
                   </TableCell>
                 </TableRow>
               )}
             </TableHead>
-            {post.interestedUsers?.map((interestedUser) => {
+            {post.registeredPlayers?.map((registeredPlayer) => {
               return (
-                <TableBody key={interestedUser.id}>
+                <TableBody key={registeredPlayer.id}>
                   <TableRow>
                     <TableCell
                       backgroundColor={
-                        post.selectedOpponent !== null
+                        post.selectedPlayers.includes(registeredPlayer.id)
                           ? "#D4AF37 "
-                          : interestedUser.isCoachShown
+                          : registeredPlayer.isCoachShown
                           ? "#008080"
                           : ""
                       }
                       opacity={
-                        post.selectedOpponent !== null &&
-                        post.selectedOpponent !== interestedUser.id
+                        !post.selectedPlayers.includes(registeredPlayer.id) &&
+                        post.selectedPlayers.length === post.numOfPlayersNeeded
                           ? "75%"
                           : ""
                       }
-                      fontWeight={interestedUser.isCoachShown ? "bold" : ""}
+                      fontWeight={registeredPlayer.isCoachShown ? "bold" : ""}
                     >
                       <Tooltip
                         title={
-                          interestedUser.isCoachShown
-                            ? "Collapse Coach"
-                            : "Expand Coach"
+                          registeredPlayer.isParentShown
+                            ? "Collapse Parent"
+                            : "Expand Parent"
                         }
                         onClick={() =>
-                          updateIsShown(interestedUser.id, "coach")
+                          updateIsShown(registeredPlayer.id, "parent")
                         }
                         arrow
                       >
@@ -180,8 +251,14 @@ export default function ViewPlayerPostModal(props) {
                           justifyContent="space-between"
                           alignItems="center"
                         >
-                          {interestedUser.profile.name}
-                          {interestedUser.isCoachShown ? (
+                          {
+                            post.interestedUsers.find(
+                              (iu) =>
+                                iu.profileId ===
+                                registeredPlayer.player.profileID
+                            ).profile.name
+                          }
+                          {registeredPlayer.isParentShown ? (
                             <KeyboardArrowUp />
                           ) : (
                             <KeyboardArrowDown />
@@ -191,27 +268,29 @@ export default function ViewPlayerPostModal(props) {
                     </TableCell>
                     <TableCell
                       backgroundColor={
-                        post.selectedOpponent !== null
-                          ? "#D4AF37 "
-                          : interestedUser.isTeamShown
+                        post.selectedPlayers.includes(registeredPlayer.id)
+                          ? "#D4AF37"
+                          : registeredPlayer.isTeamShown
                           ? "#008080"
                           : ""
                       }
                       opacity={
-                        post.selectedOpponent !== null &&
-                        post.selectedOpponent !== interestedUser.id
+                        !post.selectedPlayers.includes(registeredPlayer.id) &&
+                        post.selectedPlayers.length === post.numOfPlayersNeeded
                           ? "75%"
                           : ""
                       }
-                      fontWeight={interestedUser.isTeamShown ? "bold" : ""}
+                      fontWeight={registeredPlayer.isTeamShown ? "bold" : ""}
                     >
                       <Tooltip
                         title={
-                          interestedUser.isTeamShown
-                            ? "Collapse Team"
-                            : "Expand Team"
+                          registeredPlayer.isPlayerShown
+                            ? "Collapse Player"
+                            : "Expand Player"
                         }
-                        onClick={() => updateIsShown(interestedUser.id, "team")}
+                        onClick={() =>
+                          updateIsShown(registeredPlayer.id, "player")
+                        }
                         arrow
                       >
                         <Flex
@@ -219,8 +298,8 @@ export default function ViewPlayerPostModal(props) {
                           justifyContent="space-between"
                           alignItems="center"
                         >
-                          {interestedUser.profile.team.items[0].name}
-                          {interestedUser.isTeamShown ? (
+                          {registeredPlayer.player.name}
+                          {registeredPlayer.isPlayerShown ? (
                             <KeyboardArrowUp />
                           ) : (
                             <KeyboardArrowDown />
@@ -230,16 +309,18 @@ export default function ViewPlayerPostModal(props) {
                     </TableCell>
                     <TableCell
                       backgroundColor={
-                        post.selectedOpponent !== null ? "#D4AF37 " : ""
+                        post.selectedPlayers.includes(registeredPlayer.id)
+                          ? "#D4AF37 "
+                          : ""
                       }
                       opacity={
-                        post.selectedOpponent !== null &&
-                        post.selectedOpponent !== interestedUser.id
+                        !post.selectedPlayers.includes(registeredPlayer.id) &&
+                        post.selectedPlayers.length === post.numOfPlayersNeeded
                           ? "75%"
                           : ""
                       }
                     >
-                      {post.selectedOpponent === null ? (
+                      {post.isActive ? (
                         <Flex
                           justifyContent="center"
                           alignItems="center"
@@ -258,28 +339,48 @@ export default function ViewPlayerPostModal(props) {
                               }}
                             />
                           </Tooltip>
-
-                          <Tooltip title="Accept" arrow>
-                            <Done
-                              className="icon green"
-                              onClick={() =>
-                                openModal(
-                                  <ConfirmModal
-                                    function={() =>
-                                      acceptCoach(interestedUser.id)
-                                    }
-                                  />,
-                                  "Confirm"
-                                )
-                              }
-                            />
-                          </Tooltip>
-                          <Tooltip title="Reject" arrow>
-                            <Close
-                              className="icon red"
-                              onClick={() => rejectCoach(interestedUser.id)}
-                            />
-                          </Tooltip>
+                          {!post.selectedPlayers.includes(
+                            registeredPlayer.id
+                          ) ? (
+                            <Tooltip title="Accept" arrow>
+                              <Done
+                                className="icon green"
+                                onClick={() =>
+                                  openModal(
+                                    <ConfirmModal
+                                      function={() =>
+                                        acceptPlayer(registeredPlayer.id)
+                                      }
+                                    />,
+                                    "Confirm Player Selection"
+                                  )
+                                }
+                              />
+                            </Tooltip>
+                          ) : (
+                            <></>
+                          )}
+                          {!post.selectedPlayers.includes(
+                            registeredPlayer.id
+                          ) ? (
+                            <Tooltip title="Reject" arrow>
+                              <Close
+                                className="icon red"
+                                onClick={() =>
+                                  rejectPlayer(registeredPlayer.id)
+                                }
+                              />
+                            </Tooltip>
+                          ) : (
+                            <Tooltip title="Undo Selection" arrow>
+                              <Replay
+                                className="icon"
+                                onClick={() =>
+                                  undoPlayerSelection(registeredPlayer.id)
+                                }
+                              />
+                            </Tooltip>
+                          )}
                         </Flex>
                       ) : (
                         <Flex justifyContent="center" alignItems="center">
@@ -288,18 +389,19 @@ export default function ViewPlayerPostModal(props) {
                       )}
                     </TableCell>
                   </TableRow>
-                  {interestedUser.isCoachShown ? (
+                  {registeredPlayer.isParentShown ? (
                     <>
                       <TableRow
                         as="th"
                         backgroundColor={
-                          post.selectedOpponent !== null
+                          post.selectedPlayers.includes(registeredPlayer.id)
                             ? "#D4AF37 "
                             : "#008080"
                         }
                         opacity={
-                          post.selectedOpponent !== null &&
-                          post.selectedOpponent !== interestedUser.id
+                          !post.selectedPlayers.includes(registeredPlayer.id) &&
+                          post.selectedPlayers.length ===
+                            post.numOfPlayersNeeded
                             ? "75%"
                             : ""
                         }
@@ -311,59 +413,86 @@ export default function ViewPlayerPostModal(props) {
                       </TableRow>
                       <TableRow
                         opacity={
-                          post.selectedOpponent !== null &&
-                          post.selectedOpponent !== interestedUser.id
+                          !post.selectedPlayers.includes(registeredPlayer.id) &&
+                          post.selectedPlayers.length ===
+                            post.numOfPlayersNeeded
                             ? "75%"
                             : ""
                         }
                       >
-                        <TableCell>{interestedUser.profile.username}</TableCell>
-                        <TableCell>{interestedUser.profile.email}</TableCell>
                         <TableCell>
-                          {interestedUser.profile.phoneNumber}
+                          {
+                            post.interestedUsers.find(
+                              (iu) =>
+                                iu.profileId ===
+                                registeredPlayer.player.profileID
+                            ).profile.username
+                          }
+                        </TableCell>
+                        <TableCell>
+                          {
+                            post.interestedUsers.find(
+                              (iu) =>
+                                iu.profileId ===
+                                registeredPlayer.player.profileID
+                            ).profile.email
+                          }
+                        </TableCell>
+                        <TableCell>
+                          {
+                            post.interestedUsers.find(
+                              (iu) =>
+                                iu.profileId ===
+                                registeredPlayer.player.profileID
+                            ).profile.phoneNumber
+                          }
                         </TableCell>
                       </TableRow>
                     </>
                   ) : (
                     <></>
                   )}
-                  {interestedUser.isTeamShown ? (
+                  {registeredPlayer.isPlayerShown ? (
                     <>
                       <TableRow
                         as="th"
                         backgroundColor={
-                          post.selectedOpponent !== null
+                          post.selectedPlayers.includes(registeredPlayer.id)
                             ? "#D4AF37 "
                             : "#008080"
                         }
                         opacity={
-                          post.selectedOpponent !== null &&
-                          post.selectedOpponent !== interestedUser.id
+                          !post.selectedPlayers.includes(registeredPlayer.id) &&
+                          post.selectedPlayers.length ===
+                            post.numOfPlayersNeeded
                             ? "75%"
                             : ""
                         }
                         fontWeight="bold"
                       >
-                        <TableCell fontWeight="bold">League</TableCell>
                         <TableCell fontWeight="bold">Age Group</TableCell>
-                        <TableCell fontWeight="bold">Location</TableCell>
+                        <TableCell fontWeight="bold">Skill Level</TableCell>
+                        <TableCell fontWeight="bold">Positions</TableCell>
                       </TableRow>
                       <TableRow
                         opacity={
-                          post.selectedOpponent !== null &&
-                          post.selectedOpponent !== interestedUser.id
+                          !post.selectedPlayers.includes(registeredPlayer.id) &&
+                          post.selectedPlayers.length ===
+                            post.numOfPlayersNeeded
                             ? "75%"
                             : ""
                         }
                       >
                         <TableCell>
-                          {interestedUser.profile.team.items[0].league}
+                          {registeredPlayer.player.ageGroup}
                         </TableCell>
                         <TableCell>
-                          {interestedUser.profile.team.items[0].ageGroup}
+                          {registeredPlayer.player.skillLevel}
                         </TableCell>
                         <TableCell>
-                          {interestedUser.profile.team.items[0].location}
+                          {registeredPlayer.player.positions.map((position) => {
+                            return <Badge key={position}>{position}</Badge>;
+                          })}
                         </TableCell>
                       </TableRow>
                     </>

@@ -858,6 +858,37 @@ export const updateMatchPost = /* GraphQL */ `
           id
           profileId
           matchPostId
+          profile {
+            id
+            username
+            name
+            dob
+            email
+            accountType
+            street
+            townCity
+            county
+            postcode
+            phoneNumber
+            team {
+              items {
+                id
+                name
+                league
+                ageGroup
+                location
+                email
+                phoneNumber
+                website
+                profileID
+                createdAt
+                updatedAt
+                __typename
+              }
+              nextToken
+              __typename
+            }
+          }
           createdAt
           updatedAt
           __typename

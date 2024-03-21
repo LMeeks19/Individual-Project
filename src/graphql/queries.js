@@ -723,6 +723,17 @@ export const listPlayerPosts = /* GraphQL */ `
               county
               postcode
               phoneNumber
+              players {
+                items {
+                  id
+                  name
+                  dob
+                  ageGroup
+                  positions
+                  skillLevel
+                  profileID
+                }
+              }
             }
           }
           nextToken
