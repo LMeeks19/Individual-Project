@@ -6,6 +6,7 @@ import {
   modalState,
   playerPostsState,
 } from "../../Functions/GlobalState";
+import SnackbarAlert from "../../Components/Snackbar";
 
 export default function CreatePlayerPostModal() {
   const currentUser = useRecoilValue(currentUserState);
@@ -27,9 +28,15 @@ export default function CreatePlayerPostModal() {
           return updatedFields;
         }}
         onSuccess={(data) => {
-          data.interestedUsers = []
+          data.interestedUsers = [];
           setPlayerPosts([...playerPosts, data]);
+          new SnackbarAlert().success("Player Post successfully created");
           setModal({ component: null, title: null, isShown: false });
+        }}
+        onError={(error) => {
+          new SnackbarAlert().error(
+            "Unable to create Player Post, please try again"
+          );
         }}
       />
     </View>

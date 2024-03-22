@@ -30,6 +30,7 @@ import {
   deletePlayerPlayerPost,
 } from "../graphql/mutations";
 import { fetchUserAttributes } from "aws-amplify/auth";
+import SnackbarAlert from "../Components/Snackbar";
 
 // Profile API Calls
 export async function GetProfile(user) {
@@ -61,32 +62,47 @@ export async function GetProfile(user) {
 export async function DeleteProfile(id) {
   const client = generateClient();
 
-  const deletedProfile = await client.graphql({
-    query: deleteProfileMutation,
-    variables: {
-      input: {
-        id: id,
+  try {
+    const deletedProfile = await client.graphql({
+      query: deleteProfileMutation,
+      variables: {
+        input: {
+          id: id,
+        },
       },
-    },
-  });
+    });
 
-  return deletedProfile.data.deleteProfile;
+    new SnackbarAlert().success("Profile successfully deleted");
+    return deletedProfile.data.deleteProfile;
+  } catch (e) {
+    new SnackbarAlert().error(
+      "Unable to delete Profile, please try again later"
+    );
+    return {};
+  }
 }
 
 // Player API Calls
 export async function DeletePlayer(id) {
   const client = generateClient();
 
-  const apiData = await client.graphql({
-    query: deletePlayerMutation,
-    variables: {
-      input: {
-        id: id,
+  try {
+    const apiData = await client.graphql({
+      query: deletePlayerMutation,
+      variables: {
+        input: {
+          id: id,
+        },
       },
-    },
-  });
-
-  return apiData.data.deletePlayer.id;
+    });
+    new SnackbarAlert().success("Player successfully deleted");
+    return apiData.data.deletePlayer.id;
+  } catch (e) {
+    new SnackbarAlert().error(
+      "Unable to delete Player, please try again later"
+    );
+    return null;
+  }
 }
 
 export async function GetPlayersByProfileId(profileId) {
@@ -104,16 +120,21 @@ export async function GetPlayersByProfileId(profileId) {
 export async function DeleteTeam(team) {
   const client = generateClient();
 
-  team.players.forEach((player) => DeleteTeamPlayer(player.id));
+  try {
+    team.players.forEach((player) => DeleteTeamPlayer(player.id));
 
-  await client.graphql({
-    query: deleteTeamMutation,
-    variables: {
-      input: {
-        id: team.id,
+    await client.graphql({
+      query: deleteTeamMutation,
+      variables: {
+        input: {
+          id: team.id,
+        },
       },
-    },
-  });
+    });
+    new SnackbarAlert().success("Team successfully deleted");
+  } catch (e) {
+    new SnackbarAlert().error("Unable to delete Team, please try again later");
+  }
 }
 
 export async function GetTeamByProfileId(profileId) {
@@ -144,16 +165,23 @@ export async function GetTeamByProfileId(profileId) {
 export async function DeleteTeamPlayer(id) {
   const client = generateClient();
 
-  const apiData = await client.graphql({
-    query: deleteTeamPlayerMutation,
-    variables: {
-      input: {
-        id: id,
+  try {
+    const apiData = await client.graphql({
+      query: deleteTeamPlayerMutation,
+      variables: {
+        input: {
+          id: id,
+        },
       },
-    },
-  });
-
-  return apiData.data.deleteTeamPlayer.id;
+    });
+    new SnackbarAlert().success("Team Player Successfully deleted");
+    return apiData.data.deleteTeamPlayer.id;
+  } catch (e) {
+    new SnackbarAlert().error(
+      "Unable to delete Team Player, please try again later"
+    );
+    return null;
+  }
 }
 
 export async function GetTeamPlayersByTeamId(teamId) {
@@ -184,96 +212,134 @@ export async function GetMatchPosts() {
 export async function DeleteMatchPost(matchPost) {
   const client = generateClient();
 
-  matchPost.interestedUsers.forEach(async (interestedUser) => {
-    await client.graphql({
-      query: deleteProfileMatchPost,
+  try {
+    matchPost.interestedUsers.forEach(async (interestedUser) => {
+      await client.graphql({
+        query: deleteProfileMatchPost,
+        variables: {
+          input: {
+            id: interestedUser.id,
+          },
+        },
+      });
+    });
+
+    const apiData = await client.graphql({
+      query: deleteMatchPostMutation,
       variables: {
         input: {
-          id: interestedUser.id,
+          id: matchPost.id,
         },
       },
     });
-  });
-
-  const apiData = await client.graphql({
-    query: deleteMatchPostMutation,
-    variables: {
-      input: {
-        id: matchPost.id,
-      },
-    },
-  });
-
-  return apiData.data.deleteMatchPost.id;
+    new SnackbarAlert().success("Match Post successfully deleted");
+    return apiData.data.deleteMatchPost.id;
+  } catch (e) {
+    new SnackbarAlert().error(
+      "Unable to delete Match Post, please try again later"
+    );
+    return null;
+  }
 }
 
 export async function AddMatchPostInterestedUser(profileId, matchPostId) {
   const client = generateClient();
 
-  const apiData = await client.graphql({
-    query: createProfileMatchPost,
-    variables: {
-      input: {
-        profileId: profileId,
-        matchPostId: matchPostId,
+  try {
+    const apiData = await client.graphql({
+      query: createProfileMatchPost,
+      variables: {
+        input: {
+          profileId: profileId,
+          matchPostId: matchPostId,
+        },
       },
-    },
-  });
-
-  return apiData.data.createProfileMatchPost;
+    });
+    new SnackbarAlert().success("Match Posts interest successfully registered");
+    return apiData.data.createProfileMatchPost;
+  } catch (e) {
+    new SnackbarAlert().error(
+      "Unable to register interest in this Match Post, please try again later"
+    );
+    return {};
+  }
 }
 
 export async function RemoveMatchPostInterestedUser(interestedUserId) {
   const client = generateClient();
 
-  const apiData = await client.graphql({
-    query: deleteProfileMatchPost,
-    variables: {
-      input: {
-        id: interestedUserId,
+  try {
+    const apiData = await client.graphql({
+      query: deleteProfileMatchPost,
+      variables: {
+        input: {
+          id: interestedUserId,
+        },
       },
-    },
-  });
-
-  return apiData.data.deleteProfileMatchPost;
+    });
+    new SnackbarAlert().success(
+      "Match Posts interest successfully unregistered"
+    );
+    return apiData.data.deleteProfileMatchPost;
+  } catch (e) {
+    new SnackbarAlert().error(
+      "Unable to unregister interest in this Match Post, please try again later"
+    );
+    return {};
+  }
 }
 
 export async function SelectMatchPostOpponent(matchPostId, interestedUserId) {
   const client = generateClient();
 
-  const apiData = await client.graphql({
-    query: updateMatchPost,
-    variables: {
-      input: {
-        id: matchPostId,
-        selectedOpponent: interestedUserId,
-        isActive: false,
+  try {
+    const apiData = await client.graphql({
+      query: updateMatchPost,
+      variables: {
+        input: {
+          id: matchPostId,
+          selectedOpponent: interestedUserId,
+          isActive: false,
+        },
       },
-    },
-  });
+    });
 
-  let data = apiData.data.updateMatchPost;
-  data.interestedUsers = data.interestedUsers.items;
-  return data;
+    let data = apiData.data.updateMatchPost;
+    data.interestedUsers = data.interestedUsers.items;
+    new SnackbarAlert().success("Match Post opponent successfully selected");
+    return data;
+  } catch (e) {
+    new SnackbarAlert().error(
+      "Unable to select opponent for this Match Post, please try again later"
+    );
+    return {};
+  }
 }
 
-export async function ReactivateMatchPost(matchPostId, interestedUserId) {
+export async function ReactivateMatchPost(matchPostId) {
   const client = generateClient();
-
-  const apiData = await client.graphql({
-    query: updateMatchPost,
-    variables: {
-      input: {
-        id: matchPostId,
-        selectedOpponent: null,
-        isActive: true,
+  try {
+    const apiData = await client.graphql({
+      query: updateMatchPost,
+      variables: {
+        input: {
+          id: matchPostId,
+          selectedOpponent: null,
+          isActive: true,
+        },
       },
-    },
-  });
+    });
 
-  let data = apiData.data.updateMatchPost;
-  data.interestedUsers = data.interestedUsers.items;
-  return data;
+    let data = apiData.data.updateMatchPost;
+    data.interestedUsers = data.interestedUsers.items;
+    new SnackbarAlert().success("Match Post successfully reactivated");
+    return data;
+  } catch (e) {
+    new SnackbarAlert().error(
+      "Unable to reactivate this Match Post, please try again later"
+    );
+    return {};
+  }
 }
 
 // Chat API Calls
@@ -326,39 +392,45 @@ export async function DeleteChat(chat, currentUserId) {
   const client = generateClient();
   let updatedChat = [];
 
-  chat.users.forEach(async (user) => {
-    if (user.profileId === currentUserId) {
-      const deletedUserId = await client.graphql({
-        query: deleteProfileChat,
-        variables: {
-          input: {
-            id: user.id,
+  try {
+    chat.users.forEach(async (user) => {
+      if (user.profileId === currentUserId) {
+        const deletedUserId = await client.graphql({
+          query: deleteProfileChat,
+          variables: {
+            input: {
+              id: user.id,
+            },
           },
-        },
-      }).data.deleteProfileChat.id;
+        }).data.deleteProfileChat.id;
 
-      updatedChat = await client.graphql({
-        query: updateChat,
+        updatedChat = await client.graphql({
+          query: updateChat,
+          variables: {
+            input: {
+              id: chat.id,
+              user: chat.users.filter((user) => user.id !== deletedUserId),
+            },
+          },
+        }).data.updateChat;
+      }
+    });
+
+    if (updatedChat.users.length === 0) {
+      const apiData = await client.graphql({
+        query: deleteChat,
         variables: {
           input: {
             id: chat.id,
-            user: chat.users.filter((user) => user.id !== deletedUserId),
           },
         },
-      }).data.updateChat;
+      });
+      new SnackbarAlert().success("Chat successfully deleted");
+      return apiData.data.deleteChat.id;
     }
-  });
-
-  if (updatedChat.users.length === 0) {
-    const apiData = await client.graphql({
-      query: deleteChat,
-      variables: {
-        input: {
-          id: chat.id,
-        },
-      },
-    });
-    return apiData.data.deleteChat.id;
+    new SnackbarAlert().success("Chat successfully deleted");
+  } catch (e) {
+    new SnackbarAlert().error("Unable to delete Chat, please try again later");
   }
   return null;
 }
@@ -383,154 +455,221 @@ export async function GetPlayerPosts() {
 export async function DeletePlayerPost(playerPost) {
   const client = generateClient();
 
-  playerPost.interestedUsers.forEach(async (interestedUser) => {
-    await client.graphql({
-      query: deleteProfilePlayerPost,
+  try {
+    playerPost.interestedUsers.forEach(async (interestedUser) => {
+      await client.graphql({
+        query: deleteProfilePlayerPost,
+        variables: {
+          input: {
+            id: interestedUser.id,
+          },
+        },
+      });
+    });
+
+    playerPost.registeredPlayers.forEach(async (registeredPlayers) => {
+      await client.graphql({
+        query: deletePlayerPlayerPost,
+        variables: {
+          input: {
+            id: registeredPlayers.id,
+          },
+        },
+      });
+    });
+
+    const apiData = await client.graphql({
+      query: deletePlayerPost,
       variables: {
         input: {
-          id: interestedUser.id,
+          id: playerPost.id,
         },
       },
     });
-  });
-
-  const apiData = await client.graphql({
-    query: deletePlayerPost,
-    variables: {
-      input: {
-        id: playerPost.id,
-      },
-    },
-  });
-
-  return apiData.data.deletePlayerPost.id;
+    new SnackbarAlert().success("Player Post successfully deleted");
+    return apiData.data.deletePlayerPost.id;
+  } catch (e) {
+    new SnackbarAlert().error(
+      "Unable to delete Player Post, please try again later"
+    );
+    return null;
+  }
 }
 
 export async function AddPlayerPostInterestedUser(profileId, playerPostId) {
   const client = generateClient();
 
-  const apiData = await client.graphql({
-    query: createProfilePlayerPost,
-    variables: {
-      input: {
-        profileId: profileId,
-        playerPostId: playerPostId,
+  try {
+    const apiData = await client.graphql({
+      query: createProfilePlayerPost,
+      variables: {
+        input: {
+          profileId: profileId,
+          playerPostId: playerPostId,
+        },
       },
-    },
-  });
-
-  return apiData.data.createProfilePlayerPost;
+    });
+    new SnackbarAlert().success("Player Post interest successfully registered");
+    return apiData.data.createProfilePlayerPost;
+  } catch (e) {
+    new SnackbarAlert().error(
+      "Unable to register interest in this Player Post, please try again later"
+    );
+    return {};
+  }
 }
 
 export async function AddPlayerPostRegisteredPlayer(playerId, playerPostId) {
   const client = generateClient();
-
-  const apiData = await client.graphql({
-    query: createPlayerPlayerPost,
-    variables: {
-      input: {
-        playerId: playerId,
-        playerPostId: playerPostId,
+  try {
+    const apiData = await client.graphql({
+      query: createPlayerPlayerPost,
+      variables: {
+        input: {
+          playerId: playerId,
+          playerPostId: playerPostId,
+        },
       },
-    },
-  });
-
-  return apiData.data.createProfilePlayerPost;
+    });
+    new SnackbarAlert().success("Player successfully registered");
+    return apiData.data.createProfilePlayerPost;
+  } catch (e) {
+    new SnackbarAlert().error(
+      "Unable to register player for this Player Post, please try again later"
+    );
+    return {};
+  }
 }
 
 export async function RemovePlayerPostRegisteredPlayer(registeredPlayerId) {
   const client = generateClient();
 
-  const apiData = await client.graphql({
-    query: deletePlayerPlayerPost,
-    variables: {
-      input: {
-        id: registeredPlayerId,
+  try {
+    const apiData = await client.graphql({
+      query: deletePlayerPlayerPost,
+      variables: {
+        input: {
+          id: registeredPlayerId,
+        },
       },
-    },
-  });
-
-  return apiData.data.deletePlayerPlayerPost;
+    });
+    new SnackbarAlert().success("Player successfully unregistered");
+    return apiData.data.deletePlayerPlayerPost;
+  } catch (e) {
+    new SnackbarAlert().error(
+      "Unable to unregister player for this Player Post, please try again later"
+    );
+    return {};
+  }
 }
 
 export async function RemovePlayerPostInterestedUser(interestedUserId) {
   const client = generateClient();
 
-  const apiData = await client.graphql({
-    query: deleteProfilePlayerPost,
-    variables: {
-      input: {
-        id: interestedUserId,
+  try {
+    const apiData = await client.graphql({
+      query: deleteProfilePlayerPost,
+      variables: {
+        input: {
+          id: interestedUserId,
+        },
       },
-    },
-  });
-
-  return apiData.data.deleteProfilePlayerPost.id;
+    });
+    new SnackbarAlert().success(
+      "Player Post interest successfully unregistered"
+    );
+    return apiData.data.deleteProfilePlayerPost.id;
+  } catch (e) {
+    new SnackbarAlert().error(
+      "Unable to unregister interest in this Player Post, please try again later"
+    );
+    return {};
+  }
 }
 
 export async function SelectPlayerPostPlayer(playerPost, selectedPlayerId) {
   const client = generateClient();
 
-  let selectedPlayers = [...playerPost.selectedPlayers, selectedPlayerId];
+  try {
+    let selectedPlayers = [...playerPost.selectedPlayers, selectedPlayerId];
 
-  const apiData = await client.graphql({
-    query: updatePlayerPost,
-    variables: {
-      input: {
-        id: playerPost.id,
-        selectedPlayers: selectedPlayers,
-        isActive:
-          playerPost.numOfPlayersNeeded === selectedPlayers.length
-            ? false
-            : true,
+    const apiData = await client.graphql({
+      query: updatePlayerPost,
+      variables: {
+        input: {
+          id: playerPost.id,
+          selectedPlayers: selectedPlayers,
+          isActive:
+            playerPost.numOfPlayersNeeded === selectedPlayers.length
+              ? false
+              : true,
+        },
       },
-    },
-  });
+    });
 
-  let data = apiData.data.updatePlayerPost;
-  data.interestedUsers = data.interestedUsers.items;
-  data.registeredPlayers = data.registeredPlayers.items;
-  return data;
+    let data = apiData.data.updatePlayerPost;
+    data.interestedUsers = data.interestedUsers.items;
+    data.registeredPlayers = data.registeredPlayers.items;
+    new SnackbarAlert().success("Player successfully selected");
+    return data;
+  } catch (e) {
+    new SnackbarAlert().error("Unable to select Player, please try agian");
+    return {};
+  }
 }
 
 export async function UnselectPlayerPostPlayer(playerPost, selectedPlayerId) {
   const client = generateClient();
 
-  const apiData = await client.graphql({
-    query: updatePlayerPost,
-    variables: {
-      input: {
-        id: playerPost.id,
-        selectedPlayers: playerPost.selectedPlayers.filter(
-          (id) => id !== selectedPlayerId
-        ),
-        isActive: true,
+  try {
+    const apiData = await client.graphql({
+      query: updatePlayerPost,
+      variables: {
+        input: {
+          id: playerPost.id,
+          selectedPlayers: playerPost.selectedPlayers.filter(
+            (id) => id !== selectedPlayerId
+          ),
+          isActive: true,
+        },
       },
-    },
-  });
+    });
 
-  let data = apiData.data.updatePlayerPost;
-  data.interestedUsers = data.interestedUsers.items;
-  data.registeredPlayers = data.registeredPlayers.items;
-  return data;
+    let data = apiData.data.updatePlayerPost;
+    data.interestedUsers = data.interestedUsers.items;
+    data.registeredPlayers = data.registeredPlayers.items;
+    new SnackbarAlert().success("Player successfully unselected");
+    return data;
+  } catch (e) {
+    new SnackbarAlert().error("Unable to unselect Player, please try agian");
+    return {};
+  }
 }
 
 export async function ReactivatePlayerPost(playerPostId) {
   const client = generateClient();
 
-  const apiData = await client.graphql({
-    query: updatePlayerPost,
-    variables: {
-      input: {
-        id: playerPostId,
-        selectedPlayers: [],
-        isActive: true,
+  try {
+    const apiData = await client.graphql({
+      query: updatePlayerPost,
+      variables: {
+        input: {
+          id: playerPostId,
+          selectedPlayers: [],
+          isActive: true,
+        },
       },
-    },
-  });
+    });
 
-  let data = apiData.data.updatePlayerPost;
-  data.interestedUsers = data.interestedUsers.items;
-  data.registeredPlayers = data.registeredPlayers.items;
-  return data;
+    let data = apiData.data.updatePlayerPost;
+    data.interestedUsers = data.interestedUsers.items;
+    data.registeredPlayers = data.registeredPlayers.items;
+    new SnackbarAlert().success("Player Post successfully reactivated");
+    return data;
+  } catch (e) {
+    new SnackbarAlert().error(
+      "Unable to reactivate Player Post, please try agian"
+    );
+    return {};
+  }
 }

@@ -2,6 +2,7 @@ import { View, Heading, Divider } from "@aws-amplify/ui-react";
 import { TeamPlayerCreateForm } from "../../ui-components";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { currentUserState, modalState } from "../../Functions/GlobalState";
+import SnackbarAlert from "../../Components/Snackbar";
 
 export default function CreateTeamPlayerModal(props) {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
@@ -19,8 +20,20 @@ export default function CreateTeamPlayerModal(props) {
           return fields;
         }}
         onSuccess={(data) => {
-          setCurrentUser({ ...currentUser, team: { ...currentUser.team, players: [...currentUser.team.players, data] } });
+          setCurrentUser({
+            ...currentUser,
+            team: {
+              ...currentUser.team,
+              players: [...currentUser.team.players, data],
+            },
+          });
+          new SnackbarAlert().success("Team Player successfully created");
           setModal({ component: null, title: null, isShown: false });
+        }}
+        onError={(error) => {
+          new SnackbarAlert().error(
+            "Unable to create Team Player, please try again"
+          );
         }}
       />
     </View>

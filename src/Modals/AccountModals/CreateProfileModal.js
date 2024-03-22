@@ -2,6 +2,7 @@ import { View, Heading, Divider } from "@aws-amplify/ui-react";
 import { ProfileCreateForm } from "../../ui-components";
 import { currentUserState, modalState } from "../../Functions/GlobalState";
 import { useRecoilState, useSetRecoilState } from "recoil";
+import SnackbarAlert from "../../Components/Snackbar";
 
 export default function CreateProfileModal() {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
@@ -35,7 +36,13 @@ export default function CreateProfileModal() {
             county: data.county,
             postcode: data.postcode,
           });
+          new SnackbarAlert().success("Profile successfully created");
           setModal({ component: null, title: null, isShown: false });
+        }}
+        onError={(error) => {
+          new SnackbarAlert().error(
+            "Unable to create Profile, please try again"
+          );
         }}
       />
     </View>

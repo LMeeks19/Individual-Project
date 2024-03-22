@@ -2,6 +2,7 @@ import { View, Heading, Divider } from "@aws-amplify/ui-react";
 import { PlayerUpdateForm } from "../../ui-components";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { currentUserState, modalState } from "../../Functions/GlobalState";
+import SnackbarAlert from "../../Components/Snackbar";
 
 export default function UpdatePlayerModal(props) {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
@@ -17,10 +18,18 @@ export default function UpdatePlayerModal(props) {
         player={props.player}
         onSuccess={(data) => {
           data.isShown = false;
-          let updatedPlayers = currentUser.players.filter((player) => player.id !== props.player.id);
+          let updatedPlayers = currentUser.players.filter(
+            (player) => player.id !== props.player.id
+          );
           updatedPlayers.push(data);
           setCurrentUser({ ...currentUser, players: updatedPlayers });
+          new SnackbarAlert().success("Player successfully updated");
           setModal({ component: null, title: null, isShown: false });
+        }}
+        onError={() => {
+          new SnackbarAlert().error(
+            "Unable to update Player, please try again"
+          );
         }}
       />
     </View>

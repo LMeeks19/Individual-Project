@@ -3,6 +3,7 @@ import { Divider, Heading, View } from "@aws-amplify/ui-react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { currentUserState, modalState } from "../../Functions/GlobalState";
 import { ProfileUpdateForm } from "../../ui-components";
+import SnackbarAlert from "../../Components/Snackbar";
 
 export default function UpdateProfileModal() {
   const setModal = useSetRecoilState(modalState);
@@ -40,7 +41,13 @@ export default function UpdateProfileModal() {
             county: data.county,
             postcode: data.postcode,
           });
+          new SnackbarAlert().success("Profile successfully updated");
           setModal({ component: null, title: null, isShown: false });
+        }}
+        onError={(error) => {
+          new SnackbarAlert().error(
+            "Unable to update Profile, please try again"
+          );
         }}
       />
     </View>

@@ -6,6 +6,7 @@ import {
   currentUserState,
   modalState,
 } from "../../Functions/GlobalState";
+import SnackbarAlert from "../../Components/Snackbar";
 
 export default function CreateChatModal() {
   const [chats, setChats] = useRecoilState(chatsState);
@@ -33,7 +34,11 @@ export default function CreateChatModal() {
             users: data.users.items,
             messages: data.messages.items,
           });
+          new SnackbarAlert().success("Chat successfully created");
           setModal({ component: null, title: null, isShown: false });
+        }}
+        onError={(error) => {
+          new SnackbarAlert().error("Unable to create Chat, please try again");
         }}
       />
     </View>

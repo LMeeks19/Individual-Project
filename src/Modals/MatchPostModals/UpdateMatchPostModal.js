@@ -2,6 +2,7 @@ import { Heading, View, Divider } from "@aws-amplify/ui-react";
 import { MatchPostUpdateForm } from "../../ui-components";
 import { useSetRecoilState, useRecoilState } from "recoil";
 import { matchPostsState, modalState } from "../../Functions/GlobalState";
+import SnackbarAlert from "../../Components/Snackbar";
 
 export default function UpdateMatchPostModal(props) {
   const [matchPosts, setMatchPosts] = useRecoilState(matchPostsState);
@@ -42,7 +43,13 @@ export default function UpdateMatchPostModal(props) {
           data.interestedUsers = data.interestedUsers.items;
           curPosts.push(data);
           setMatchPosts(curPosts);
+          new SnackbarAlert().success("Match Post successfully updated");
           setModal({ component: null, title: null, isShown: false });
+        }}
+        onError={(error) => {
+          new SnackbarAlert().error(
+            "Unable to update Match Post, please try again"
+          );
         }}
       />
     </View>

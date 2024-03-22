@@ -26,10 +26,8 @@ import {
   ThumbUpAlt,
 } from "@mui/icons-material";
 import {
-  AddPlayerPostInterestedUser,
   DeletePlayerPost,
   ReactivatePlayerPost,
-  RemovePlayerPostInterestedUser,
 } from "../../Functions/Server";
 import ViewPlayerPostModal from "../../Modals/PlayerPostModals/ViewPlayerPostModal";
 import UpdatePlayerPostModal from "../../Modals/PlayerPostModals/UpdatePlayerPostModal";
@@ -191,7 +189,12 @@ export default function PlayerPostsTab(props) {
                               <Tooltip title="Unregister Interest" arrow>
                                 <ThumbUpAlt
                                   className="icon"
-                                  // TODO: Unregister Interest
+                                  onClick={() =>
+                                    openModal(
+                                      <RegisterPlayerModal playerPost={post} />,
+                                      "Player Registration"
+                                    )
+                                  }
                                 />
                               </Tooltip>
                             ) : (
@@ -201,7 +204,7 @@ export default function PlayerPostsTab(props) {
                                   onClick={() =>
                                     openModal(
                                       <RegisterPlayerModal playerPost={post} />,
-                                      "Register Player"
+                                      "Player Registration"
                                     )
                                   }
                                 />

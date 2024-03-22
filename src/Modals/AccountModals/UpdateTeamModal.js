@@ -2,6 +2,7 @@ import { View, Heading, Divider } from "@aws-amplify/ui-react";
 import { TeamUpdateForm } from "../../ui-components";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { currentUserState, modalState } from "../../Functions/GlobalState";
+import SnackbarAlert from "../../Components/Snackbar";
 
 export default function UpdateTeamModal() {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
@@ -30,7 +31,11 @@ export default function UpdateTeamModal() {
           data.players = currentUser.team.players;
           data.id = currentUser.team.id;
           setCurrentUser({ ...currentUser, team: data });
+          new SnackbarAlert().success("Team successfully created");
           setModal({ component: null, title: null, isShown: false });
+        }}
+        onError={(error) => {
+          new SnackbarAlert().error("Unable to update Team, please try again");
         }}
       />
     </View>

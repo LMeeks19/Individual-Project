@@ -2,6 +2,7 @@ import { View, Heading, Divider } from "@aws-amplify/ui-react";
 import { PlayerCreateForm } from "../../ui-components";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { currentUserState, modalState } from "../../Functions/GlobalState";
+import SnackbarAlert from "../../Components/Snackbar";
 
 export default function CreatePlayerModal() {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
@@ -20,8 +21,17 @@ export default function CreatePlayerModal() {
         }}
         onSuccess={(data) => {
           data.isShown = false;
-          setCurrentUser({ ...currentUser, players: [...currentUser.players, data] });
+          setCurrentUser({
+            ...currentUser,
+            players: [...currentUser.players, data],
+          });
+          new SnackbarAlert().success("Player successfully created");
           setModal({ component: null, title: null, isShown: false });
+        }}
+        onError={(error) => {
+          new SnackbarAlert().error(
+            "Unable to create Player, please try again"
+          );
         }}
       />
     </View>

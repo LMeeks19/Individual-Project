@@ -6,6 +6,7 @@ import {
   matchPostsState,
   modalState,
 } from "../../Functions/GlobalState";
+import SnackbarAlert from "../../Components/Snackbar";
 
 export default function CreateMatchPostModal() {
   const currentUser = useRecoilValue(currentUserState);
@@ -29,9 +30,15 @@ export default function CreateMatchPostModal() {
           return updatedFields;
         }}
         onSuccess={(data) => {
-          data.interestedUsers = []
+          data.interestedUsers = [];
           setMatchPosts([...matchPosts, data]);
+          new SnackbarAlert().success("Match Post successfully created");
           setModal({ component: null, title: null, isShown: false });
+        }}
+        onError={(error) => {
+          new SnackbarAlert().error(
+            "Unable to create Match Post, please try again"
+          );
         }}
       />
     </View>

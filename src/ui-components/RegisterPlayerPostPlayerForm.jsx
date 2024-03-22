@@ -505,6 +505,11 @@ export default function RegisterPlayerPostPlayerForm(props) {
               interestedUsersToLinkMap.set(id, count);
             }
           });
+          interestedUsersToUnLinkMap.forEach((count, id) => {
+            const recordKeys = JSON.parse(id);
+            if (modelFields.interestedUsers.some((iu) => iu.id === recordKeys.id))
+              interestedUsersToUnLinkMap.delete(id);
+          })
           interestedUsersToUnLinkMap.forEach(async (count, id) => {
             const recordKeys = JSON.parse(id);
             const profilePlayerPostRecords = (
@@ -557,6 +562,7 @@ export default function RegisterPlayerPostPlayerForm(props) {
           const registeredPlayersToUnLinkMap = new Map();
           const registeredPlayersMap = new Map();
           const linkedRegisteredPlayersMap = new Map();
+          setRegisteredPlayers([...modelFields.registeredPlayers])
           registeredPlayers.forEach((r) => {
             const count = registeredPlayersMap.get(
               getIDValue.registeredPlayers?.(r)
@@ -599,6 +605,11 @@ export default function RegisterPlayerPostPlayerForm(props) {
               registeredPlayersToLinkMap.set(id, count);
             }
           });
+          registeredPlayersToUnLinkMap.forEach((count, id) => {
+            const recordKeys = JSON.parse(id);
+            if (modelFields.registeredPlayers.some((iu) => iu.id === recordKeys.id))
+              registeredPlayersToUnLinkMap.delete(id);
+          })
           registeredPlayersToUnLinkMap.forEach(async (count, id) => {
             const recordKeys = JSON.parse(id);
             const playerPlayerPostRecords = (
@@ -690,7 +701,7 @@ export default function RegisterPlayerPostPlayerForm(props) {
         }}
         currentFieldValue={currentInterestedUsersValue}
         label={"Interested users"}
-        items={interestedUsers}
+        items={interestedUsers.filter((rp) => rp.id === user.userId)}
         hasError={errors?.interestedUsers?.hasError}
         runValidationTasks={async () =>
           await runValidationTasks(
@@ -773,7 +784,7 @@ export default function RegisterPlayerPostPlayerForm(props) {
         }}
         currentFieldValue={currentRegisteredPlayersValue}
         label={"Players to Register"}
-        items={registeredPlayers}
+        items={registeredPlayers.filter((rp) => rp.profileID === user.userId)}
         hasError={errors?.registeredPlayers?.hasError}
         runValidationTasks={async () =>
           await runValidationTasks(
@@ -794,7 +805,7 @@ export default function RegisterPlayerPostPlayerForm(props) {
       >
         <Autocomplete
           label="Players to Register"
-          isRequired={true}
+          isRequired={false}
           isReadOnly={false}
           placeholder="Search Player"
           value={currentRegisteredPlayersDisplayValue}
@@ -863,7 +874,9 @@ export default function RegisterPlayerPostPlayerForm(props) {
             variation="primary"
             isDisabled={
               !(idProp || playerPostModelProp) ||
-              Object.values(errors).some((e) => e?.hasError)
+              Object.values(errors).some((e) => e?.hasError) ||
+              !interestedUsers.some((iu) => iu.id === user.userId) && registeredPlayers.some((rp) => rp.profileID === user.userId) ||
+              interestedUsers.some((iu) => iu.id === user.userId) && !registeredPlayers.some((rp) => rp.profileID === user.userId)
             }
             {...getOverrideProps(overrides, "SubmitButton")}
           ></Button>
