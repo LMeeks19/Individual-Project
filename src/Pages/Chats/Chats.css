@@ -6,11 +6,11 @@
         gap: 0;
         height: 100%;
         width: 25%;
-        min-width: fit-content;
         border-right: 1px solid black;
         box-shadow: 10px 0 20px -4px;
         z-index: 2;
         position: relative;
+        overflow: auto;
 
         .icon {
             cursor: pointer;
@@ -33,6 +33,7 @@
         .chat-title {
             width: 100%;
             height: fit-content;
+            min-width: fit-content;
             display: flex;
             align-items: center;
             justify-content: space-between;

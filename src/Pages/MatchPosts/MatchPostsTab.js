@@ -167,7 +167,7 @@ export default function MatchPostsTab(props) {
                                   onClick={() =>
                                     openModal(
                                       <ViewMatchPostModal post={post} />,
-                                      "View Match Post Details"
+                                      "Match Post Details"
                                     )
                                   }
                                 />
@@ -212,7 +212,7 @@ export default function MatchPostsTab(props) {
                                   onClick={() =>
                                     openModal(
                                       <ViewMatchPostModal post={post} />,
-                                      "View Match Post Details"
+                                      "Match Post Details"
                                     )
                                   }
                                 />
@@ -273,7 +273,7 @@ export default function MatchPostsTab(props) {
                                 onClick={() =>
                                   openModal(
                                     <ViewMatchPostModal post={post} />,
-                                    "View Match Post Details"
+                                    "Match Post Details"
                                   )
                                 }
                               />

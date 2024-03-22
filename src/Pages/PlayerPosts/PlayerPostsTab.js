@@ -133,7 +133,7 @@ export default function PlayerPostsTab(props) {
                                 onClick={() =>
                                   openModal(
                                     <ViewPlayerPostModal post={post} />,
-                                    "View Player Post Details"
+                                    "Player Post Details"
                                   )
                                 }
                               />
@@ -175,7 +175,7 @@ export default function PlayerPostsTab(props) {
                                 onClick={() =>
                                   openModal(
                                     <ViewPlayerPostModal post={post} />,
-                                    "View Player Post Details"
+                                    "Player Post Details"
                                   )
                                 }
                               />
@@ -229,7 +229,7 @@ export default function PlayerPostsTab(props) {
                               onClick={() =>
                                 openModal(
                                   <ViewPlayerPostModal post={post} />,
-                                  "View Player Post Details"
+                                  "Player Post Details"
                                 )
                               }
                             />

@@ -56,8 +56,6 @@
 
             &.actions {
                 width: 15% !important;
-                position: relative;
-                z-index: 2;
             }
 
             &.description {
@@ -93,13 +91,92 @@
         display: flex;
         justify-content: center;
         gap: 5px;
-    
+
         &.delete {
             color: red;
         }
     }
-    
+
     .icon:hover {
         opacity: 50%;
+    }
+}
+
+@media screen and (max-width: 1380px) {
+    .match-posts-table {
+        tr {
+
+            td,
+            th {
+                &.title {
+                    width: 25%;
+                }
+
+                &.created-on {
+                    width: 20%;
+                }
+
+                &.actions {
+                    width: 30% !important;
+                }
+
+                &.description {
+                    width: 25% !important;
+                }
+
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .match-posts-table {
+        tr {
+            td,
+            th {
+                &.title {
+                    width: 20%;
+                }
+
+                &.created-on {
+                    width: 20%;
+                }
+
+                &.actions {
+                    width: 40% !important;
+                }
+
+                &.description {
+                    width: 20% !important;
+                }
+
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 570px) {
+    .match-posts-table {
+        tr {
+            td,
+            th {
+                &.title {
+                    width: 0%;
+                }
+
+                &.created-on {
+                    width: 0%;
+                }
+
+                &.actions {
+                    width: 100% !important;
+                }
+
+                &.description {
+                    width: 0% !important;
+                }
+
+            }
+        }
     }
 }
