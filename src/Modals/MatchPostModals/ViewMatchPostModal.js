@@ -23,6 +23,7 @@ import { Tooltip } from "@mui/material";
 import { useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
+  activeNavbarTabState,
   currentUserState,
   matchPostsState,
   modalState,
@@ -40,9 +41,10 @@ export default function ViewMatchPostModal(props) {
   const setModal = useSetRecoilState(modalState);
   const [post, setPost] = useState(props.post);
   const [matchPosts, setMatchPosts] = useRecoilState(matchPostsState);
+  const setActiveNavbarTab = useSetRecoilState(activeNavbarTabState);
 
   function formatDateTime(date) {
-    return format(new Date(date), "do MMMM yyyy @ H:mm a");
+    return format(new Date(date), "do MMMM yyyy @ h:mm a");
   }
 
   function updateIsShown(id, field) {
@@ -296,6 +298,7 @@ export default function ViewMatchPostModal(props) {
                                   title: null,
                                   isShown: false,
                                 });
+                                setActiveNavbarTab("3");
                                 navigate("/messages");
                               }}
                             />

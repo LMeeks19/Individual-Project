@@ -5,6 +5,7 @@ import {
   Text,
   TextField,
   useAuthenticator,
+  Button,
 } from "@aws-amplify/ui-react";
 import { AddCircle, Send, Delete } from "@mui/icons-material";
 import "./Chats.css";
@@ -28,7 +29,8 @@ import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
 import { intlFormatDistance } from "date-fns";
 import { onCreateChatMessage } from "../../graphql/subscriptions";
 import { generateClient } from "aws-amplify/api";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, IconButton, Tooltip } from "@mui/material";
+import { AccountType } from "../../Functions/Enums";
 
 export default function Chats() {
   const [chats, setChats] = useRecoilState(chatsState);
@@ -39,6 +41,7 @@ export default function Chats() {
   const [message, setMessage] = useState("");
   const client = generateClient();
   const [isLoading, setIsLoading] = useState(true);
+  const accountTypes = new AccountType();
 
   useEffect(() => {
     async function GetChats() {
@@ -118,6 +121,12 @@ export default function Chats() {
     return names.replace(",", ", ");
   }
 
+  function getTooltipMessage() {
+    if (currentUser.accountType === accountTypes.NONE)
+      return "Please create a profile to access this feature";
+    return "Create Chat";
+  }
+
   function openModal(component, title) {
     setModal({ component: component, title: title, isShown: true });
   }
@@ -129,11 +138,22 @@ export default function Chats() {
           <Heading level={3} color="#f7f5ef">
             Chats
           </Heading>
-          <AddCircle
-            className="icon add"
-            fontSize="large"
+          <Button
+            className="chat-add-button"
+            disabled={currentUser.accountType === accountTypes.NONE}
             onClick={() => openModal(<CreateChatModal />, "Create Chat")}
-          />
+          >
+            <Tooltip title={getTooltipMessage()} arrow>
+              <AddCircle
+                className={`chat-icon add ${
+                  currentUser.accountType === accountTypes.NONE
+                    ? "disabled"
+                    : ""
+                }`}
+                fontSize="large"
+              />
+            </Tooltip>
+          </Button>
         </Text>
         {chats.length === 0 || isLoading ? (
           <>

@@ -8,7 +8,7 @@ import { Routes, Route } from "react-router-dom";
 export default function NavRouter() {
   return (
     <Routes>
-      <Route path="/match-posts" element={<MatchPosts />} />
+      <Route index path="/match-posts" element={<MatchPosts />} />
       <Route path="/player-posts" element={<PlayersPosts />} />
       <Route path="/account" element={<Account />} />
       <Route path="/messages" element={<Messages />} />

@@ -62,7 +62,6 @@ export const playerPostsState = atom({
   default: [],
 });
 
-
 export const chatsState = atom({
   key: "chatsState",
   default: [],
@@ -96,4 +95,9 @@ export const modalState = atom({
 export const isLoadingState = atom({
   key: "isLoadingState",
   default: false,
+});
+
+export const activeNavbarTabState = atom({
+  key: "activateNavbarTabState",
+  default: null,
 });

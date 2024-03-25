@@ -29,11 +29,13 @@ import { DeleteTeam } from "../../Functions/Server";
 import CreateTeamModal from "../../Modals/AccountModals/CreateTeamModal";
 import CreateTeamPlayerModal from "../../Modals/AccountModals/CreateTeamPlayerModal";
 import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
+import { AccountType } from "../../Functions/Enums";
 
 export default function Profile() {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const { signOut } = useAuthenticator();
   const setModal = useSetRecoilState(modalState);
+  const accountTypes = new AccountType();
 
   function openModal(component, title) {
     setModal({ component: component, title: title, isShown: true });
@@ -66,26 +68,23 @@ export default function Profile() {
           <Tabs.Item className="account-tab" value="1">
             PROFILE
           </Tabs.Item>
-          <Tabs.Item className="account-tab" value="2">
-            SECURITY
-          </Tabs.Item>
-          {currentUser.accountType === "COACH" ||
-          currentUser.accountType === "ADMIN" ? (
-            <Tabs.Item className="account-tab" value="3">
+          {currentUser.accountType === accountTypes.COACH ||
+          currentUser.accountType === accountTypes.ADMIN ? (
+            <Tabs.Item className="account-tab" value="2">
               TEAM
             </Tabs.Item>
           ) : (
             <></>
           )}
-          {currentUser.accountType === "PARENT" ||
-          currentUser.accountType === "ADMIN" ? (
-            <Tabs.Item className="account-tab" value="4">
+          {currentUser.accountType === accountTypes.PARENT ||
+          currentUser.accountType === accountTypes.ADMIN ? (
+            <Tabs.Item className="account-tab" value="3">
               PLAYERS
             </Tabs.Item>
           ) : (
             <></>
           )}
-          <Tabs.Item className="account-tab" value="5">
+          <Tabs.Item className="account-tab" value="4">
             SETTINGS
           </Tabs.Item>
         </Tabs.List>
@@ -122,6 +121,9 @@ export default function Profile() {
             )}
           </Flex>
 
+          <Heading level={4}>Login</Heading>
+          <Divider marginTop="10px" />
+          <ViewSecurityTable currentUser={currentUser} />
           <Heading level={4}>Personal</Heading>
           <Divider marginTop="10px" />
           <ViewPersonalTable currentUser={currentUser} />
@@ -130,19 +132,9 @@ export default function Profile() {
           <ViewAddressTable currentUser={currentUser} />
         </Tabs.Panel>
 
-        <Tabs.Panel value="2">
-          <Heading marginBottom="20px" level={3}>
-            Security
-          </Heading>
-
-          <Heading level={4}>Login</Heading>
-          <Divider marginTop="10px" />
-          <ViewSecurityTable currentUser={currentUser} />
-        </Tabs.Panel>
-
-        {currentUser.accountType === "COACH" ||
-        currentUser.accountType === "ADMIN" ? (
-          <Tabs.Panel value="3">
+        {currentUser.accountType === accountTypes.COACH ||
+        currentUser.accountType === accountTypes.ADMIN ? (
+          <Tabs.Panel value="2">
             <Flex marginBottom="20px" justifyContent="space-between">
               <Heading level={3}>My Team</Heading>
               {currentUser.team.id !== null ? (
@@ -225,9 +217,9 @@ export default function Profile() {
           <></>
         )}
 
-        {currentUser.accountType === "PARENT" ||
-        currentUser.accountType === "ADMIN" ? (
-          <Tabs.Panel value="4">
+        {currentUser.accountType === accountTypes.PARENT ||
+        currentUser.accountType === accountTypes.ADMIN ? (
+          <Tabs.Panel value="3">
             <Heading marginBottom="20px" level={3}>
               Players
             </Heading>
@@ -252,7 +244,7 @@ export default function Profile() {
           <></>
         )}
 
-        <Tabs.Panel value="5">
+        <Tabs.Panel value="4">
           <Heading marginBottom="20px" level={3}>
             Settings
           </Heading>

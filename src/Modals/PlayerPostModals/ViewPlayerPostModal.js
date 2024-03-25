@@ -28,6 +28,7 @@ import {
   currentUserState,
   playerPostsState,
   modalState,
+  activeNavbarTabState,
 } from "../../Functions/GlobalState";
 import { useNavigate } from "react-router-dom";
 import {
@@ -44,6 +45,7 @@ export default function ViewPlayerPostModal(props) {
   const setModal = useSetRecoilState(modalState);
   const [post, setPost] = useState(props.post);
   const [playerPosts, setPlayerPosts] = useRecoilState(playerPostsState);
+  const setActiveNavbarTab = useSetRecoilState(activeNavbarTabState);
 
   function formatDateTime(date) {
     return format(new Date(date), "do MMMM yyyy @ H:mm a");
@@ -335,6 +337,7 @@ export default function ViewPlayerPostModal(props) {
                                   title: null,
                                   isShown: false,
                                 });
+                                setActiveNavbarTab("3");
                                 navigate("/messages");
                               }}
                             />

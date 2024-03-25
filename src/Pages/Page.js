@@ -44,7 +44,7 @@ export default function Page() {
       >
         <Router>
           {modal.isShown ? <Modal /> : <></>}
-          <View className={`layout ${modal.isShown ? "disabled" : ""}`}>
+          <View className={`layout ${modal.isShown ? "page-disabled" : ""}`}>
             <NavBar />
             <View className="container">
               <WarningMessage currentUser={currentUser} />

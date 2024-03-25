@@ -8,9 +8,13 @@ import {
   Text,
 } from "@aws-amplify/ui-react";
 import { CircularProgress, TablePagination, Tooltip } from "@mui/material";
-import { modalState, matchPostsState } from "../../Functions/GlobalState";
+import {
+  modalState,
+  matchPostsState,
+  activeNavbarTabState,
+} from "../../Functions/GlobalState";
 import { useState } from "react";
-import { formatRelative } from "date-fns";
+import { format } from "date-fns";
 import {
   AddMatchPostInterestedUser,
   DeleteMatchPost,
@@ -33,6 +37,7 @@ import {
   ThumbUpOffAlt,
   ThumbUpAlt,
 } from "@mui/icons-material";
+import { AccountType } from "../../Functions/Enums";
 
 export default function MatchPostsTab(props) {
   const [page, setPage] = useState(0);
@@ -40,6 +45,8 @@ export default function MatchPostsTab(props) {
   const setModal = useSetRecoilState(modalState);
   const [matchPosts, setMatchPosts] = useRecoilState(matchPostsState);
   const navigate = useNavigate();
+  const setActiveNavbarTab = useSetRecoilState(activeNavbarTabState);
+  const accountTypes = new AccountType();
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -51,8 +58,7 @@ export default function MatchPostsTab(props) {
   };
 
   function formatDate(date) {
-    let formattedDate = formatRelative(new Date(date), new Date(), {});
-    return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+    return format(new Date(date), "do MMMM yyyy @ h:mm a");
   }
 
   async function deleteMatchPost(matchPost) {
@@ -156,147 +162,163 @@ export default function MatchPostsTab(props) {
                   <td className="created-on">
                     <Text>{formatDate(post.createdAt)}</Text>
                   </td>
-                  <td className="actions">
-                    {post.isActive ? (
-                      <Text as="div">
-                        {post.createdByProfileID === props.currentUser.id ? (
-                          <Flex justifyContent="center">
-                            <Flex gap="4px" className="icon">
-                              <Tooltip title="View Match Post Details" arrow>
-                                <Visibility
-                                  onClick={() =>
-                                    openModal(
-                                      <ViewMatchPostModal post={post} />,
-                                      "Match Post Details"
-                                    )
-                                  }
-                                />
-                              </Tooltip>
-                            </Flex>
-                            <Divider orientation="vertical" />
-                            <Flex gap="4px" className="icon">
-                              <Tooltip title="Update Match Post Details" arrow>
-                                <Edit
-                                  onClick={() =>
-                                    openModal(
-                                      <UpdateMatchPostModal post={post} />,
-                                      "Update Match Post Details"
-                                    )
-                                  }
-                                />
-                              </Tooltip>
-                            </Flex>
-                            <Divider orientation="vertical" />
-                            <Flex gap="4px" className="icon delete">
-                              <Tooltip title="Delete Match Post" arrow>
-                                <Delete
-                                  onClick={() =>
-                                    openModal(
-                                      <ConfirmDeleteModal
-                                        deleteFunction={() =>
-                                          deleteMatchPost(post)
-                                        }
-                                      />,
-                                      "Confirm Match Post Delete"
-                                    )
-                                  }
-                                />
-                              </Tooltip>
-                            </Flex>
-                          </Flex>
-                        ) : (
-                          <Flex justifyContent="center">
-                            <Flex gap="4px" className="icon">
-                              <Tooltip title="View Match Post Details" arrow>
-                                <Visibility
-                                  onClick={() =>
-                                    openModal(
-                                      <ViewMatchPostModal post={post} />,
-                                      "Match Post Details"
-                                    )
-                                  }
-                                />
-                              </Tooltip>
-                            </Flex>
-                            <Divider orientation="vertical" />
-                            {!post.interestedUsers.some(
-                              (interestedUser) =>
-                                interestedUser.profileId ===
-                                props.currentUser.id
-                            ) ? (
-                              <Flex gap="4px" className="icon">
-                                <Tooltip title="Register Interest" arrow>
-                                  <ThumbUpOffAlt
-                                    onClick={() =>
-                                      registerInterest(
-                                        props.currentUser.id,
-                                        post.id
-                                      )
-                                    }
-                                  />
-                                </Tooltip>
-                              </Flex>
-                            ) : (
-                              <Flex gap="4px" className="icon">
-                                <Tooltip title="Unregister Interest" arrow>
-                                  <ThumbUpAlt
-                                    onClick={() =>
-                                      unRegisterInterest(
-                                        post.interestedUsers.find(
-                                          (interestedUser) =>
-                                            interestedUser.profileId ===
-                                            props.currentUser.id
-                                        ).id
-                                      )
-                                    }
-                                  />
-                                </Tooltip>
-                              </Flex>
-                            )}
-                            <Divider orientation="vertical" />
-                            <Flex gap="4px" className="icon">
-                              <Tooltip title="Message" arrow>
-                                <Message
-                                  onClick={() => navigate("/messages")}
-                                />
-                              </Tooltip>
-                            </Flex>
-                          </Flex>
-                        )}
-                      </Text>
-                    ) : (
-                      <Text as="div">
-                        <Flex justifyContent="center">
-                          <Flex gap="4px" className="icon">
-                            <Tooltip title="View Match Post Details" arrow>
-                              <Visibility
-                                onClick={() =>
-                                  openModal(
-                                    <ViewMatchPostModal post={post} />,
-                                    "Match Post Details"
-                                  )
-                                }
-                              />
-                            </Tooltip>
-                          </Flex>
+                  {props.currentUser.accountType === accountTypes.COACH ||
+                  props.currentUser.accountType === accountTypes.ADMIN ? (
+                    <td className="actions">
+                      {post.isActive ? (
+                        <Text as="div">
                           {post.createdByProfileID === props.currentUser.id ? (
-                            <>
+                            <Flex justifyContent="center">
+                              <Flex gap="4px" className="icon">
+                                <Tooltip title="View Match Post Details" arrow>
+                                  <Visibility
+                                    onClick={() =>
+                                      openModal(
+                                        <ViewMatchPostModal post={post} />,
+                                        "Match Post Details"
+                                      )
+                                    }
+                                  />
+                                </Tooltip>
+                              </Flex>
                               <Divider orientation="vertical" />
                               <Flex gap="4px" className="icon">
-                                <Tooltip title="Reactivate Match Post" arrow>
-                                  <Replay
-                                    onClick={() => reActivateMatchPost(post.id)}
+                                <Tooltip
+                                  title="Update Match Post Details"
+                                  arrow
+                                >
+                                  <Edit
+                                    onClick={() =>
+                                      openModal(
+                                        <UpdateMatchPostModal post={post} />,
+                                        "Update Match Post Details"
+                                      )
+                                    }
                                   />
                                 </Tooltip>
                               </Flex>
-                            </>
+                              <Divider orientation="vertical" />
+                              <Flex gap="4px" className="icon delete">
+                                <Tooltip title="Delete Match Post" arrow>
+                                  <Delete
+                                    onClick={() =>
+                                      openModal(
+                                        <ConfirmDeleteModal
+                                          deleteFunction={() =>
+                                            deleteMatchPost(post)
+                                          }
+                                        />,
+                                        "Confirm Match Post Delete"
+                                      )
+                                    }
+                                  />
+                                </Tooltip>
+                              </Flex>
+                            </Flex>
                           ) : (
-                            <></>
+                            <Flex justifyContent="center">
+                              <Flex gap="4px" className="icon">
+                                <Tooltip title="View Match Post Details" arrow>
+                                  <Visibility
+                                    onClick={() =>
+                                      openModal(
+                                        <ViewMatchPostModal post={post} />,
+                                        "Match Post Details"
+                                      )
+                                    }
+                                  />
+                                </Tooltip>
+                              </Flex>
+                              <Divider orientation="vertical" />
+                              {!post.interestedUsers.some(
+                                (interestedUser) =>
+                                  interestedUser.profileId ===
+                                  props.currentUser.id
+                              ) ? (
+                                <Flex gap="4px" className="icon">
+                                  <Tooltip title="Register Interest" arrow>
+                                    <ThumbUpOffAlt
+                                      onClick={() =>
+                                        registerInterest(
+                                          props.currentUser.id,
+                                          post.id
+                                        )
+                                      }
+                                    />
+                                  </Tooltip>
+                                </Flex>
+                              ) : (
+                                <Flex gap="4px" className="icon">
+                                  <Tooltip title="Unregister Interest" arrow>
+                                    <ThumbUpAlt
+                                      onClick={() =>
+                                        unRegisterInterest(
+                                          post.interestedUsers.find(
+                                            (interestedUser) =>
+                                              interestedUser.profileId ===
+                                              props.currentUser.id
+                                          ).id
+                                        )
+                                      }
+                                    />
+                                  </Tooltip>
+                                </Flex>
+                              )}
+                              <Divider orientation="vertical" />
+                              <Flex gap="4px" className="icon">
+                                <Tooltip title="Message" arrow>
+                                  <Message
+                                    onClick={() => {
+                                      setActiveNavbarTab("3");
+                                      navigate("/messages");
+                                    }}
+                                  />
+                                </Tooltip>
+                              </Flex>
+                            </Flex>
                           )}
-                        </Flex>
-                      </Text>
-                    )}
-                  </td>
+                        </Text>
+                      ) : (
+                        <Text as="div">
+                          <Flex justifyContent="center">
+                            <Flex gap="4px" className="icon">
+                              <Tooltip title="View Match Post Details" arrow>
+                                <Visibility
+                                  onClick={() =>
+                                    openModal(
+                                      <ViewMatchPostModal post={post} />,
+                                      "Match Post Details"
+                                    )
+                                  }
+                                />
+                              </Tooltip>
+                            </Flex>
+                            {post.createdByProfileID ===
+                            props.currentUser.id ? (
+                              <>
+                                <Divider orientation="vertical" />
+                                <Flex gap="4px" className="icon">
+                                  <Tooltip title="Reactivate Match Post" arrow>
+                                    <Replay
+                                      onClick={() =>
+                                        reActivateMatchPost(post.id)
+                                      }
+                                    />
+                                  </Tooltip>
+                                </Flex>
+                              </>
+                            ) : (
+                              <></>
+                            )}
+                          </Flex>
+                        </Text>
+                      )}
+                    </td>
+                  ) : (
+                    <td className="actions">
+                      <Text>No Actions</Text>
+                    </td>
+                  )}
                 </TableRow>
               );
             })}

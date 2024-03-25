@@ -162,8 +162,8 @@ export const formFields = {
   confirmResetPassword: {
     confirmation_code: {
       placeholder: "Enter your Confirmation Code:",
-      label: "New Label",
-      isRequired: false,
+      label: "Confirmation Code",
+      isRequired: true,
     },
     confirm_password: {
       placeholder: "Enter your Password Please:",
@@ -175,16 +175,16 @@ export const formFields = {
       totpUsername: "amplify_qr_test_user",
     },
     confirmation_code: {
-      label: "New Label",
+      label: "Confirmation Code",
       placeholder: "Enter your Confirmation Code:",
-      isRequired: false,
+      isRequired: true,
     },
   },
   confirmSignIn: {
     confirmation_code: {
-      label: "New Label",
+      label: "Confirmation Code",
       placeholder: "Enter your Confirmation Code:",
-      isRequired: false,
+      isRequired: true,
     },
   },
 };

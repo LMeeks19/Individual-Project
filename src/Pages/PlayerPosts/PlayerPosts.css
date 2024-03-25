@@ -84,10 +84,7 @@
 
     .icon {
         cursor: pointer;
-        display: flex;
-        justify-content: center;
-        gap: 5px;
-    
+        
         &.delete {
             color: red;
         }

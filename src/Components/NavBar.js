@@ -5,30 +5,57 @@ import {
   Menu,
   MenuItem,
   Divider,
-  Heading
+  Heading,
 } from "@aws-amplify/ui-react";
-import React from "react";
+import React, { useEffect } from "react";
 import "./NavBar.css";
 import { useNavigate } from "react-router-dom";
-
 import { PostAdd, Chat, AccountCircle } from "@mui/icons-material";
-import { useRecoilValue } from "recoil";
-import { currentUserState } from "../Functions/GlobalState";
+import { useRecoilValue, useRecoilState } from "recoil";
+import {
+  activeNavbarTabState,
+  currentUserState,
+} from "../Functions/GlobalState";
+import { AccountType } from "../Functions/Enums";
 
 export default function NavBar() {
   const navigate = useNavigate();
   const currentUser = useRecoilValue(currentUserState);
+  const [activeNavbarTab, setActiveNavbarTab] =
+    useRecoilState(activeNavbarTabState);
+  const accountTypes = new AccountType();
+
+  useEffect(() => {
+    function setTab() {
+      if (
+        currentUser.accountType === accountTypes.COACH ||
+        currentUser.accountType === accountTypes.ADMIN ||
+        currentUser.accountType === accountTypes.NONE
+      ) {
+        setActiveNavbarTab("1");
+        navigate("/match-posts");
+      } else if (currentUser.accountType === accountTypes.PARENT) {
+        setActiveNavbarTab("2");
+        navigate("player-posts");
+      }
+    }
+    setTab();
+  }, []);
 
   return (
     <Flex gap="0" className="flex-container">
-      <Heading className="header" level={3}>Individual Project</Heading>
-      <Tabs.Container className="tab-container" defaultValue={currentUser.accountType === "COACH" || currentUser.accountType === "ADMIN" ? "1" : "2"}>
+      <Heading className="header" level={3}>
+        Individual Project
+      </Heading>
+      <Tabs.Container className="tab-container" value={activeNavbarTab}>
         <Tabs.List className="navbar" spacing="equal">
-
           <Tabs.Item
             className="item"
             value="1"
-            onClick={() => navigate("/match-posts")}
+            onClick={() => {
+              setActiveNavbarTab("1");
+              navigate("/match-posts");
+            }}
           >
             <Text display="flex">
               <PostAdd className="icon" />
@@ -39,7 +66,10 @@ export default function NavBar() {
           <Tabs.Item
             className="item"
             value="2"
-            onClick={() => navigate("/player-posts")}
+            onClick={() => {
+              setActiveNavbarTab("2");
+              navigate("/player-posts");
+            }}
           >
             <Text display="flex">
               <PostAdd className="icon" />
@@ -50,7 +80,10 @@ export default function NavBar() {
           <Tabs.Item
             className="item"
             value="3"
-            onClick={() => navigate("/messages")}
+            onClick={() => {
+              setActiveNavbarTab("3");
+              navigate("/messages");
+            }}
           >
             <Text display="flex">
               <Chat className="icon" />
@@ -61,7 +94,10 @@ export default function NavBar() {
           <Tabs.Item
             className="item"
             value="4"
-            onClick={() => navigate("/account")}
+            onClick={() => {
+              setActiveNavbarTab("4");
+              navigate("/account");
+            }}
           >
             <Text display="flex">
               <AccountCircle className="icon" />

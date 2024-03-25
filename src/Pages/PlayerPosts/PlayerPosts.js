@@ -11,12 +11,15 @@ import { Add } from "@mui/icons-material";
 import "./PlayerPosts.css";
 import { GetPlayerPosts } from "../../Functions/Server";
 import CreatePlayerPostModal from "../../Modals/PlayerPostModals/CreatePlayerPostsModal";
+import { Tooltip } from "@mui/material";
+import { AccountType } from "../../Functions/Enums";
 
 export default function MatchPosts() {
   const currentUser = useRecoilValue(currentUserState);
   const [playerPosts, setPlayerPosts] = useRecoilState(playerPostsState);
   const setModal = useSetRecoilState(modalState);
   const [isLoading, setIsLoading] = useState(true);
+  const accountTypes = new AccountType();
 
   useEffect(() => {
     async function getPlayerPosts() {
@@ -32,6 +35,14 @@ export default function MatchPosts() {
     setModal({ component: component, title: title, isShown: true });
   }
 
+  function getTooltipMessage() {
+    if (currentUser.accountType === accountTypes.NONE)
+      return "Create a Profile to create a players post";
+    if (currentUser.accountType === accountTypes.PARENT)
+      return "Parents cannot create Players Posts";
+    return "Create Players Post";
+  }
+
   return (
     <View className="page">
       <Flex
@@ -40,18 +51,22 @@ export default function MatchPosts() {
         alignItems="center"
       >
         <Heading level={3}>Player Posts</Heading>
-        <Button
-          className="custom-button"
-          variation="primary"
-          onClick={() =>
-            openModal(<CreatePlayerPostModal />, "Create Player Post")
-          }
-        >
-          <Text display="flex">
-            <Add fontSize="small" className="icon" />
-            Create
-          </Text>
-        </Button>
+        <Tooltip title={getTooltipMessage()} arrow>
+          <Button
+            className="custom-button"
+            variation="primary"
+            onClick={() =>
+              openModal(<CreatePlayerPostModal />, "Create Player Post")
+            }
+            disabled={
+              currentUser.accountType === accountTypes.PARENT ||
+              currentUser.accountType === accountTypes.NONE
+            }
+          >
+            <Add fontSize="small" className="icon" htmlColor="#f9f1f1" />
+            <Text fontWeight="medium">Create</Text>
+          </Button>
+        </Tooltip>
       </Flex>
       <Tabs.Container defaultValue="1">
         <Tabs.List spacing="equal" wrap="wrap">

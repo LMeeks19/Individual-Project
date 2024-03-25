@@ -123,19 +123,14 @@
   margin-top: 20px;
   margin-bottom: 20px;
 
-  .crest {
-    min-width: 20%;
-    padding: 0;
-  }
-
   .info-container {
-    width: 80%;
+    width: 100%;
     justify-content: space-evenly;
     flex-wrap: wrap;
 
     .team-info,
     .coach-info {
-      width: 40%;
+      width: 48%;
       background-color: inherit;
       padding: 20px;
       display: flex;
@@ -171,10 +166,6 @@
   box-shadow: 0px 0px 20px -4px #000;
   border-radius: 15px;
 
-  .avatar-container {
-    padding: 0;
-  }
-
   .details {
     background-color: inherit;
     display: flex;
@@ -200,10 +191,6 @@
 @media screen and (max-width: 1600px) {
   .details-card {
     min-width: 275px;
-
-    .crest {
-      width: 100%;
-    }
 
     .info-container {
       width: 100%;

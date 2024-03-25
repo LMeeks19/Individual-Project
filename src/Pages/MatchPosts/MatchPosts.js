@@ -8,12 +8,15 @@ import CreateMatchPostModal from "../../Modals/MatchPostModals/CreateMatchPostMo
 import { modalState } from "../../Functions/GlobalState";
 import { Add } from "@mui/icons-material";
 import "./MatchPosts.css";
+import { Tooltip } from "@mui/material";
+import { AccountType } from "../../Functions/Enums";
 
 export default function MatchPosts() {
   const currentUser = useRecoilValue(currentUserState);
   const [matchPosts, setMatchPosts] = useRecoilState(matchPostsState);
   const setModal = useSetRecoilState(modalState);
   const [isLoading, setIsLoading] = useState(true);
+  const accountTypes = new AccountType();
 
   useEffect(() => {
     async function getMatchPosts() {
@@ -29,6 +32,14 @@ export default function MatchPosts() {
     setModal({ component: component, title: title, isShown: true });
   }
 
+  function getTooltipMessage() {
+    if (currentUser.accountType === accountTypes.NONE)
+      return "Create a Profile to create a match post";
+    if (currentUser.accountType === accountTypes.PARENT)
+      return "Parents cannot create Match Posts";
+    return "Create Match Post";
+  }
+
   return (
     <View className="page">
       <Flex
@@ -37,18 +48,22 @@ export default function MatchPosts() {
         alignItems="center"
       >
         <Heading level={3}>Match Posts</Heading>
-        <Button
-          className="custom-button"
-          variation="primary"
-          onClick={() =>
-            openModal(<CreateMatchPostModal />, "Create Match Post")
-          }
-        >
-          <Text display="flex">
-            <Add fontSize="small" className="icon" />
-            Create
-          </Text>
-        </Button>
+        <Tooltip title={getTooltipMessage()} arrow>
+          <Button
+            className="custom-button"
+            variation="primary"
+            onClick={() =>
+              openModal(<CreateMatchPostModal />, "Create Match Post")
+            }
+            disabled={
+              currentUser.accountType === accountTypes.PARENT ||
+              currentUser.accountType === accountTypes.NONE
+            }
+          >
+            <Add fontSize="small" className="icon" htmlColor="#f9f1f1" />
+            <Text fontWeight="medium">Create</Text>
+          </Button>
+        </Tooltip>
       </Flex>
       <Tabs.Container defaultValue="1">
         <Tabs.List spacing="equal" wrap="wrap">

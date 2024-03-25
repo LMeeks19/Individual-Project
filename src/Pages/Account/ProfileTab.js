@@ -8,15 +8,17 @@ import {
   ToggleButtonGroup,
   ToggleButton,
   Card,
+  Button,
 } from "@aws-amplify/ui-react";
 import "./Account.css";
-import { useRecoilState } from "recoil";
-import { themeState } from "../../Functions/GlobalState";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { modalState, themeState } from "../../Functions/GlobalState";
 
 import { MdLightMode } from "react-icons/md";
 import { MdDarkMode } from "react-icons/md";
 import { VscColorMode } from "react-icons/vsc";
 import { format } from "date-fns";
+import ChangePasswordModal from "../../Modals/AccountModals/ChangePasswordModal";
 
 export function ViewPersonalTable(props) {
   function formatDate(date) {
@@ -99,6 +101,11 @@ export function ViewAddressTable(props) {
 }
 
 export function ViewSecurityTable(props) {
+  const setModal = useSetRecoilState(modalState);
+
+  function openModal(component, title) {
+    setModal({ component: component, title: title, isShown: true });
+  }
   return (
     <Table
       boxShadow="0 0 20px -4px #000"
@@ -121,7 +128,19 @@ export function ViewSecurityTable(props) {
         </TableRow>
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Password</TableCell>
-          <TableCell className="account-table-cell"></TableCell>
+          <TableCell className="account-table-cell">
+            <Button
+              fontSize="medium"
+              fontWeight="normal"
+              border="none"
+              padding="0 5px"
+              onClick={() =>
+                openModal(<ChangePasswordModal />, "Change Password")
+              }
+            >
+              Change Password
+            </Button>
+          </TableCell>
         </TableRow>
       </TableBody>
     </Table>

@@ -12,8 +12,18 @@
         position: relative;
         overflow: auto;
 
-        .icon {
-            cursor: pointer;
+        .chat-add-button {
+            border: none;
+            padding: 0;
+        }
+
+        .chat-add-button:hover {
+            background-color: #008080;
+            opacity: 75%;
+        }
+
+        .chat-icon {
+            cursor: inherit;
 
             &.add {
                 color: #f7f5ef !important;
@@ -24,10 +34,10 @@
                 width: 2rem;
                 height: 2rem;
             }
-        }
 
-        .icon:hover {
-            opacity: 75%;
+            &.disabled {
+                opacity: 75%;
+            }
         }
 
         .chat-title {
@@ -62,10 +72,6 @@
                     .text-overflow {
                         color: #f7f5ef !important;
                     }
-                }
-
-                .delet-icon {
-                    color: red;
                 }
 
                 .text-overflow {

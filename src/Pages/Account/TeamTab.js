@@ -8,7 +8,6 @@ import {
   View,
 } from "@aws-amplify/ui-react";
 import "./Account.css";
-import { Avatar } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 import { DeleteTeamPlayer } from "../../Functions/Server";
 import { currentUserState, modalState } from "../../Functions/GlobalState";
@@ -21,9 +20,6 @@ export function TeamDetails(props) {
     <View>
       {props.team.id !== null ? (
         <Flex className="details-card" wrap="wrap" gap="0">
-          <Card className="crest">
-            <Avatar variant="square" sx={{ width: "100%", height: "100%" }} />
-          </Card>
           <Flex className="info-container">
             <View className="team-info">
               <Heading className="header" level={4}>
@@ -98,18 +94,11 @@ export function TeamRoster(props) {
 
   return (
     <View>
-      {currentUser.team.id !== null &&
-      currentUser.team.players.length !== 0 ? (
+      {currentUser.team.id !== null && currentUser.team.players.length !== 0 ? (
         <Flex marginTop="20px" wrap="wrap">
           {props.players?.map((player) => {
             return (
               <Card key={player.id} className="card">
-                <Card className="avatar-container">
-                  <Avatar
-                    variant="square"
-                    sx={{ width: "100%", height: "100%" }}
-                  />
-                </Card>
                 <Card className="details">
                   <Heading className="header" color="#f7f5ef" level={4}>
                     <Text>{player.name}</Text>
@@ -126,7 +115,14 @@ export function TeamRoster(props) {
                       <Delete
                         className="icon"
                         htmlColor="red"
-                        onClick={() => openModal(<ConfirmDeleteModal deleteFunction={() => deleteTeamPlayer(player.id)} />, "Confirm Delete Team Player")}
+                        onClick={() =>
+                          openModal(
+                            <ConfirmDeleteModal
+                              deleteFunction={() => deleteTeamPlayer(player.id)}
+                            />,
+                            "Confirm Delete Team Player"
+                          )
+                        }
                       />
                     </Flex>
                   </Heading>
