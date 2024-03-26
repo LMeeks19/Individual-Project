@@ -2,10 +2,10 @@ import { View, Flex, Button, Grid, PasswordField } from "@aws-amplify/ui-react";
 import { useSetRecoilState } from "recoil";
 import { modalState } from "../../Functions/GlobalState";
 import SnackbarAlert from "../../Components/Snackbar";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { updatePassword } from "aws-amplify/auth";
 
-export default function ChangePasswordModal() {
+export default function UpdatePasswordModal() {
   const setModal = useSetRecoilState(modalState);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -14,13 +14,24 @@ export default function ChangePasswordModal() {
   const [hasFormatError, setHasFormatError] = useState(false);
   const snackbarAlert = new SnackbarAlert();
 
-  async function changeUserPassword() {
+  const isSubmitDisabled = hasFormatError || hasMatchError || oldPassword === "" || newPassword === "" || confirmNewPassword === "";
+  const isResetDisabled = oldPassword === "" && newPassword === "" && confirmNewPassword === "";
+
+  function resetFormValues() {
+    setOldPassword("");
+    setNewPassword("");
+    setConfirmNewPassword("");
+    setHasMatchError(false);
+    setHasFormatError(false);
+  }
+
+  async function submitFormValues() {
     try {
       await updatePassword({ oldPassword, newPassword }).then(() =>
         snackbarAlert.success("Password successfully changed")
       );
-    } catch (e) {
-      snackbarAlert.error(e.message);
+    } catch (error) {
+      snackbarAlert.error(error.message);
     }
     setModal({ component: null, title: null, isShown: false });
   }
@@ -33,7 +44,7 @@ export default function ChangePasswordModal() {
         columnGap="15px"
         onSubmit={(event) => {
           event.preventDefault();
-          changeUserPassword();
+          submitFormValues();
         }}
       >
         <PasswordField
@@ -41,7 +52,7 @@ export default function ChangePasswordModal() {
           placeholder="Enter your current password"
           isRequired={true}
           value={oldPassword}
-          onChange={(e) => setOldPassword(e.target.value)}
+          onChange={(event) => setOldPassword(event.target.value)}
         />
         <PasswordField
           label="New Password"
@@ -50,22 +61,22 @@ export default function ChangePasswordModal() {
           placeholder="Enter your new password"
           isRequired={true}
           value={newPassword}
-          onChange={(e) => {
+          onChange={(event) => {
             let passwordRegex = new RegExp(
               /^(?!\s)(?![\s\S]*\s$)(?=.*[A-Z])(?=.*[a-z])(?=.*[\d])(?=.*[\W])[a-zA-Z0-9\W\s()-]{8,}$/
             );
             if (
-              !passwordRegex.test(e.target.value) &&
-              e.target.value.length >= 5
+              !passwordRegex.test(event.target.value) &&
+              event.target.value.length >= 5
             ) {
               setHasFormatError(true);
             } else {
               setHasFormatError(false);
             }
-            if (e.target.value === "") {
+            if (event.target.value === "") {
               setHasFormatError(false);
             }
-            setNewPassword(e.target.value);
+            setNewPassword(event.target.value);
           }}
           hasError={hasFormatError}
           errorMessage="Your password does not match the required format"
@@ -76,48 +87,33 @@ export default function ChangePasswordModal() {
           placeholder="Re-enter your new password"
           isRequired={true}
           value={confirmNewPassword}
-          onChange={(e) => {
-            if (e.target.value !== newPassword) {
+          onChange={(event) => {
+            if (event.target.value !== newPassword) {
               setHasMatchError(true);
             } else {
               setHasMatchError(false);
             }
-            setConfirmNewPassword(e.target.value);
+            setConfirmNewPassword(event.target.value);
           }}
           hasError={hasMatchError}
           errorMessage="Your new passwords do not match"
         />
-
         <Flex justifyContent="space-between">
           <Button
             children="Clear"
             type="reset"
             onClick={(event) => {
               event.preventDefault();
-              setOldPassword("");
-              setNewPassword("");
-              setConfirmNewPassword("");
-              setHasMatchError(false);
-              setHasFormatError(false);
+              resetFormValues();
             }}
-            disabled={
-              oldPassword === "" &&
-              newPassword === "" &&
-              confirmNewPassword === ""
-            }
+            disabled={isResetDisabled}
           ></Button>
           <Flex gap="15px">
             <Button
               children="Submit"
               type="submit"
               variation="primary"
-              disabled={
-                hasFormatError ||
-                hasMatchError ||
-                oldPassword === "" ||
-                newPassword === "" ||
-                confirmNewPassword === ""
-              }
+              disabled={isSubmitDisabled}
             ></Button>
           </Flex>
         </Flex>

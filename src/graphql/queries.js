@@ -1979,3 +1979,18 @@ export const profileChatsByChatId = /* GraphQL */ `
     }
   }
 `;
+
+export const listEmailProfiles = /* GraphQL */ `
+  query ListProfiles(
+    $filter: ModelProfileFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listProfiles(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        email
+      }
+    }
+  }
+`;

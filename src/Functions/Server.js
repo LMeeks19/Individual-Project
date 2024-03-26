@@ -8,6 +8,8 @@ import {
   listChats,
   listChatMessages,
   listPlayerPosts,
+  listProfiles,
+  listEmailProfiles,
 } from "../graphql/queries";
 import {
   deleteProfile as deleteProfileMutation,
@@ -28,6 +30,8 @@ import {
   createProfilePlayerPost,
   createPlayerPlayerPost,
   deletePlayerPlayerPost,
+  updateProfile,
+  updateProfileEmail,
 } from "../graphql/mutations";
 import { fetchUserAttributes } from "aws-amplify/auth";
 import SnackbarAlert from "../Components/Snackbar";
@@ -671,5 +675,36 @@ export async function ReactivatePlayerPost(playerPostId) {
       "Unable to reactivate Player Post, please try agian"
     );
     return {};
+  }
+}
+
+export async function GetProfileEmails(newEmail) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: listEmailProfiles,
+    variables: {
+      filter: { email: { eq: newEmail } },
+    },
+  });
+
+  return apiData.data.listProfiles.items
+}
+
+export async function UpdateProfileEmail(currentUserId, newEmail) {
+  const client = generateClient();
+
+  try {
+    const apiData = await client.graphql({
+      query: updateProfileEmail,
+      variables: {
+        input: {
+          id: currentUserId,
+          email: newEmail,
+        },
+      },
+    });
+  } catch (error) {
+    new SnackbarAlert().error("Unable to update email, please try again");
   }
 }

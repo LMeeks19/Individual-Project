@@ -2058,3 +2058,15 @@ export const deleteProfileChat = /* GraphQL */ `
     }
   }
 `;
+
+export const updateProfileEmail = /* GraphQL */ `
+  mutation UpdateProfile(
+    $input: UpdateProfileInput!
+    $condition: ModelProfileConditionInput
+  ) {
+    updateProfile(input: $input, condition: $condition) {
+      id
+      email
+    }
+  }
+`;

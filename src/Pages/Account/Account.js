@@ -68,9 +68,12 @@ export default function Profile() {
           <Tabs.Item className="account-tab" value="1">
             PROFILE
           </Tabs.Item>
+          <Tabs.Item className="account-tab" value="2">
+            SECURITY
+          </Tabs.Item>
           {currentUser.accountType === accountTypes.COACH ||
           currentUser.accountType === accountTypes.ADMIN ? (
-            <Tabs.Item className="account-tab" value="2">
+            <Tabs.Item className="account-tab" value="3">
               TEAM
             </Tabs.Item>
           ) : (
@@ -78,13 +81,13 @@ export default function Profile() {
           )}
           {currentUser.accountType === accountTypes.PARENT ||
           currentUser.accountType === accountTypes.ADMIN ? (
-            <Tabs.Item className="account-tab" value="3">
+            <Tabs.Item className="account-tab" value="4">
               PLAYERS
             </Tabs.Item>
           ) : (
             <></>
           )}
-          <Tabs.Item className="account-tab" value="4">
+          <Tabs.Item className="account-tab" value="5">
             SETTINGS
           </Tabs.Item>
         </Tabs.List>
@@ -121,9 +124,6 @@ export default function Profile() {
             )}
           </Flex>
 
-          <Heading level={4}>Login</Heading>
-          <Divider marginTop="10px" />
-          <ViewSecurityTable currentUser={currentUser} />
           <Heading level={4}>Personal</Heading>
           <Divider marginTop="10px" />
           <ViewPersonalTable currentUser={currentUser} />
@@ -132,9 +132,19 @@ export default function Profile() {
           <ViewAddressTable currentUser={currentUser} />
         </Tabs.Panel>
 
+        <Tabs.Panel value="2">
+          <Heading marginBottom="20px" level={3}>
+            Security
+          </Heading>
+
+          <Heading level={4}>Login</Heading>
+          <Divider marginTop="10px" />
+          <ViewSecurityTable currentUser={currentUser} />
+        </Tabs.Panel>
+
         {currentUser.accountType === accountTypes.COACH ||
         currentUser.accountType === accountTypes.ADMIN ? (
-          <Tabs.Panel value="2">
+          <Tabs.Panel value="3">
             <Flex marginBottom="20px" justifyContent="space-between">
               <Heading level={3}>My Team</Heading>
               {currentUser.team.id !== null ? (
@@ -219,7 +229,7 @@ export default function Profile() {
 
         {currentUser.accountType === accountTypes.PARENT ||
         currentUser.accountType === accountTypes.ADMIN ? (
-          <Tabs.Panel value="3">
+          <Tabs.Panel value="4">
             <Heading marginBottom="20px" level={3}>
               Players
             </Heading>
@@ -244,7 +254,7 @@ export default function Profile() {
           <></>
         )}
 
-        <Tabs.Panel value="4">
+        <Tabs.Panel value="5">
           <Heading marginBottom="20px" level={3}>
             Settings
           </Heading>

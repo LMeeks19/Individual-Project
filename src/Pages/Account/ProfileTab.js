@@ -18,7 +18,9 @@ import { MdLightMode } from "react-icons/md";
 import { MdDarkMode } from "react-icons/md";
 import { VscColorMode } from "react-icons/vsc";
 import { format } from "date-fns";
-import ChangePasswordModal from "../../Modals/AccountModals/ChangePasswordModal";
+import UpdatePasswordModal from "../../Modals/AccountModals/UpdatePasswordModal";
+import { Edit } from "@mui/icons-material";
+import UpdateEmailModal from "../../Modals/AccountModals/UpdateEmailModal";
 
 export function ViewPersonalTable(props) {
   function formatDate(date) {
@@ -42,7 +44,7 @@ export function ViewPersonalTable(props) {
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Date of Birth</TableCell>
           <TableCell className="account-table-cell">
-            {props.currentUser.dob}
+            {formatDate(props.currentUser.dob)}
           </TableCell>
         </TableRow>
         <TableRow className="account-table-row">
@@ -106,6 +108,7 @@ export function ViewSecurityTable(props) {
   function openModal(component, title) {
     setModal({ component: component, title: title, isShown: true });
   }
+
   return (
     <Table
       boxShadow="0 0 20px -4px #000"
@@ -122,8 +125,14 @@ export function ViewSecurityTable(props) {
         </TableRow>
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Email</TableCell>
-          <TableCell className="account-table-cell">
+          <TableCell className="account-table-cell data">
             {props.currentUser?.email ?? ""}
+            <Edit
+              className="table-icon"
+              fontSize="small"
+              htmlColor="#f9f1f1"
+              onClick={() => openModal(<UpdateEmailModal />, "Update Email")}
+            />
           </TableCell>
         </TableRow>
         <TableRow className="account-table-row">
@@ -135,7 +144,7 @@ export function ViewSecurityTable(props) {
               border="none"
               padding="0 5px"
               onClick={() =>
-                openModal(<ChangePasswordModal />, "Change Password")
+                openModal(<UpdatePasswordModal />, "Update Password")
               }
             >
               Change Password

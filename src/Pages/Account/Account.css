@@ -40,6 +40,16 @@
 
 .account-table-cell {
   width: 50%;
+
+  &.data {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    border-top: 1px solid #f9f1f1;
+    border-right: 1px solid #f9f1f1;
+  }
 }
 
 .link {
@@ -51,6 +61,15 @@
   margin-top: auto;
   margin-bottom: auto;
   margin-right: 5px;
+}
+
+.table-icon {
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.table-icon:hover {
+  opacity: 75%;
 }
 
 .registered-player-card {
