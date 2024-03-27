@@ -8,16 +8,14 @@ import {
   listChats,
   listChatMessages,
   listPlayerPosts,
-  listProfiles,
   listEmailProfiles,
 } from "../graphql/queries";
 import {
-  deleteProfile as deleteProfileMutation,
-  deletePlayer as deletePlayerMutation,
-  deleteTeam as deleteTeamMutation,
-  deleteTeamPlayer as deleteTeamPlayerMutation,
-  deleteMatchPost as deleteMatchPostMutation,
-  createChatMessage as createChatMessageMutation,
+  deletePlayer,
+  deleteTeam,
+  deleteTeamPlayer,
+  deleteMatchPost,
+  createChatMessage,
   createProfileMatchPost,
   deleteProfileMatchPost,
   updateMatchPost,
@@ -30,7 +28,6 @@ import {
   createProfilePlayerPost,
   createPlayerPlayerPost,
   deletePlayerPlayerPost,
-  updateProfile,
   updateProfileEmail,
 } from "../graphql/mutations";
 import { fetchUserAttributes } from "aws-amplify/auth";
@@ -63,36 +60,13 @@ export async function GetProfile(user) {
   };
 }
 
-export async function DeleteProfile(id) {
-  const client = generateClient();
-
-  try {
-    const deletedProfile = await client.graphql({
-      query: deleteProfileMutation,
-      variables: {
-        input: {
-          id: id,
-        },
-      },
-    });
-
-    new SnackbarAlert().success("Profile successfully deleted");
-    return deletedProfile.data.deleteProfile;
-  } catch (e) {
-    new SnackbarAlert().error(
-      "Unable to delete Profile, please try again later"
-    );
-    return {};
-  }
-}
-
 // Player API Calls
 export async function DeletePlayer(id) {
   const client = generateClient();
 
   try {
     const apiData = await client.graphql({
-      query: deletePlayerMutation,
+      query: deletePlayer,
       variables: {
         input: {
           id: id,
@@ -128,7 +102,7 @@ export async function DeleteTeam(team) {
     team.players.forEach((player) => DeleteTeamPlayer(player.id));
 
     await client.graphql({
-      query: deleteTeamMutation,
+      query: deleteTeam,
       variables: {
         input: {
           id: team.id,
@@ -171,7 +145,7 @@ export async function DeleteTeamPlayer(id) {
 
   try {
     const apiData = await client.graphql({
-      query: deleteTeamPlayerMutation,
+      query: deleteTeamPlayer,
       variables: {
         input: {
           id: id,
@@ -217,19 +191,8 @@ export async function DeleteMatchPost(matchPost) {
   const client = generateClient();
 
   try {
-    matchPost.interestedUsers.forEach(async (interestedUser) => {
-      await client.graphql({
-        query: deleteProfileMatchPost,
-        variables: {
-          input: {
-            id: interestedUser.id,
-          },
-        },
-      });
-    });
-
     const apiData = await client.graphql({
-      query: deleteMatchPostMutation,
+      query: deleteMatchPost,
       variables: {
         input: {
           id: matchPost.id,
@@ -368,7 +331,7 @@ export async function CreateChatMessage(chatId, senderId, message) {
   const client = generateClient();
 
   const apiData = await client.graphql({
-    query: createChatMessageMutation,
+    query: createChatMessage,
     variables: {
       input: {
         chatID: chatId,
@@ -460,17 +423,6 @@ export async function DeletePlayerPost(playerPost) {
   const client = generateClient();
 
   try {
-    playerPost.interestedUsers.forEach(async (interestedUser) => {
-      await client.graphql({
-        query: deleteProfilePlayerPost,
-        variables: {
-          input: {
-            id: interestedUser.id,
-          },
-        },
-      });
-    });
-
     playerPost.registeredPlayers.forEach(async (registeredPlayers) => {
       await client.graphql({
         query: deletePlayerPlayerPost,
@@ -688,14 +640,14 @@ export async function GetProfileEmails(newEmail) {
     },
   });
 
-  return apiData.data.listProfiles.items
+  return apiData.data.listProfiles.items;
 }
 
 export async function UpdateProfileEmail(currentUserId, newEmail) {
   const client = generateClient();
 
   try {
-    const apiData = await client.graphql({
+    await client.graphql({
       query: updateProfileEmail,
       variables: {
         input: {

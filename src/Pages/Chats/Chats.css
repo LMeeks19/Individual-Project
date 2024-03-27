@@ -2,6 +2,29 @@
     height: 100%;
     gap: 0;
 
+    .chat-icon {
+        cursor: pointer;
+
+        &.add {
+            color: #f7f5ef !important;
+
+            &.disabled {
+                opacity: 75%;
+                cursor: not-allowed;
+            }
+        }
+
+        &.delete {
+            color: red;
+            width: 2rem;
+            height: 2rem;
+        }
+    }
+
+    .chat-icon:hover {
+        opacity: 75%;
+    }
+
     .chat-container-1 {
         gap: 0;
         height: 100%;
@@ -20,24 +43,6 @@
         .chat-add-button:hover {
             background-color: #008080;
             opacity: 75%;
-        }
-
-        .chat-icon {
-            cursor: inherit;
-
-            &.add {
-                color: #f7f5ef !important;
-            }
-
-            &.delete {
-                color: red;
-                width: 2rem;
-                height: 2rem;
-            }
-
-            &.disabled {
-                opacity: 75%;
-            }
         }
 
         .chat-title {
@@ -93,14 +98,6 @@
         height: 100%;
         width: 75%;
         border-right: 1px solid black;
-
-        .icon {
-            cursor: pointer;
-        }
-
-        .icon:hover {
-            opacity: 75%;
-        }
 
         .chat-current {
             height: fit-content;

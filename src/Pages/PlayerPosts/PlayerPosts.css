@@ -87,6 +87,11 @@
         
         &.delete {
             color: red;
+
+            &.disabled {
+                opacity: 75%;
+                cursor: not-allowed;
+            }
         }
     }
     

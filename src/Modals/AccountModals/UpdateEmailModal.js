@@ -6,8 +6,6 @@ import { useState } from "react";
 import {
   updateUserAttributes,
   confirmUserAttribute,
-  sendUserAttributeVerificationCode,
-  User,
 } from "aws-amplify/auth";
 import { currentUserState } from "../../Functions/GlobalState";
 import { GetProfileEmails, UpdateProfileEmail } from "../../Functions/Server";
@@ -141,7 +139,7 @@ export default function UpdateEmailModal() {
             value={newEmail}
             onChange={(event) => {
               let emailRegex = new RegExp(
-                /^(?!.*[^\S])(?!.*([\._\-+]){2,})([a-zA-Z0-9][\s\S]{0,62}[a-zA-Z0-9])(@)([a-zA-Z0-9][\s\S]{0,251}[a-zA-Z0-9])(\.)(com|net|gov|edu|co\.uk|gov\.uk|ac\.uk)$/
+                /^(?!.*[^\S])(?!.*([._\-+]){2,})([a-zA-Z0-9][\s\S]{0,62}[a-zA-Z0-9])(@)([a-zA-Z0-9][\s\S]{0,251}[a-zA-Z0-9])(\.)(com|net|gov|edu|co\.uk|gov\.uk|ac\.uk)$/
               );
               if (!emailRegex.test(event.target.value)) {
                 setHasError(true);

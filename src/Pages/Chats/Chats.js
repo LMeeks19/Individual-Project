@@ -5,7 +5,6 @@ import {
   Text,
   TextField,
   useAuthenticator,
-  Button,
 } from "@aws-amplify/ui-react";
 import { AddCircle, Send, Delete } from "@mui/icons-material";
 import "./Chats.css";
@@ -29,7 +28,7 @@ import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
 import { intlFormatDistance } from "date-fns";
 import { onCreateChatMessage } from "../../graphql/subscriptions";
 import { generateClient } from "aws-amplify/api";
-import { CircularProgress, IconButton, Tooltip } from "@mui/material";
+import { CircularProgress, Tooltip } from "@mui/material";
 import { AccountType } from "../../Functions/Enums";
 
 export default function Chats() {
@@ -121,7 +120,7 @@ export default function Chats() {
     return names.replace(",", ", ");
   }
 
-  function getTooltipMessage() {
+  function getChatAddTooltipMessage() {
     if (currentUser.accountType === accountTypes.NONE)
       return "Please create a profile to access this feature";
     return "Create Chat";
@@ -138,22 +137,17 @@ export default function Chats() {
           <Heading level={3} color="#f7f5ef">
             Chats
           </Heading>
-          <Button
-            className="chat-add-button"
-            disabled={currentUser.accountType === accountTypes.NONE}
-            onClick={() => openModal(<CreateChatModal />, "Create Chat")}
-          >
-            <Tooltip title={getTooltipMessage()} arrow>
+          <Tooltip title={getChatAddTooltipMessage()} arrow>
+            {currentUser.accountType === accountTypes.NONE ? (
+              <AddCircle className="chat-icon add disabled" fontSize="large" />
+            ) : (
               <AddCircle
-                className={`chat-icon add ${
-                  currentUser.accountType === accountTypes.NONE
-                    ? "disabled"
-                    : ""
-                }`}
+                className="chat-icon add"
                 fontSize="large"
+                onClick={() => openModal(<CreateChatModal />, "Create Chat")}
               />
-            </Tooltip>
-          </Button>
+            )}
+          </Tooltip>
         </Text>
         {chats.length === 0 || isLoading ? (
           <>
@@ -194,7 +188,7 @@ export default function Chats() {
                   </Heading>
                   {selectedChat !== null && selectedChat.id === chat.id ? (
                     <Delete
-                      className="icon delete"
+                      className="chat-icon delete"
                       onClick={() =>
                         openModal(
                           <ConfirmDeleteModal
@@ -275,7 +269,7 @@ export default function Chats() {
               }}
             />
             <Send
-              className="icon"
+              className="chat-icon"
               fontSize="large"
               onClick={() => sendMessage()}
             />

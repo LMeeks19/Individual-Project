@@ -77,10 +77,10 @@ export default function MatchPosts() {
             MY PLAYER POSTS
           </Tabs.Item>
           <Tabs.Item className="account-tab" value="3">
-            INTERESTED PLAYER POSTS
+            MY INTERESTED PLAYER POSTS
           </Tabs.Item>
           <Tabs.Item className="account-tab" value="4">
-            ARCHIVED PLAYER POSTS
+            RELATED CLOSED PLAYER POSTS
           </Tabs.Item>
         </Tabs.List>
 

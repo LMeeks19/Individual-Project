@@ -155,21 +155,32 @@ export default function PlayerPostsTab(props) {
                                 />
                               </Tooltip>
                               <Divider orientation="vertical" />
-                              <Tooltip title="Delete Player Post" arrow>
-                                <Delete
-                                  className="icon delete"
-                                  onClick={() =>
-                                    openModal(
-                                      <ConfirmDeleteModal
-                                        deleteFunction={() =>
-                                          deletePlayerPost(post)
-                                        }
-                                      />,
-                                      "Confirm Player Post Delete"
-                                    )
-                                  }
-                                />
-                              </Tooltip>
+                              {post.interestedUsers.length > 0 ||
+                              post.registeredPlayers.length > 0 ||
+                              post.selectedPlayers.length > 0 ? (
+                                <Tooltip
+                                  title="Remove all interested parents and selected players first"
+                                  arrow
+                                >
+                                  <Delete className="icon delete disabled" />
+                                </Tooltip>
+                              ) : (
+                                <Tooltip title="Delete Player Post" arrow>
+                                  <Delete
+                                    className="icon delete"
+                                    onClick={() =>
+                                      openModal(
+                                        <ConfirmDeleteModal
+                                          deleteFunction={() =>
+                                            deletePlayerPost(post)
+                                          }
+                                        />,
+                                        "Confirm Player Post Delete"
+                                      )
+                                    }
+                                  />
+                                </Tooltip>
+                              )}
                             </Flex>
                           ) : (
                             <Flex justifyContent="center">

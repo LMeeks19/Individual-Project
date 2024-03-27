@@ -74,10 +74,10 @@ export default function MatchPosts() {
             MY MATCH POSTS
           </Tabs.Item>
           <Tabs.Item className="match-posts-tab" value="3">
-            INTERESTED MATCH POSTS
+            MY INTERESTED MATCH POSTS
           </Tabs.Item>
           <Tabs.Item className="match-posts-tab" value="4">
-            ARCHIVED MATCH POSTS
+            RELATED CLOSED MATCH POSTS
           </Tabs.Item>
         </Tabs.List>
 

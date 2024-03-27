@@ -91,6 +91,11 @@
 
         &.delete {
             color: red;
+
+            &.disabled {
+                opacity: 75%;
+                cursor: not-allowed;
+            }
         }
     }
 
@@ -129,6 +134,7 @@
 @media screen and (max-width: 750px) {
     .match-posts-table {
         tr {
+
             td,
             th {
                 &.title {
@@ -155,6 +161,7 @@
 @media screen and (max-width: 570px) {
     .match-posts-table {
         tr {
+
             td,
             th {
                 &.title {
