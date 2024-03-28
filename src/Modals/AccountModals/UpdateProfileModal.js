@@ -44,9 +44,8 @@ export default function UpdateProfileModal() {
           new SnackbarAlert().success("Profile successfully updated");
           setModal({ component: null, title: null, isShown: false });
         }}
-        onError={(error) => {
-          new SnackbarAlert().error(
-            "Unable to update Profile, please try again"
+        onError={(fields, errorMessage) => {
+          new SnackbarAlert().error(errorMessage
           );
         }}
       />

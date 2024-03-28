@@ -148,7 +148,7 @@ export default function CreateTeamForm(props) {
     >
       <TextField
         label="Name"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={name}
         onChange={(e) => {
@@ -178,7 +178,7 @@ export default function CreateTeamForm(props) {
       ></TextField>
       <TextField
         label="League"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={league}
         onChange={(e) => {
@@ -208,7 +208,7 @@ export default function CreateTeamForm(props) {
       ></TextField>
       <TextField
         label="Age group"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={ageGroup}
         onChange={(e) => {
@@ -238,7 +238,7 @@ export default function CreateTeamForm(props) {
       ></TextField>
       <TextField
         label="Location"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={location}
         onChange={(e) => {

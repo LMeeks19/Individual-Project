@@ -17,9 +17,10 @@ import {
   ScrollView,
   Text,
   TextField,
+  useAuthenticator,
   useTheme,
 } from "@aws-amplify/ui-react";
-import { fetchByPath, getOverrideProps, validateField } from "./utils";
+import { fetchByPath, getOverrideProps, useAuth, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
 import { listProfiles } from "../graphql/queries";
 import { createChat, createProfileChat } from "../graphql/mutations";
@@ -180,6 +181,7 @@ function ArrayField({
   );
 }
 export default function ChatCreateForm(props) {
+  const {user} = useAuthenticator();
   const {
     clearOnSuccess = true,
     onSuccess,
@@ -193,9 +195,11 @@ export default function ChatCreateForm(props) {
   const initialValues = {
     name: "",
     users: [],
+    userIDs: []
   };
   const [name, setName] = React.useState(initialValues.name);
   const [users, setUsers] = React.useState(initialValues.users);
+  const [userIDs, setUserIDs] = React.useState(initialValues.userIDs);
   const [usersLoading, setUsersLoading] = React.useState(false);
   const [usersRecords, setUsersRecords] = React.useState([]);
   const autocompleteLength = 10;
@@ -203,6 +207,7 @@ export default function ChatCreateForm(props) {
   const resetStateValues = () => {
     setName(initialValues.name);
     setUsers(initialValues.users);
+    setUserIDs(initialValues.userIDs);
     setCurrentUsersValue(undefined);
     setCurrentUsersDisplayValue("");
     setErrors({});
@@ -250,7 +255,7 @@ export default function ChatCreateForm(props) {
     while (newOptions.length < autocompleteLength && newNext != null) {
       const variables = {
         limit: autocompleteLength * 5,
-        filter: { or: [{ username: { contains: value } }] },
+        filter: { or: {username: {contains: value}, and: { id: { ne: user.userId } } } }
       };
       if (newNext) {
         variables["nextToken"] = newNext;
@@ -284,6 +289,7 @@ export default function ChatCreateForm(props) {
         let modelFields = {
           name,
           users,
+          userIDs
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -323,6 +329,7 @@ export default function ChatCreateForm(props) {
           });
           const modelFieldsToSave = {
             name: modelFields.name,
+            userIDs: modelFields.userIDs
           };
           const chat = (
             await client.graphql({

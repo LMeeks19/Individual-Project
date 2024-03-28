@@ -22,6 +22,7 @@ import {
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
 import { createPlayerPost } from "../graphql/mutations";
+import { format } from "date-fns";
 const client = generateClient();
 function ArrayField({
   items = [],
@@ -241,14 +242,14 @@ export default function PlayerPostCreateForm(props) {
   const getDisplayValue = {
     positionsNeeded: (r) => {
       const enumDisplayValueMap = {
-        GK: "Gk",
-        LB: "Lb",
-        CB: "Cb",
-        RB: "Rb",
-        LM: "Lm",
-        CM: "Cm",
-        RM: "Rm",
-        ST: "St",
+        GK: "GK",
+        LB: "LB",
+        CB: "CB",
+        RB: "RB",
+        LM: "LM",
+        CM: "CM",
+        RM: "RM",
+        ST: "ST",
       };
       return enumDisplayValueMap[r];
     },
@@ -260,7 +261,14 @@ export default function PlayerPostCreateForm(props) {
     positionsNeeded: [{ type: "Required" }],
     numOfPlayersNeeded: [{ type: "Required" }],
     skillLevel: [{ type: "Required" }],
-    kickOff: [{ type: "Required" }],
+    kickOff: [
+      { type: "Required" },
+       {
+        type: "BeAfter", 
+        strValues: [new Date().toISOString()], 
+        validationMessage: "Match cannot be scheduled in the past",
+      }
+    ],
     street: [{ type: "Required" }],
     townCity: [{ type: "Required" }],
     county: [{ type: "Required" }],
@@ -612,42 +620,42 @@ export default function PlayerPostCreateForm(props) {
           {...getOverrideProps(overrides, "positionsNeeded")}
         >
           <option
-            children="Gk"
+            children="GK"
             value="GK"
             {...getOverrideProps(overrides, "positionsNeededoption0")}
           ></option>
           <option
-            children="Lb"
+            children="LB"
             value="LB"
             {...getOverrideProps(overrides, "positionsNeededoption1")}
           ></option>
           <option
-            children="Cb"
+            children="CB"
             value="CB"
             {...getOverrideProps(overrides, "positionsNeededoption2")}
           ></option>
           <option
-            children="Rb"
+            children="RB"
             value="RB"
             {...getOverrideProps(overrides, "positionsNeededoption3")}
           ></option>
           <option
-            children="Lm"
+            children="LM"
             value="LM"
             {...getOverrideProps(overrides, "positionsNeededoption4")}
           ></option>
           <option
-            children="Cm"
+            children="CM"
             value="CM"
             {...getOverrideProps(overrides, "positionsNeededoption5")}
           ></option>
           <option
-            children="Rm"
+            children="RM"
             value="RM"
             {...getOverrideProps(overrides, "positionsNeededoption6")}
           ></option>
           <option
-            children="St"
+            children="ST"
             value="ST"
             {...getOverrideProps(overrides, "positionsNeededoption7")}
           ></option>
@@ -747,6 +755,7 @@ export default function PlayerPostCreateForm(props) {
         label="Kick off"
         isRequired={true}
         isReadOnly={false}
+        min={format(new Date(), "yyyy-MM-dd hh:mm")}
         type="datetime-local"
         value={kickOff && convertToLocal(new Date(kickOff))}
         onChange={(e) => {

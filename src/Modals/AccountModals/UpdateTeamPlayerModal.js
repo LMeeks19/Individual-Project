@@ -15,22 +15,21 @@ export default function UpdateTeamPlayerModal(props) {
       <Divider marginBottom="20px" />
       <TeamPlayerUpdateForm
         padding="0"
-        teamPlayer={{
-          name: props.teamPlayer.name,
-          age: props.teamPlayer.age,
-          kitNumber: props.teamPlayer.kitNumber,
-          positions: props.teamPlayer.positions,
-        }}
+        teamPlayer={props.teamPlayer}
         onSubmit={(fields) => {
-          fields.id = props.teamPlayer.id;
-          fields.teamID = currentUser.team.id;
-          return fields;
+          const updatedFields = fields;
+          updatedFields.id = props.teamPlayer.id;
+          updatedFields.teamID = props.teamPlayer.teamID;
+          return updatedFields;
         }}
         onSuccess={(data) => {
-          let updatedPlayers = currentUser.team.players.filter(
-            (player) => player.id !== data.id
-          );
-          updatedPlayers.push(data);
+          let updatedPlayers = [...currentUser.team.players].map((player) => {
+            if (player.id === data.id) {
+              return data;
+            } else {
+              return player;
+            }
+          });
           setCurrentUser({
             ...currentUser,
             team: {
@@ -41,10 +40,8 @@ export default function UpdateTeamPlayerModal(props) {
           new SnackbarAlert().success("Team Player successfully updated");
           setModal({ component: null, title: null, isShown: false });
         }}
-        onError={(error) => {
-          new SnackbarAlert().error(
-            "Unable to update Team Player, please try again"
-          );
+        onError={(fields, errorMessage) => {
+          new SnackbarAlert().error(errorMessage);
         }}
       />
     </View>

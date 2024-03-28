@@ -26,10 +26,8 @@ export default function UpdatePlayerModal(props) {
           new SnackbarAlert().success("Player successfully updated");
           setModal({ component: null, title: null, isShown: false });
         }}
-        onError={() => {
-          new SnackbarAlert().error(
-            "Unable to update Player, please try again"
-          );
+        onError={(fields, errorMessage) => {
+          new SnackbarAlert().error(errorMessage);
         }}
       />
     </View>

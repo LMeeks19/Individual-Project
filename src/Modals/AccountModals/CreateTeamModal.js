@@ -3,6 +3,7 @@ import { TeamCreateForm } from "../../ui-components";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { currentUserState, modalState } from "../../Functions/GlobalState";
 import SnackbarAlert from "../../Components/Snackbar";
+import { GetTeamByProfileId } from "../../Functions/Server";
 
 export default function CreateTeamModal() {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
@@ -16,17 +17,20 @@ export default function CreateTeamModal() {
       <TeamCreateForm
         padding="0"
         onSubmit={(fields) => {
-          fields.profileID = currentUser.id;
-          return fields;
+          const updatedFields = fields;
+          updatedFields.profileID = currentUser.id;
+          return updatedFields;
         }}
-        onSuccess={(data) => {
-          data.players = data.players.items;
-          setCurrentUser({ ...currentUser, team: data });
+        onSuccess={async (data) => {
+          setCurrentUser({
+            ...currentUser,
+            team: await GetTeamByProfileId(currentUser.id),
+          });
           new SnackbarAlert().success("Team successfully created");
           setModal({ component: null, title: null, isShown: false });
         }}
-        onError={(error) => {
-          new SnackbarAlert().error("Unable to create Team, please try again");
+        onError={(fields, errorMessage) => {
+          new SnackbarAlert().error(errorMessage);
         }}
       />
     </View>

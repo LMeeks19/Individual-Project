@@ -27,16 +27,25 @@ export default function NavBar() {
 
   useEffect(() => {
     function setTab() {
-      if (
-        currentUser.accountType === accountTypes.COACH ||
-        currentUser.accountType === accountTypes.ADMIN ||
-        currentUser.accountType === accountTypes.NONE
-      ) {
+      if (window.location.href.endsWith("/")) {
+        if (
+          currentUser.accountType === accountTypes.COACH ||
+          currentUser.accountType === accountTypes.ADMIN ||
+          currentUser.accountType === accountTypes.NONE
+        ) {
+          navigate("/match-posts");
+        } else if (currentUser.accountType === accountTypes.PARENT) {
+          navigate("/player-posts");
+        }
+      }
+      if (window.location.href.endsWith("/match-posts")) {
         setActiveNavbarTab("1");
-        navigate("/match-posts");
-      } else if (currentUser.accountType === accountTypes.PARENT) {
+      } else if (window.location.href.endsWith("/player-posts")) {
         setActiveNavbarTab("2");
-        navigate("player-posts");
+      } else if (window.location.href.endsWith("/messages")) {
+        setActiveNavbarTab("3");
+      } else if (window.location.href.endsWith("/account")) {
+        setActiveNavbarTab("4");
       }
     }
     setTab();

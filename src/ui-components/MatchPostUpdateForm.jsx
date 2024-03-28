@@ -20,6 +20,7 @@ import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
 import { getMatchPost } from "../graphql/queries";
 import { updateMatchPost } from "../graphql/mutations";
+import { format } from "date-fns";
 const client = generateClient();
 export default function MatchPostUpdateForm(props) {
   const {
@@ -113,12 +114,43 @@ export default function MatchPostUpdateForm(props) {
     description: [{ type: "Required" }],
     gameType: [{ type: "Required" }],
     ageGroup: [{ type: "Required" }],
-    teamSize: [{ type: "Required" }],
+    teamSize: [
+      { type: "Required" },
+      {
+        type: "LessThanNum",
+        numValues: [12],
+        validationMessage: "The maximum number of players for 1 team is 11",
+      },
+      {
+        type: "GreaterThanNum",
+        numValues: [5],
+        validationMessage: "The minimum number of players for 1 team is 5",
+      },
+    ],
     substitutionLimit: [{ type: "Required" }],
-    createdByName: [{ type: "Required" }],
     cards: [{ type: "Required" }],
-    halfLength: [{ type: "Required" }],
-    kickOff: [{ type: "Required" }],
+    halfLength: [
+      { type: "Required" },
+      {
+        type: "LessThanNum",
+        numValues: [46],
+        validationMessage:
+          "Maximum half length must be at no more than 45 minutes",
+      },
+      {
+        type: "GreaterThanNum",
+        numValues: [9],
+        validationMessage: "Minimum half length must be at least 45 minutes",
+      },
+    ],
+    kickOff: [
+      { type: "Required" },
+       {
+        type: "BeAfter", 
+        strValues: [new Date().toISOString()], 
+        validationMessage: "Match cannot be scheduled in the past",
+      }
+    ],
     street: [{ type: "Required" }],
     townCity: [{ type: "Required" }],
     county: [{ type: "Required" }],
@@ -478,6 +510,8 @@ export default function MatchPostUpdateForm(props) {
         isReadOnly={false}
         type="number"
         step="any"
+        min="5"
+        max="11"
         value={teamSize}
         onChange={(e) => {
           let value = isNaN(parseInt(e.target.value))
@@ -632,6 +666,8 @@ export default function MatchPostUpdateForm(props) {
         isReadOnly={false}
         type="number"
         step="any"
+        min="10"
+        max="45"
         value={halfLength}
         onChange={(e) => {
           let value = isNaN(parseInt(e.target.value))
@@ -671,6 +707,7 @@ export default function MatchPostUpdateForm(props) {
         label="Kick off"
         isRequired={true}
         isReadOnly={false}
+        min={format(new Date(), "yyyy-MM-dd hh:mm")}
         type="datetime-local"
         value={kickOff && convertToLocal(new Date(kickOff))}
         onChange={(e) => {

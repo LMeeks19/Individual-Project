@@ -16,26 +16,7 @@ export default function UpdatePlayerPostModal(props) {
       <Divider marginBottom="20px" />
       <PlayerPostUpdateForm
         padding="0"
-        playerPost={{
-          id: props.id,
-          title: props.title,
-          description: props.description,
-          createdByName: props.createdByName,
-          createdByProfileID: props.createdByProfileID,
-          ageGroup: props.ageGroup,
-          positionsNeeded: props.positionsNeeded,
-          numOfPlayersNeeded: props.numOfPlayersNeeded,
-          skillLevel: props.skillLevel,
-          kickOff: props.kickOff,
-          street: props.street,
-          townCity: props.townCity,
-          county: props.county,
-          postcode: props.postcode,
-          isActive: props.isActive,
-          interestedUsers: props.interestedUsers,
-          registeredPlayers: props.registeredPlayers,
-          selectedPlayers: props.selectedPlayers,
-        }}
+        playerPost={props.playerPost}
         onSuccess={(data) => {
           let curPosts = playerPosts.filter((post) => post.id === data.id);
           data.interestedUsers = data.interestedUsers.items;
@@ -45,10 +26,8 @@ export default function UpdatePlayerPostModal(props) {
           new SnackbarAlert().success("Player Post successfully updated");
           setModal({ component: null, title: null, isShown: false });
         }}
-        onError={() => {
-          new SnackbarAlert().error(
-            "Unable to update Player Post, please try again"
-          );
+        onError={(fields, errorMessage) => {
+          new SnackbarAlert().error(errorMessage);
         }}
       />
     </View>

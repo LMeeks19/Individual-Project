@@ -16,26 +16,23 @@ export default function UpdateTeamModal() {
       <Divider marginBottom="20px" />
       <TeamUpdateForm
         padding="0"
-        team={{
-          id: currentUser.team.id,
-          profileId: currentUser.team.profileId,
-          name: currentUser.team.name,
-          league: currentUser.team.league,
-          ageGroup: currentUser.team.ageGroup,
-          location: currentUser.team.location,
-          email: currentUser.team.email,
-          phoneNumber: currentUser.team.phoneNumber,
-          website: currentUser.team.website,
+        team={currentUser.team}
+        onSubmit={(fields) => {
+          const updatedFields = fields;
+          updatedFields.id = currentUser.team.id;
+          updatedFields.profileID = currentUser.team.profileID;
+          return updatedFields;
         }}
         onSuccess={(data) => {
-          data.players = currentUser.team.players;
-          data.id = currentUser.team.id;
-          setCurrentUser({ ...currentUser, team: data });
+          setCurrentUser({
+            ...currentUser,
+            team: { ...data, players: currentUser.team.players },
+          });
           new SnackbarAlert().success("Team successfully created");
           setModal({ component: null, title: null, isShown: false });
         }}
-        onError={(error) => {
-          new SnackbarAlert().error("Unable to update Team, please try again");
+        onError={(fields, errorMessage) => {
+          new SnackbarAlert().error(errorMessage);
         }}
       />
     </View>

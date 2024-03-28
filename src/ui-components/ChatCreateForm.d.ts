@@ -24,6 +24,7 @@ export declare type ValidationFunction<T> = (value: T, validationResponse: Valid
 export declare type ChatCreateFormInputValues = {
     name?: string;
     users?: any[];
+    userIDs: any[];
 };
 export declare type ChatCreateFormValidationValues = {
     name?: ValidationFunction<string>;

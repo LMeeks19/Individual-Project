@@ -19,7 +19,7 @@ import ViewRegisteredPlayers from "./PlayersTab";
 import { currentUserState, modalState } from "../../Functions/GlobalState";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { Logout, Edit, Add, Delete } from "@mui/icons-material";
-
+import { Tooltip } from "@mui/material";
 import UpdateProfileModal from "../../Modals/AccountModals/UpdateProfileModal";
 import CreateProfileModal from "../../Modals/AccountModals/CreateProfileModal";
 import CreatePlayerModal from "../../Modals/AccountModals/CreatePlayerModal";
@@ -44,8 +44,15 @@ export default function Profile() {
   async function deleteTeam(team) {
     try {
       await DeleteTeam(team);
-      setCurrentUser({ ...currentUser, team: [] });
+      setCurrentUser({ ...currentUser, team: { id: null, players: [] } });
     } catch (e) {}
+  }
+
+  function getDeleteTeamTooltipMessage() {
+    if (currentUser.team.players.length > 0) {
+      return "Remove all team players first";
+    }
+    return "Create Team";
   }
 
   function hasNoProfile(object) {
@@ -148,24 +155,28 @@ export default function Profile() {
             <Flex marginBottom="20px" justifyContent="space-between">
               <Heading level={3}>My Team</Heading>
               {currentUser.team.id !== null ? (
-                <Button
-                  className="custom-button delete"
-                  variation="primary"
-                  disabled={currentUser.team.players.length > 0}
-                  onClick={() =>
-                    openModal(
-                      <ConfirmDeleteModal
-                        deleteFunction={() => deleteTeam(currentUser.team)}
-                      />,
-                      "Confirm Delete Team"
-                    )
-                  }
-                >
-                  <Text display="flex">
-                    <Delete fontSize="small" className="icon" />
-                    Delete Team
-                  </Text>
-                </Button>
+                <Tooltip title={getDeleteTeamTooltipMessage()} arrow>
+                  <span>
+                    <Button
+                      className="custom-button delete"
+                      variation="primary"
+                      disabled={currentUser.team.players.length > 0}
+                      onClick={() =>
+                        openModal(
+                          <ConfirmDeleteModal
+                            deleteFunction={() => deleteTeam(currentUser.team)}
+                          />,
+                          "Confirm Delete Team"
+                        )
+                      }
+                    >
+                      <Text display="flex">
+                        <Delete fontSize="small" className="icon" />
+                        Delete Team
+                      </Text>
+                    </Button>
+                  </span>
+                </Tooltip>
               ) : (
                 <Button
                   className="custom-button"

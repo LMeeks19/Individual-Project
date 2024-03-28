@@ -7,6 +7,7 @@ import {
   modalState,
 } from "../../Functions/GlobalState";
 import SnackbarAlert from "../../Components/Snackbar";
+import { GetChatsByProfileId } from "../../Functions/Server";
 
 export default function CreateChatModal() {
   const [chats, setChats] = useRecoilState(chatsState);
@@ -22,23 +23,20 @@ export default function CreateChatModal() {
       <ChatCreateForm
         padding="0"
         onSubmit={(fields) => {
-          fields.users.push(currentUser);
-          fields.userIDs = fields.users.map((user) => {
+          let updatedFields = fields;
+          updatedFields.users.push(currentUser);
+          updatedFields.userIDs = updatedFields.users.map((user) => {
             return user.id;
           });
-          return fields;
+          return updatedFields;
         }}
-        onSuccess={(data) => {
-          setChats({
-            ...chats,
-            users: data.users.items,
-            messages: data.messages.items,
-          });
+        onSuccess={async (data) => {
+          setChats(await GetChatsByProfileId(currentUser.id));
           new SnackbarAlert().success("Chat successfully created");
           setModal({ component: null, title: null, isShown: false });
         }}
-        onError={(error) => {
-          new SnackbarAlert().error("Unable to create Chat, please try again");
+        onError={(fields, errorMessage) => {
+          new SnackbarAlert().error(errorMessage);
         }}
       />
     </View>

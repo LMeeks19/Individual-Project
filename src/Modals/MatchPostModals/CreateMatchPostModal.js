@@ -7,6 +7,7 @@ import {
   modalState,
 } from "../../Functions/GlobalState";
 import SnackbarAlert from "../../Components/Snackbar";
+import { GetUsersMatchPosts } from "../../Functions/Server";
 
 export default function CreateMatchPostModal() {
   const currentUser = useRecoilValue(currentUserState);
@@ -23,22 +24,25 @@ export default function CreateMatchPostModal() {
         padding="0"
         onSubmit={(fields) => {
           const updatedFields = fields;
+          updatedFields.createdByName = currentUser.name;
           updatedFields.createdByProfileID = currentUser.id;
           updatedFields.isActive = true;
           updatedFields.teamID = currentUser.team.id;
           updatedFields.teamName = currentUser.team.name;
           return updatedFields;
         }}
-        onSuccess={(data) => {
-          data.interestedUsers = [];
-          setMatchPosts([...matchPosts, data]);
+        onSuccess={async (data) => {
+          const userMatchPosts = await GetUsersMatchPosts(currentUser.id);
+          const nonUserMatchPosts = matchPosts.filter(
+            (post) => post.createdByProfileID !== currentUser.id
+          );
+          let updatedMatchPosts = nonUserMatchPosts.concat(userMatchPosts);
+          setMatchPosts(updatedMatchPosts);
           new SnackbarAlert().success("Match Post successfully created");
           setModal({ component: null, title: null, isShown: false });
         }}
-        onError={(error) => {
-          new SnackbarAlert().error(
-            "Unable to create Match Post, please try again"
-          );
+        onError={(fields, errorMessage) => {
+          new SnackbarAlert().error(errorMessage);
         }}
       />
     </View>

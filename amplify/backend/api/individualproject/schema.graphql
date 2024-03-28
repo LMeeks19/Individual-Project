@@ -54,9 +54,9 @@ type Team @model @auth(rules: [{allow: public}]) {
   league: String!
   ageGroup: AgeGroup!
   location: String!
-  email: AWSEmail!
-  phoneNumber: AWSPhone!
-  website: AWSURL!
+  email: AWSEmail
+  phoneNumber: AWSPhone
+  website: AWSURL
   profileID: ID! @index(name: "byProfile")
   players: [TeamPlayer] @hasMany(indexName: "byTeam", fields: ["id"])
   associatedMatchPosts: [MatchPost] @hasMany(indexName: "byTeam", fields: ["id"])

@@ -21,10 +21,8 @@ import {
   CreateChatMessage,
   GetChatsByProfileId,
   GetChatMessages,
-  DeleteChat,
 } from "../../Functions/Server";
 import CreateChatModal from "../../Modals/ChatModals/CreateChatModal";
-import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
 import { intlFormatDistance } from "date-fns";
 import { onCreateChatMessage } from "../../graphql/subscriptions";
 import { generateClient } from "aws-amplify/api";
@@ -44,8 +42,7 @@ export default function Chats() {
 
   useEffect(() => {
     async function GetChats() {
-      const chats = await GetChatsByProfileId(user.userId);
-      setChats(chats);
+      setChats(await GetChatsByProfileId(user.userId));
       setIsLoading(false);
     }
     GetChats();
@@ -100,18 +97,10 @@ export default function Chats() {
     setMessage("");
   }
 
-  async function deleteChat(chat) {
-    const deletedChatId = await DeleteChat(chat, currentUser.id);
-
-    if (deletedChatId !== null) {
-      setChats(chats.filter((chat) => chat.id !== deletedChatId));
-    }
-  }
-
   function getChatNameFromUsers(chat) {
     let names = chat.users
       .map((user) => {
-        if (user.id !== currentUser.id) return user.name;
+        if (user.profileId !== currentUser.id) return user.profile.name;
         return "";
       })
       .toString();
@@ -160,7 +149,9 @@ export default function Chats() {
               </Flex>
             ) : (
               <Flex height="100%" justifyContent="center" alignItems="center">
-                <Text fontSize="large">No Chats</Text>
+                <Text fontSize="large" opacity="75%">
+                  No Chats
+                </Text>
               </Flex>
             )}
           </>
@@ -186,21 +177,6 @@ export default function Chats() {
                   <Heading className="text-overflow" level={4}>
                     {chat.name ?? getChatNameFromUsers(chat)}
                   </Heading>
-                  {selectedChat !== null && selectedChat.id === chat.id ? (
-                    <Delete
-                      className="chat-icon delete"
-                      onClick={() =>
-                        openModal(
-                          <ConfirmDeleteModal
-                            deleteFunction={() => deleteChat(chat)}
-                          />,
-                          "Confirm Delete Chat"
-                        )
-                      }
-                    />
-                  ) : (
-                    <></>
-                  )}
                 </Flex>
               );
             })}

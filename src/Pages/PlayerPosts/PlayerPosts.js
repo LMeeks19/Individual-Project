@@ -52,20 +52,23 @@ export default function MatchPosts() {
       >
         <Heading level={3}>Player Posts</Heading>
         <Tooltip title={getTooltipMessage()} arrow>
-          <Button
-            className="custom-button"
-            variation="primary"
-            onClick={() =>
-              openModal(<CreatePlayerPostModal />, "Create Player Post")
-            }
-            disabled={
-              currentUser.accountType === accountTypes.PARENT ||
-              currentUser.accountType === accountTypes.NONE
-            }
-          >
-            <Add fontSize="small" className="icon" htmlColor="#f9f1f1" />
-            <Text fontWeight="medium">Create</Text>
-          </Button>
+          <span>
+            <Button
+              className="custom-button"
+              variation="primary"
+              onClick={() =>
+                openModal(<CreatePlayerPostModal />, "Create Player Post")
+              }
+              disabled={
+                currentUser.accountType === accountTypes.PARENT ||
+                currentUser.accountType === accountTypes.NONE ||
+                currentUser.team.id === null
+              }
+            >
+              <Add fontSize="small" className="icon" htmlColor="#f9f1f1" />
+              <Text fontWeight="medium">Create</Text>
+            </Button>
+          </span>
         </Tooltip>
       </Flex>
       <Tabs.Container defaultValue="1">

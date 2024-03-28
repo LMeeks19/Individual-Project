@@ -7,6 +7,7 @@ import {
   playerPostsState,
 } from "../../Functions/GlobalState";
 import SnackbarAlert from "../../Components/Snackbar";
+import { GetUsersPlayerPosts } from "../../Functions/Server";
 
 export default function CreatePlayerPostModal() {
   const currentUser = useRecoilValue(currentUserState);
@@ -23,20 +24,23 @@ export default function CreatePlayerPostModal() {
         padding="0"
         onSubmit={(fields) => {
           const updatedFields = fields;
+          updatedFields.createdByName = currentUser.name;
           updatedFields.createdByProfileID = currentUser.id;
           updatedFields.isActive = true;
           return updatedFields;
         }}
-        onSuccess={(data) => {
-          data.interestedUsers = [];
-          setPlayerPosts([...playerPosts, data]);
+        onSuccess={async (data) => {
+          const userPlayerPosts = await GetUsersPlayerPosts(currentUser.id);
+          const nonUserPlayerPosts = playerPosts.filter(
+            (post) => post.createdByProfileID !== currentUser.id
+          );
+          let updatedPlayerPosts = nonUserPlayerPosts.concat(userPlayerPosts);
+          setPlayerPosts(updatedPlayerPosts);
           new SnackbarAlert().success("Player Post successfully created");
           setModal({ component: null, title: null, isShown: false });
         }}
-        onError={(error) => {
-          new SnackbarAlert().error(
-            "Unable to create Player Post, please try again"
-          );
+        onError={(fields, errorMessage) => {
+          new SnackbarAlert().error(errorMessage);
         }}
       />
     </View>

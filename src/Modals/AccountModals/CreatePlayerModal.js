@@ -28,10 +28,8 @@ export default function CreatePlayerModal() {
           new SnackbarAlert().success("Player successfully created");
           setModal({ component: null, title: null, isShown: false });
         }}
-        onError={(error) => {
-          new SnackbarAlert().error(
-            "Unable to create Player, please try again"
-          );
+        onError={(fields, errorMessage) => {
+          new SnackbarAlert().error(errorMessage);
         }}
       />
     </View>

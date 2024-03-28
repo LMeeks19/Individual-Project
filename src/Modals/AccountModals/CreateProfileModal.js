@@ -24,25 +24,15 @@ export default function CreateProfileModal() {
         }}
         onSuccess={(data) => {
           setCurrentUser({
-            id: data.id,
-            username: data.username,
-            name: data.name,
-            dob: data.dob,
-            email: data.email,
-            phoneNumber: data.phoneNumber,
-            accountType: data.accountType,
-            street: data.street,
-            townCity: data.townCity,
-            county: data.county,
-            postcode: data.postcode,
+            ...data,
+            team: currentUser.team,
+            players: currentUser.players,
           });
           new SnackbarAlert().success("Profile successfully created");
           setModal({ component: null, title: null, isShown: false });
         }}
-        onError={(error) => {
-          new SnackbarAlert().error(
-            "Unable to create Profile, please try again"
-          );
+        onError={(fields, errorMessage) => {
+          new SnackbarAlert().error(errorMessage);
         }}
       />
     </View>

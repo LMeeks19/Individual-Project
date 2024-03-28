@@ -16,8 +16,9 @@ export default function CreateTeamPlayerModal(props) {
       <TeamPlayerCreateForm
         padding="0"
         onSubmit={(fields) => {
-          fields.teamID = currentUser.team.id;
-          return fields;
+          const updatedFields = fields;
+          updatedFields.teamID = currentUser.team.id;
+          return updatedFields;
         }}
         onSuccess={(data) => {
           setCurrentUser({
@@ -30,10 +31,8 @@ export default function CreateTeamPlayerModal(props) {
           new SnackbarAlert().success("Team Player successfully created");
           setModal({ component: null, title: null, isShown: false });
         }}
-        onError={(error) => {
-          new SnackbarAlert().error(
-            "Unable to create Team Player, please try again"
-          );
+        onError={(fields, errorMessage) => {
+          new SnackbarAlert().error(errorMessage);
         }}
       />
     </View>

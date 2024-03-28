@@ -233,6 +233,7 @@ export default function TeamUpdateForm(props) {
       ></TextField>
       <SelectField
         label="Age group"
+        isRequired={true}
         placeholder="Please select an option"
         isDisabled={false}
         value={ageGroup}

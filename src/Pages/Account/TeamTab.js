@@ -8,7 +8,7 @@ import {
   View,
 } from "@aws-amplify/ui-react";
 import "./Account.css";
-import { Edit, Delete } from "@mui/icons-material";
+import { Edit, Delete, Propane } from "@mui/icons-material";
 import { DeleteTeamPlayer } from "../../Functions/Server";
 import { currentUserState, modalState } from "../../Functions/GlobalState";
 import { useRecoilState, useSetRecoilState } from "recoil";
@@ -27,10 +27,16 @@ export function TeamDetails(props) {
               </Heading>
               <Divider />
               <View className="info">
-                <Text className="text">Name: {props.team.name}</Text>
-                <Text className="text">League: {props.team.league}</Text>
-                <Text className="text">Age Group: {props.team.ageGroup}</Text>
-                <Text className="text">Location: {props.team.location}</Text>
+                <Text className="text">Name: {props.team.name ?? "N/A"}</Text>
+                <Text className="text">
+                  League: {props.team.league ?? "N/A"}
+                </Text>
+                <Text className="text">
+                  Age Group: {props.team.ageGroup ?? "N/A"}
+                </Text>
+                <Text className="text">
+                  Location: {props.team.location ?? "N/A"}
+                </Text>
               </View>
             </View>
             <View className="coach-info">
@@ -39,15 +45,23 @@ export function TeamDetails(props) {
               </Heading>
               <Divider />
               <View className="info">
-                <Text className="text">Email: {props.team.email}</Text>
+                <Text className="text">Email: {props.team.email ?? "N/A"}</Text>
                 <Text className="text">
-                  Phone Nmuber: {props.team.phoneNumber}
+                  Phone Nmuber: {props.team.phoneNumber ?? "N/A"}
                 </Text>
                 <Text className="text">
-                  Website:{" "}
-                  <a target="_blank" rel="noreferrer" href={props.team.website}>
-                    {props.team.website}
-                  </a>
+                  Website:
+                  {props.team.website !== null ? (
+                    <a
+                      target="_blank"
+                      rel="noreferrer"
+                      href={props.team.website}
+                    >
+                      {props.team.website}
+                    </a>
+                  ) : (
+                    "N/A"
+                  )}
                 </Text>
               </View>
             </View>

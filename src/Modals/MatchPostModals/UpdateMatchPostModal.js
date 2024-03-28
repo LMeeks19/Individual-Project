@@ -16,40 +16,29 @@ export default function UpdateMatchPostModal(props) {
       <Divider marginBottom="20px" />
       <MatchPostUpdateForm
         padding="0"
-        matchPost={{
-          id: props.post.id,
-          title: props.post.title,
-          description: props.post.description,
-          createdByProfileID: props.post.createdByProfileID,
-          createdByName: props.post.createdByName,
-          teamID: props.post.teamID,
-          teamName: props.post.teamName,
-          gameType: props.post.gameType,
-          ageGroup: props.post.ageGroup,
-          teamSize: props.post.teamSize,
-          substitutionLimit: props.post.substitutionLimit,
-          cards: props.post.cards,
-          halfLength: props.post.halfLength,
-          kickOff: props.post.kickOff,
-          street: props.post.street,
-          townCity: props.post.townCity,
-          county: props.post.county,
-          postcode: props.post.postcode,
-          interestedUsers: props.post.interestedUsers,
-          isActive: props.post.isActive,
+        matchPost={props.post}
+        onSubmit={(fields) => {
+          let updatedFields = fields;
+          updatedFields.createdByProfileID = props.post.createdByProfileID;
+          updatedFields.selectedOpponent = props.post.selectedOpponent;
+          updatedFields.isActive = props.post.isActive;
+          updatedFields.teamName = props.post.teamName;
+          updatedFields.teamID = props.post.teamID;
+          return updatedFields;
         }}
         onSuccess={(data) => {
-          let curPosts = matchPosts.filter((post) => post.id === data.id);
-          data.interestedUsers = data.interestedUsers.items;
-          curPosts.push(data);
-          setMatchPosts(curPosts);
+          let updatedMatchPosts = [...matchPosts].map((post) => {
+            if (post.id === data.id) {
+              return { data, interestedUsers: post.interestedUsers };
+            }
+            return post;
+          });
+          setMatchPosts(updatedMatchPosts);
           new SnackbarAlert().success("Match Post successfully updated");
           setModal({ component: null, title: null, isShown: false });
         }}
-        onError={(error) => {
-          new SnackbarAlert().error(
-            "Unable to update Match Post, please try again"
-          );
+        onError={(fields, errorMessage) => {
+          new SnackbarAlert().error(errorMessage);
         }}
       />
     </View>

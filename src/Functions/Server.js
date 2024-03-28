@@ -43,20 +43,21 @@ export async function GetProfile(user) {
     variables: { id: user.userId },
   });
 
-  const data = apiData.data.getProfile;
+  const profile = apiData.data.getProfile;
 
   return {
-    id: data === null ? user.userId : data.id,
-    name: data?.name,
-    dob: data?.dob,
-    username: data === null ? user.username : data.username,
-    email: data === null ? (await authenticationAttributes).email : data.email,
-    phoneNumber: data?.phoneNumber,
-    accountType: data?.accountType,
-    street: data?.street,
-    townCity: data?.townCity,
-    county: data?.county,
-    postcode: data?.postcode,
+    id: profile === null ? user.userId : profile.id,
+    name: profile === null ? null : profile.name,
+    dob: profile === null ? null : profile.dob,
+    username: profile === null ? user.username : profile.username,
+    email:
+      profile === null ? (await authenticationAttributes).email : profile.email,
+    phoneNumber: profile === null ? null : profile.phoneNumber,
+    accountType: profile === null ? null : profile.accountType,
+    street: profile === null ? null : profile.street,
+    townCity: profile === null ? null : profile.townCity,
+    county: profile === null ? null : profile.county,
+    postcode: profile === null ? null : profile.postcode,
   };
 }
 
@@ -123,19 +124,20 @@ export async function GetTeamByProfileId(profileId) {
     variables: { profileID: profileId },
   });
 
-  const team = apiData.data.teamsByProfileID.items[0];
+  const teams = apiData.data.teamsByProfileID;
+  const team = teams.items[0];
 
   return {
-    id: team?.id ?? null,
-    profileId: team?.profileID ?? null,
-    name: team?.name ?? null,
-    league: team?.league ?? null,
-    ageGroup: team?.ageGroup ?? null,
-    location: team?.location ?? null,
-    email: team?.email ?? null,
-    phoneNumber: team?.phoneNumber ?? null,
-    website: team?.website ?? null,
-    players: team?.players?.items ?? [],
+    id: teams !== null ? team.id : null,
+    profileId: teams !== null ? team.profileID : null,
+    name: teams !== null ? team.name : null,
+    league: teams !== null ? team.league : null,
+    ageGroup: teams !== null ? team.ageGroup : null,
+    location: teams !== null ? team.location : null,
+    email: teams !== null ? team.email : null,
+    phoneNumber: teams !== null ? team.phoneNumber : null,
+    website: teams !== null ? team.website : null,
+    players: teams !== null ? team.players.items : [],
   };
 }
 
@@ -179,6 +181,20 @@ export async function GetMatchPosts() {
 
   const apiData = await client.graphql({
     query: listMatchPosts,
+  });
+
+  let data = apiData.data.listMatchPosts.items;
+
+  data.forEach((post) => (post.interestedUsers = post.interestedUsers.items));
+  return data;
+}
+
+export async function GetUsersMatchPosts(profileId) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: listMatchPosts,
+    variables: { filter: { createdByProfileID: { eq: profileId } } },
   });
 
   let data = apiData.data.listMatchPosts.items;
@@ -321,7 +337,7 @@ export async function GetChatsByProfileId(id) {
   let chats = apiData.data.listChats.items;
 
   chats.forEach((chat) => {
-    chat.users = chat.users.items.map((user) => user.profile);
+    chat.users = chat.users.items;
     chat.messages = [];
   });
   return chats;
@@ -355,52 +371,62 @@ export async function GetChatMessages(chatId) {
   return apiData.data.listChatMessages.items;
 }
 
-export async function DeleteChat(chat, currentUserId) {
-  const client = generateClient();
-  let updatedChat = [];
-
-  try {
-    chat.users.forEach(async (user) => {
-      if (user.profileId === currentUserId) {
-        const deletedUserId = await client.graphql({
-          query: deleteProfileChat,
-          variables: {
-            input: {
-              id: user.id,
-            },
-          },
-        }).data.deleteProfileChat.id;
-
-        updatedChat = await client.graphql({
-          query: updateChat,
-          variables: {
-            input: {
-              id: chat.id,
-              user: chat.users.filter((user) => user.id !== deletedUserId),
-            },
-          },
-        }).data.updateChat;
-      }
-    });
-
-    if (updatedChat.users.length === 0) {
-      const apiData = await client.graphql({
-        query: deleteChat,
-        variables: {
-          input: {
-            id: chat.id,
-          },
-        },
-      });
-      new SnackbarAlert().success("Chat successfully deleted");
-      return apiData.data.deleteChat.id;
-    }
-    new SnackbarAlert().success("Chat successfully deleted");
-  } catch (e) {
-    new SnackbarAlert().error("Unable to delete Chat, please try again later");
-  }
-  return null;
-}
+// export async function DeleteChat(chat, currentUserId) {
+//   const client = generateClient();
+//   let updatedChat = {
+//     id: null,
+//     userIDs: [],
+//   };
+// 
+//   try {
+//     chat.users.forEach(async (chatUser) => {
+//       if (chatUser.profileId === currentUserId) {
+//         await client.graphql({
+//           query: deleteProfileChat,
+//           variables: {
+//             input: {
+//               id: chatUser.id,
+//             },
+//           },
+//         });
+// 
+//         let filteredUserIds = chat.userIDs.filter((id) => id !== currentUserId);
+// 
+//         const apiData = await client.graphql({
+//           query: updateChat,
+//           variables: {
+//             input: {
+//               id: chat.id,
+//               userIDs: filteredUserIds,
+//             },
+//           },
+//         });
+// 
+//         updatedChat = {
+//           id: apiData.data.updateChat.id,
+//           userIDs: apiData.data.updateChat.userIDs,
+//         };
+//       }
+//     });
+// 
+//     if (updatedChat.userIDs.length === 0) {
+//       const apiData = await client.graphql({
+//         query: deleteChat,
+//         variables: {
+//           input: {
+//             id: chat.id,
+//           },
+//         },
+//       });
+//       new SnackbarAlert().success("Chat successfully deleted");
+//       return apiData.data.deleteChat.id;
+//     }
+//     new SnackbarAlert().success("Chat successfully left");
+//   } catch (e) {
+//     new SnackbarAlert().error(e.message);
+//   }
+//   return null;
+// }
 
 // Player Post API Calls
 export async function GetPlayerPosts() {
@@ -415,6 +441,25 @@ export async function GetPlayerPosts() {
   data.forEach((playerPost) => {
     playerPost.interestedUsers = playerPost.interestedUsers.items;
     playerPost.registeredPlayers = playerPost.registeredPlayers.items;
+    playerPost.selectedPlayers = playerPost.selectedPlayers ?? [];
+  });
+  return data;
+}
+
+export async function GetUsersPlayerPosts(profileId) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: listPlayerPosts,
+    variables: { filter: { createdByProfileID: { eq: profileId } } },
+  });
+
+  let data = apiData.data.listPlayerPosts.items;
+
+  data.forEach((playerPost) => {
+    playerPost.interestedUsers = playerPost.interestedUsers.items;
+    playerPost.registeredPlayers = playerPost.registeredPlayers.items;
+    playerPost.selectedPlayers = playerPost.selectedPlayers ?? [];
   });
   return data;
 }

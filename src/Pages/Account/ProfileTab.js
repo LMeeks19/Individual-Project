@@ -21,6 +21,8 @@ import { format } from "date-fns";
 import UpdatePasswordModal from "../../Modals/AccountModals/UpdatePasswordModal";
 import { Edit } from "@mui/icons-material";
 import UpdateEmailModal from "../../Modals/AccountModals/UpdateEmailModal";
+import { AccountType } from "../../Functions/Enums";
+import { Tooltip } from "@mui/material";
 
 export function ViewPersonalTable(props) {
   function formatDate(date) {
@@ -38,25 +40,27 @@ export function ViewPersonalTable(props) {
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Name</TableCell>
           <TableCell className="account-table-cell">
-            {props.currentUser?.name ?? ""}
+            {props.currentUser?.name ?? "N/A"}
           </TableCell>
         </TableRow>
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Date of Birth</TableCell>
           <TableCell className="account-table-cell">
-            {formatDate(props.currentUser.dob)}
+            {props.currentUser.dob !== null
+              ? formatDate(props.currentUser.dob)
+              : "N/A"}
           </TableCell>
         </TableRow>
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Phone Number</TableCell>
           <TableCell className="account-table-cell">
-            {props.currentUser?.phoneNumber ?? ""}
+            {props.currentUser?.phoneNumber ?? "N/A"}
           </TableCell>
         </TableRow>
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Account Type</TableCell>
           <TableCell className="account-table-cell">
-            {props.currentUser?.accountType ?? ""}
+            {props.currentUser?.accountType ?? "N/A"}
           </TableCell>
         </TableRow>
       </TableBody>
@@ -76,25 +80,25 @@ export function ViewAddressTable(props) {
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Street</TableCell>
           <TableCell className="account-table-cell">
-            {props.currentUser?.street ?? ""}
+            {props.currentUser?.street ?? "N/A"}
           </TableCell>
         </TableRow>
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Town/City</TableCell>
           <TableCell className="account-table-cell">
-            {props.currentUser?.townCity ?? ""}
+            {props.currentUser?.townCity ?? "N/A"}
           </TableCell>
         </TableRow>
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">County</TableCell>
           <TableCell className="account-table-cell">
-            {props.currentUser?.county ?? ""}
+            {props.currentUser?.county ?? "N/A"}
           </TableCell>
         </TableRow>
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Postcode</TableCell>
           <TableCell className="account-table-cell">
-            {props.currentUser?.postcode ?? ""}
+            {props.currentUser?.postcode ?? "N/A"}
           </TableCell>
         </TableRow>
       </TableBody>
@@ -103,7 +107,14 @@ export function ViewAddressTable(props) {
 }
 
 export function ViewSecurityTable(props) {
+  const accountTypes = new AccountType();
   const setModal = useSetRecoilState(modalState);
+
+  function changePasswordTooltipMessage() {
+    if (props.currentUser.accountType === accountTypes.NONE)
+      return "Please create a profile first"
+    return "Change password"
+  }
 
   function openModal(component, title) {
     setModal({ component: component, title: title, isShown: true });
@@ -120,35 +131,42 @@ export function ViewSecurityTable(props) {
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Username</TableCell>
           <TableCell className="account-table-cell">
-            {props.currentUser?.username ?? ""}
+            {props.currentUser?.username ?? "N/A"}
           </TableCell>
         </TableRow>
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Email</TableCell>
           <TableCell className="account-table-cell data">
-            {props.currentUser?.email ?? ""}
-            <Edit
-              className="table-icon"
-              fontSize="small"
-              htmlColor="#f9f1f1"
-              onClick={() => openModal(<UpdateEmailModal />, "Update Email")}
-            />
+            {props.currentUser?.email ?? "N/A"}
+            {props.currentUser.accountType === accountTypes.NONE ? (
+              <></>
+            ) : (
+              <Edit
+                className="table-icon"
+                fontSize="small"
+                htmlColor="#f9f1f1"
+                onClick={() => openModal(<UpdateEmailModal />, "Update Email")}
+              />
+            )}
           </TableCell>
         </TableRow>
         <TableRow className="account-table-row">
           <TableCell className="account-table-cell">Password</TableCell>
           <TableCell className="account-table-cell">
-            <Button
-              fontSize="medium"
-              fontWeight="normal"
-              border="none"
-              padding="0 5px"
-              onClick={() =>
-                openModal(<UpdatePasswordModal />, "Update Password")
-              }
-            >
-              Change Password
-            </Button>
+            <Tooltip title={changePasswordTooltipMessage()} arrow>
+              <Button
+                fontSize="medium"
+                fontWeight="normal"
+                border="none"
+                padding="0 5px"
+                disabled={props.currentUser.accountType === accountTypes.NONE}
+                onClick={() =>
+                  openModal(<UpdatePasswordModal />, "Update Password")
+                }
+              >
+                Change Password
+              </Button>
+            </Tooltip>
           </TableCell>
         </TableRow>
       </TableBody>
