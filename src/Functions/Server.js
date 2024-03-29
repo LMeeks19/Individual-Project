@@ -9,6 +9,7 @@ import {
   listChatMessages,
   listPlayerPosts,
   listEmailProfiles,
+  listEvents,
 } from "../graphql/queries";
 import {
   deletePlayer,
@@ -32,6 +33,7 @@ import {
 } from "../graphql/mutations";
 import { fetchUserAttributes } from "aws-amplify/auth";
 import SnackbarAlert from "../Components/Snackbar";
+import { formatDefaultDate } from "./FormatDate";
 
 // Profile API Calls
 export async function GetProfile(user) {
@@ -151,7 +153,9 @@ export async function DeleteTeamPlayer(teamPlayer) {
         },
       },
     });
-    new SnackbarAlert().success(`Team Player ${teamPlayer.name} Successfully deleted`);
+    new SnackbarAlert().success(
+      `Team Player ${teamPlayer.name} Successfully deleted`
+    );
     return apiData.data.deleteTeamPlayer.id;
   } catch (e) {
     new SnackbarAlert().error(
@@ -702,3 +706,20 @@ export async function UpdateProfileEmail(currentUserId, newEmail) {
     new SnackbarAlert().error("Unable to update email, please try again");
   }
 }
+
+export async function GetEvents(dateTime) {
+  const client = generateClient();
+
+  let date = formatDefaultDate(dateTime);
+
+  const apiData = await client.graphql({
+    query: listEvents,
+    variables: {
+      filter: { date: { contains: date } },
+    },
+  });
+
+  return apiData.data.listEvents.items;
+}
+
+//TODO: Create Events;

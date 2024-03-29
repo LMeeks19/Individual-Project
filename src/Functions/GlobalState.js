@@ -14,13 +14,13 @@ export const currentUserState = atom({
     dob: null,
     email: null,
     phoneNumber: null,
-    accountType: null, 
+    accountType: null,
     street: null,
-    townCity: null, 
-    county: null, 
-    postcode: null, 
-    createdAt: null, 
-    updatedAt: null, 
+    townCity: null,
+    county: null,
+    postcode: null,
+    createdAt: null,
+    updatedAt: null,
     players: [],
     team: {
       id: null,
@@ -35,6 +35,11 @@ export const currentUserState = atom({
       players: [],
     },
   },
+});
+
+export const eventsState = atom({
+  key: "eventsState",
+  default: [],
 });
 
 export const matchPostsState = atom({

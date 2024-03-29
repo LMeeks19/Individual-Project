@@ -1994,3 +1994,20 @@ export const listEmailProfiles = /* GraphQL */ `
     }
   }
 `;
+
+export const listEvents = /* GraphQL */ `
+  query ListEvents(
+    $filter: ModelEventFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEvents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        opposingCoach
+        location
+        date
+      }
+    }
+  }
+`;

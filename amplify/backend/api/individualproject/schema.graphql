@@ -39,7 +39,7 @@ enum GameType {
   CUP
 }
 
-type TeamPlayer @model @auth(rules: [{allow: public}]) {
+type TeamPlayer @model @auth(rules: [{ allow: public }]) {
   id: ID!
   name: String!
   age: Int!
@@ -48,7 +48,7 @@ type TeamPlayer @model @auth(rules: [{allow: public}]) {
   teamID: ID! @index(name: "byTeam")
 }
 
-type Team @model @auth(rules: [{allow: public}]) {
+type Team @model @auth(rules: [{ allow: public }]) {
   id: ID!
   name: String!
   league: String!
@@ -59,10 +59,11 @@ type Team @model @auth(rules: [{allow: public}]) {
   website: AWSURL
   profileID: ID! @index(name: "byProfile")
   players: [TeamPlayer] @hasMany(indexName: "byTeam", fields: ["id"])
-  associatedMatchPosts: [MatchPost] @hasMany(indexName: "byTeam", fields: ["id"])
+  associatedMatchPosts: [MatchPost]
+    @hasMany(indexName: "byTeam", fields: ["id"])
 }
 
-type Player @model @auth(rules: [{allow: public}]) {
+type Player @model @auth(rules: [{ allow: public }]) {
   id: ID!
   name: String!
   dob: AWSDate!
@@ -70,10 +71,11 @@ type Player @model @auth(rules: [{allow: public}]) {
   positions: [Positions!]!
   skillLevel: SkillLevel!
   profileID: ID! @index(name: "byProfile")
-  registeredPlayerPosts: [PlayerPost] @manyToMany(relationName: "PlayerPlayerPost")
+  registeredPlayerPosts: [PlayerPost]
+    @manyToMany(relationName: "PlayerPlayerPost")
 }
 
-type Profile @model @auth(rules: [{allow: public}]) {
+type Profile @model @auth(rules: [{ allow: public }]) {
   id: ID!
   username: String!
   name: String!
@@ -88,13 +90,15 @@ type Profile @model @auth(rules: [{allow: public}]) {
   players: [Player] @hasMany(indexName: "byProfile", fields: ["id"])
   team: [Team] @hasMany(indexName: "byProfile", fields: ["id"])
   matchPosts: [MatchPost] @hasMany(indexName: "byProfile", fields: ["id"])
-  interestedMatchPosts: [MatchPost] @manyToMany(relationName: "ProfileMatchPost")
+  interestedMatchPosts: [MatchPost]
+    @manyToMany(relationName: "ProfileMatchPost")
   playerPosts: [PlayerPost] @hasMany(indexName: "byProfile", fields: ["id"])
-  interestedPlayerPosts: [PlayerPost] @manyToMany(relationName: "ProfilePlayerPost")
+  interestedPlayerPosts: [PlayerPost]
+    @manyToMany(relationName: "ProfilePlayerPost")
   chats: [Chat] @manyToMany(relationName: "ProfileChat")
 }
 
-type MatchPost @model @auth(rules: [{allow: public}]) {
+type MatchPost @model @auth(rules: [{ allow: public }]) {
   id: ID!
   title: String!
   description: String!
@@ -118,7 +122,7 @@ type MatchPost @model @auth(rules: [{allow: public}]) {
   selectedOpponent: ID
 }
 
-type PlayerPost @model @auth(rules: [{allow: public}]) {
+type PlayerPost @model @auth(rules: [{ allow: public }]) {
   id: ID!
   title: String!
   description: String!
@@ -139,7 +143,7 @@ type PlayerPost @model @auth(rules: [{allow: public}]) {
   selectedPlayers: [ID]
 }
 
-type Chat @model @auth(rules: [{allow: public}]) {
+type Chat @model @auth(rules: [{ allow: public }]) {
   id: ID!
   name: String
   users: [Profile!] @manyToMany(relationName: "ProfileChat")
@@ -147,10 +151,16 @@ type Chat @model @auth(rules: [{allow: public}]) {
   userIDs: [ID!]!
 }
 
-type ChatMessage @model @auth(rules: [{allow: public}]) {
+type ChatMessage @model @auth(rules: [{ allow: public }]) {
   id: ID!
-  chatID: ID! @index(name: "byChat") 
+  chatID: ID! @index(name: "byChat")
   senderUserID: ID!
   message: String!
 }
- 
+
+type Event @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  opposingCoach: String!
+  location: String!
+  date: AWSDateTime!
+}

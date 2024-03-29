@@ -15,8 +15,16 @@ const locale = {
   formatRelative: (token) => formatRelativeLocale[token],
 };
 
+export function formatDefaultDate(date) {
+  return format(new Date(date), "yyyy-MM-dd");
+}
+
 export function formatDate(date) {
   return format(new Date(date), "do MMMM yyyy");
+}
+
+export function formatTime(date) {
+  return format(new Date(date), "h:mmaaa");
 }
 
 export function formatDateTime(date) {

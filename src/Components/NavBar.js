@@ -10,7 +10,12 @@ import {
 import React, { useEffect } from "react";
 import "./NavBar.css";
 import { useNavigate } from "react-router-dom";
-import { PostAdd, Chat, AccountCircle } from "@mui/icons-material";
+import {
+  PostAdd,
+  Chat,
+  AccountCircle,
+  CalendarMonth,
+} from "@mui/icons-material";
 import { useRecoilValue, useRecoilState } from "recoil";
 import {
   activeNavbarTabState,
@@ -28,15 +33,10 @@ export default function NavBar() {
   useEffect(() => {
     function setTab() {
       if (window.location.href.endsWith("/")) {
-        if (
-          currentUser.accountType === accountTypes.COACH ||
-          currentUser.accountType === accountTypes.ADMIN ||
-          currentUser.accountType === accountTypes.NONE
-        ) {
-          navigate("/match-posts");
-        } else if (currentUser.accountType === accountTypes.PARENT) {
-          navigate("/player-posts");
-        }
+        navigate("/schedule");
+      }
+      if (window.location.href.endsWith("/schedule")) {
+        setActiveNavbarTab("6");
       }
       if (window.location.href.endsWith("/match-posts")) {
         if (currentUser.accountType === accountTypes.PARENT)
@@ -63,6 +63,20 @@ export default function NavBar() {
       </Heading>
       <Tabs.Container className="tab-container" value={activeNavbarTab}>
         <Tabs.List className="navbar" spacing="equal">
+          <Tabs.Item
+            className="item"
+            value="6"
+            onClick={() => {
+              setActiveNavbarTab("6");
+              navigate("/schedule");
+            }}
+          >
+            <Text display="flex">
+              <CalendarMonth className="icon" />
+              SCHEDULE
+            </Text>
+          </Tabs.Item>
+
           {currentUser.accountType === accountTypes.COACH ||
           currentUser.accountType === accountTypes.ADMIN ? (
             <Tabs.Item
