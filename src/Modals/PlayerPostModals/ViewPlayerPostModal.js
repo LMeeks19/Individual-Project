@@ -11,7 +11,6 @@ import {
   View,
   Badge,
 } from "@aws-amplify/ui-react";
-import { format } from "date-fns";
 import "./ViewPlayerPostModal.css";
 import {
   Close,
@@ -38,6 +37,7 @@ import {
   UnselectPlayerPostPlayer,
 } from "../../Functions/Server";
 import ConfirmModal from "../ConfirmModal";
+import { formatDateTime } from "../../Functions/FormatDate";
 
 export default function ViewPlayerPostModal(props) {
   const currentUser = useRecoilValue(currentUserState);
@@ -46,10 +46,6 @@ export default function ViewPlayerPostModal(props) {
   const [post, setPost] = useState(props.post);
   const [playerPosts, setPlayerPosts] = useRecoilState(playerPostsState);
   const setActiveNavbarTab = useSetRecoilState(activeNavbarTabState);
-
-  function formatDateTime(date) {
-    return format(new Date(date), "do MMMM yyyy @ H:mm a");
-  }
 
   function updateIsShown(id, field) {
     let updatedList = [...post.registeredPlayers].map((item) => {

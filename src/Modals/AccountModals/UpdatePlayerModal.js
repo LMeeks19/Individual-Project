@@ -16,12 +16,20 @@ export default function UpdatePlayerModal(props) {
       <PlayerUpdateForm
         padding="0"
         player={props.player}
+        onSubmit={(fields) => {
+          const updatedFields = fields;
+          updatedFields.id = props.player.id;
+          updatedFields.profileID = props.player.profileID;
+          return updatedFields;
+        }}
         onSuccess={(data) => {
-          data.isShown = false;
-          let updatedPlayers = currentUser.players.filter(
-            (player) => player.id !== props.player.id
-          );
-          updatedPlayers.push(data);
+          let updatedPlayers = [...currentUser.players].map((player) => {
+            if (player.id === data.id) {
+              return { ...data, isShown: props.player.isShown };
+            } else {
+              return player;
+            }
+          });
           setCurrentUser({ ...currentUser, players: updatedPlayers });
           new SnackbarAlert().success("Player successfully updated");
           setModal({ component: null, title: null, isShown: false });

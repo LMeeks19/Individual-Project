@@ -3,6 +3,7 @@ import { PlayerCreateForm } from "../../ui-components";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { currentUserState, modalState } from "../../Functions/GlobalState";
 import SnackbarAlert from "../../Components/Snackbar";
+import { GetPlayersByProfileId } from "../../Functions/Server";
 
 export default function CreatePlayerModal() {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
@@ -19,11 +20,10 @@ export default function CreatePlayerModal() {
           fields.profileID = currentUser.id;
           return fields;
         }}
-        onSuccess={(data) => {
-          data.isShown = false;
+        onSuccess={async (data) => {
           setCurrentUser({
             ...currentUser,
-            players: [...currentUser.players, data],
+            players: await GetPlayersByProfileId(currentUser.id),
           });
           new SnackbarAlert().success("Player successfully created");
           setModal({ component: null, title: null, isShown: false });

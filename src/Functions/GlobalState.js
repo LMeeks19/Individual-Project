@@ -65,7 +65,7 @@ export const selectedChatState = atom({
 
 export const warningIsShownState = atom({
   key: "warningIsShownState",
-  default: false,
+  default: true,
 });
 
 export const modalState = atom({

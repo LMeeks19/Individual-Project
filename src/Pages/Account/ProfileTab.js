@@ -14,20 +14,16 @@ import "./Account.css";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { modalState, themeState } from "../../Functions/GlobalState";
 
-import { MdLightMode } from "react-icons/md";
-import { MdDarkMode } from "react-icons/md";
+import { MdLightMode, MdDarkMode } from "react-icons/md";
 import { VscColorMode } from "react-icons/vsc";
-import { format } from "date-fns";
 import UpdatePasswordModal from "../../Modals/AccountModals/UpdatePasswordModal";
 import { Edit } from "@mui/icons-material";
 import UpdateEmailModal from "../../Modals/AccountModals/UpdateEmailModal";
 import { AccountType } from "../../Functions/Enums";
 import { Tooltip } from "@mui/material";
+import { formatDate } from "../../Functions/FormatDate";
 
 export function ViewPersonalTable(props) {
-  function formatDate(date) {
-    return format(new Date(date), "do MMMM yyyy");
-  }
 
   return (
     <Table

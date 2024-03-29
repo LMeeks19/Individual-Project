@@ -14,7 +14,6 @@ import {
   playerPostsState,
 } from "../../Functions/GlobalState";
 import { useState } from "react";
-import { format } from "date-fns";
 import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
 import { useSetRecoilState, useRecoilState } from "recoil";
 import "./PlayerPosts.css";
@@ -34,6 +33,7 @@ import ViewPlayerPostModal from "../../Modals/PlayerPostModals/ViewPlayerPostMod
 import UpdatePlayerPostModal from "../../Modals/PlayerPostModals/UpdatePlayerPostModal";
 import RegisterPlayerModal from "../../Modals/PlayerPostModals/RegisterPlayerModal";
 import { AccountType } from "../../Functions/Enums";
+import { formatDateTimeRelative } from "../../Functions/FormatDate";
 
 export default function PlayerPostsTab(props) {
   const [page, setPage] = useState(0);
@@ -52,10 +52,6 @@ export default function PlayerPostsTab(props) {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-
-  function formatDate(date) {
-    return format(new Date(date), "do MMMM yyyy @ h:mm a");
-  }
 
   async function deletePlayerPost(playerPost) {
     const deletedPlayerPostId = await DeletePlayerPost(playerPost);
@@ -123,7 +119,7 @@ export default function PlayerPostsTab(props) {
                     <Text>{post.description}</Text>
                   </td>
                   <td className="created-on">
-                    <Text>{formatDate(post.createdAt)}</Text>
+                    <Text>{formatDateTimeRelative(post.createdAt)}</Text>
                   </td>
                   {props.currentUser.accountType !== accountTypes.NONE ? (
                     <td className="actions">
@@ -196,9 +192,9 @@ export default function PlayerPostsTab(props) {
                                 />
                               </Tooltip>
                               <Divider orientation="vertical" />
-                              {post.interestedUsers.some(
-                                (interestedUser) =>
-                                  interestedUser.profileId ===
+                              {post.registeredPlayers.some(
+                                (registeredPlayer) =>
+                                  registeredPlayer.player.profileID ===
                                   props.currentUser.id
                               ) ? (
                                 <Tooltip title="Unregister Interest" arrow>
@@ -209,7 +205,7 @@ export default function PlayerPostsTab(props) {
                                         <RegisterPlayerModal
                                           playerPost={post}
                                         />,
-                                        "Player Registration"
+                                        "Player UnRegistration"
                                       )
                                     }
                                   />

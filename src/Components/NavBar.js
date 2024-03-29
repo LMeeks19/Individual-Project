@@ -39,12 +39,17 @@ export default function NavBar() {
         }
       }
       if (window.location.href.endsWith("/match-posts")) {
-        setActiveNavbarTab("1");
-      } else if (window.location.href.endsWith("/player-posts")) {
+        if (currentUser.accountType === accountTypes.PARENT)
+          navigate("/player-posts");
+        else setActiveNavbarTab("1");
+      }
+      if (window.location.href.endsWith("/player-posts")) {
         setActiveNavbarTab("2");
-      } else if (window.location.href.endsWith("/messages")) {
+      }
+      if (window.location.href.endsWith("/messages")) {
         setActiveNavbarTab("3");
-      } else if (window.location.href.endsWith("/account")) {
+      }
+      if (window.location.href.endsWith("/account")) {
         setActiveNavbarTab("4");
       }
     }
@@ -58,19 +63,24 @@ export default function NavBar() {
       </Heading>
       <Tabs.Container className="tab-container" value={activeNavbarTab}>
         <Tabs.List className="navbar" spacing="equal">
-          <Tabs.Item
-            className="item"
-            value="1"
-            onClick={() => {
-              setActiveNavbarTab("1");
-              navigate("/match-posts");
-            }}
-          >
-            <Text display="flex">
-              <PostAdd className="icon" />
-              MATCH POSTS
-            </Text>
-          </Tabs.Item>
+          {currentUser.accountType === accountTypes.COACH ||
+          currentUser.accountType === accountTypes.ADMIN ? (
+            <Tabs.Item
+              className="item"
+              value="1"
+              onClick={() => {
+                setActiveNavbarTab("1");
+                navigate("/match-posts");
+              }}
+            >
+              <Text display="flex">
+                <PostAdd className="icon" />
+                MATCH POSTS
+              </Text>
+            </Tabs.Item>
+          ) : (
+            <></>
+          )}
 
           <Tabs.Item
             className="item"

@@ -10,7 +10,6 @@ import {
   Text,
   View,
 } from "@aws-amplify/ui-react";
-import { format } from "date-fns";
 import "./ViewMatchPostModal.css";
 import {
   Close,
@@ -34,6 +33,7 @@ import {
   SelectMatchPostOpponent,
 } from "../../Functions/Server";
 import ConfirmModal from "../ConfirmModal";
+import { formatDateTime } from "../../Functions/FormatDate";
 
 export default function ViewMatchPostModal(props) {
   const currentUser = useRecoilValue(currentUserState);
@@ -42,10 +42,6 @@ export default function ViewMatchPostModal(props) {
   const [post, setPost] = useState(props.post);
   const [matchPosts, setMatchPosts] = useRecoilState(matchPostsState);
   const setActiveNavbarTab = useSetRecoilState(activeNavbarTabState);
-
-  function formatDateTime(date) {
-    return format(new Date(date), "do MMMM yyyy @ h:mm a");
-  }
 
   function updateIsShown(id, field) {
     let updatedList = [...post.interestedUsers].map((item) => {

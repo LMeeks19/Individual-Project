@@ -62,7 +62,7 @@ export default function RegisterPlayerModal(props) {
         }}
         onSuccess={async () => {
           setPlayerPosts(await GetPlayerPosts());
-          new SnackbarAlert().success("Interest successfully registered");
+          new SnackbarAlert().success("Interest successfully updated");
           setModal({ component: null, title: null, isShown: false });
         }}
         onError={(fields, errorMessage) => {

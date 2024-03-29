@@ -1,43 +1,9 @@
 .warning {
-	background-color: indianred;
-	height: 0px;
-	border-radius: 20px;
-	text-align: center;
-	position: relative;
-	overflow: hidden;
-	transition: height 1s ease-in-out;
+	display: flex;
+	margin: 50px 50px 0 50px;
+	align-items: center;
 
-	&.show {
-		height: fit-content;
-		padding: 20px;
-		margin: 50px;
-		margin-bottom: 0px;
+	&.hide {
+		display: none;
 	}
-}
-
-.warning-header {
-	font-size: x-large;
-	font-weight: bold;
-}
-
-.warning-message,
-.warning-link {
-	margin-top: 10px;
-	font-size: larger;
-}
-
-.warning-close {
-	position: absolute;
-	top: 0;
-	right: 0;
-	margin: 20px;
-	font-size: larger;
-	font-weight: bold;
-	cursor: pointer;
-}
-
-.warning-link {
-	text-decoration: underline;
-	cursor: pointer;
-	font-weight: lighter;
 }

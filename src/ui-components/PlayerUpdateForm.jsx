@@ -367,7 +367,7 @@ export default function PlayerUpdateForm(props) {
         {...getOverrideProps(overrides, "name")}
       ></TextField>
       <TextField
-        label="Dob"
+        label="Date of Birth"
         isRequired={true}
         isReadOnly={false}
         type="date"

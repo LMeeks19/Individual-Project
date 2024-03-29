@@ -1,43 +1,42 @@
-import { View, Text } from "@aws-amplify/ui-react";
-import { Close } from "@mui/icons-material";
 import "./Warning-Message.css";
-import { useRecoilState } from "recoil";
-import { modalState, warningIsShownState } from "../Functions/GlobalState";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  currentUserState,
+  warningIsShownState,
+} from "../Functions/GlobalState";
+import { Alert, IconButton } from "@mui/material";
+import { Close, Warning } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
-export default function WarningMessage(props) {
+export default function WarningMessage() {
   const [warningIsShown, setWarningIsShown] =
     useRecoilState(warningIsShownState);
-  const [modal, setModal] = useRecoilState(modalState);
+  const currentUser = useRecoilValue(currentUserState);
+  const navigate = useNavigate();
 
   return (
-    <View
+    <Alert
       className={`warning ${
-        Object.values(props.currentUser).some((v) => v === null) &&
-        warningIsShown
-          ? "show"
-          : ""
+        Object.values(currentUser).some((value) => value === null) &&
+        warningIsShown && !window.location.href.endsWith("/messages")
+          ? ""
+          : "hide"
       }`}
-    >
-      <View className="warning-close" onClick={() => setWarningIsShown(false)}>
-        <Text>
-          <Close />
-        </Text>
-      </View>
-      <View className="warning-header">
-        <Text>! WARNING !</Text>
-      </View>
-      <View className="warning-message">
-        <Text>
-          Access to certain features is be disabled until account set-up has
-          been completed
-        </Text>
-        <Text
-          className="warning-link"
-          onClick={() => setModal({ ...modal, isShown: true })}
+      severity="warning"
+      variant="filled"
+      icon={<Warning fontSize="inherit" />}
+      action={
+        <IconButton
+          aria-label="close"
+          color="inherit"
+          onClick={() => {
+            setWarningIsShown(false);
+          }}
         >
-          Create Profile
-        </Text>
-      </View>
-    </View>
+          <Close fontSize="inerit" />
+        </IconButton>
+      }
+    >
+      Various features will be unavailable until a <a href="" onClick={() => navigate("/account")}>profile</a> has been created</Alert>
   );
 }

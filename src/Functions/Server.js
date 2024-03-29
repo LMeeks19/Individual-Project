@@ -62,7 +62,7 @@ export async function GetProfile(user) {
 }
 
 // Player API Calls
-export async function DeletePlayer(id) {
+export async function DeletePlayer(player) {
   const client = generateClient();
 
   try {
@@ -70,11 +70,11 @@ export async function DeletePlayer(id) {
       query: deletePlayer,
       variables: {
         input: {
-          id: id,
+          id: player.id,
         },
       },
     });
-    new SnackbarAlert().success("Player successfully deleted");
+    new SnackbarAlert().success(`Player: ${player.name} successfully deleted`);
     return apiData.data.deletePlayer.id;
   } catch (e) {
     new SnackbarAlert().error(
@@ -100,8 +100,6 @@ export async function DeleteTeam(team) {
   const client = generateClient();
 
   try {
-    team.players.forEach((player) => DeleteTeamPlayer(player.id));
-
     await client.graphql({
       query: deleteTeam,
       variables: {
@@ -124,25 +122,24 @@ export async function GetTeamByProfileId(profileId) {
     variables: { profileID: profileId },
   });
 
-  const teams = apiData.data.teamsByProfileID;
-  const team = teams.items[0];
+  const team = apiData.data.teamsByProfileID.items[0] ?? null;
 
   return {
-    id: teams !== null ? team.id : null,
-    profileId: teams !== null ? team.profileID : null,
-    name: teams !== null ? team.name : null,
-    league: teams !== null ? team.league : null,
-    ageGroup: teams !== null ? team.ageGroup : null,
-    location: teams !== null ? team.location : null,
-    email: teams !== null ? team.email : null,
-    phoneNumber: teams !== null ? team.phoneNumber : null,
-    website: teams !== null ? team.website : null,
-    players: teams !== null ? team.players.items : [],
+    id: team !== null ? team.id : null,
+    profileId: team !== null ? team.profileID : null,
+    name: team !== null ? team.name : null,
+    league: team !== null ? team.league : null,
+    ageGroup: team !== null ? team.ageGroup : null,
+    location: team !== null ? team.location : null,
+    email: team !== null ? team.email : null,
+    phoneNumber: team !== null ? team.phoneNumber : null,
+    website: team !== null ? team.website : null,
+    players: team !== null ? team.players.items : [],
   };
 }
 
 // Team Player API Calls
-export async function DeleteTeamPlayer(id) {
+export async function DeleteTeamPlayer(teamPlayer) {
   const client = generateClient();
 
   try {
@@ -150,11 +147,11 @@ export async function DeleteTeamPlayer(id) {
       query: deleteTeamPlayer,
       variables: {
         input: {
-          id: id,
+          id: teamPlayer.id,
         },
       },
     });
-    new SnackbarAlert().success("Team Player Successfully deleted");
+    new SnackbarAlert().success(`Team Player ${teamPlayer.name} Successfully deleted`);
     return apiData.data.deleteTeamPlayer.id;
   } catch (e) {
     new SnackbarAlert().error(
@@ -377,7 +374,7 @@ export async function GetChatMessages(chatId) {
 //     id: null,
 //     userIDs: [],
 //   };
-// 
+//
 //   try {
 //     chat.users.forEach(async (chatUser) => {
 //       if (chatUser.profileId === currentUserId) {
@@ -389,9 +386,9 @@ export async function GetChatMessages(chatId) {
 //             },
 //           },
 //         });
-// 
+//
 //         let filteredUserIds = chat.userIDs.filter((id) => id !== currentUserId);
-// 
+//
 //         const apiData = await client.graphql({
 //           query: updateChat,
 //           variables: {
@@ -401,14 +398,14 @@ export async function GetChatMessages(chatId) {
 //             },
 //           },
 //         });
-// 
+//
 //         updatedChat = {
 //           id: apiData.data.updateChat.id,
 //           userIDs: apiData.data.updateChat.userIDs,
 //         };
 //       }
 //     });
-// 
+//
 //     if (updatedChat.userIDs.length === 0) {
 //       const apiData = await client.graphql({
 //         query: deleteChat,

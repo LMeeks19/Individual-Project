@@ -93,8 +93,8 @@ export function TeamRoster(props) {
     setModal({ component: component, title: title, isShown: true });
   }
 
-  async function deleteTeamPlayer(id) {
-    const deletedId = await DeleteTeamPlayer(id);
+  async function deleteTeamPlayer(teamPlayer) {
+    const deletedId = await DeleteTeamPlayer(teamPlayer);
     setCurrentUser({
       ...currentUser,
       team: {
@@ -132,7 +132,7 @@ export function TeamRoster(props) {
                         onClick={() =>
                           openModal(
                             <ConfirmDeleteModal
-                              deleteFunction={() => deleteTeamPlayer(player.id)}
+                              deleteFunction={() => deleteTeamPlayer(player)}
                             />,
                             "Confirm Delete Team Player"
                           )

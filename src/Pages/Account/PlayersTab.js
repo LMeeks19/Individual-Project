@@ -2,7 +2,6 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import "./Account.css";
 import { modalState, currentUserState } from "../../Functions/GlobalState";
 import { Card, View, Heading, Flex, Text, Badge } from "@aws-amplify/ui-react";
-import { format } from "date-fns";
 
 import {
   KeyboardArrowDown,
@@ -13,14 +12,11 @@ import {
 import { DeletePlayer } from "../../Functions/Server";
 import UpdatePlayerModal from "../../Modals/AccountModals/UpdatePlayerModal";
 import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
+import { formatDate } from "../../Functions/FormatDate";
 
 export default function ViewRegisteredPlayers() {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const setModal = useSetRecoilState(modalState);
-
-  function formatDate(date) {
-    return format(new Date(date), "do MMMM yyyy");
-  }
 
   function updateIsShown(registeredPlayerId) {
     let updatedList = [...currentUser.players].map((item) => {
@@ -35,8 +31,8 @@ export default function ViewRegisteredPlayers() {
     });
   }
 
-  async function deletePlayer(playerId) {
-    const deletedId = await DeletePlayer(playerId);
+  async function deletePlayer(player) {
+    const deletedId = await DeletePlayer(player);
     setCurrentUser({
       ...currentUser,
       players: currentUser.players.filter((player) => player.id !== deletedId),
@@ -63,13 +59,13 @@ export default function ViewRegisteredPlayers() {
         </View>
       ) : (
         <View>
-          {currentUser.players.map((registeredPlayer) => {
+          {currentUser.players.map((player) => {
             return (
               <Card
                 className={`registered-player-card ${
-                  registeredPlayer.isShown ? "show" : ""
+                  player.isShown ? "show" : ""
                 }`}
-                key={registeredPlayer.id}
+                key={player.id}
               >
                 <Flex
                   className="registered-player-heading"
@@ -77,7 +73,7 @@ export default function ViewRegisteredPlayers() {
                   justifyContent="space-between"
                 >
                   <Heading className="header" level={5}>
-                    {registeredPlayer.name}
+                    {player.name}
                   </Heading>
                   <Flex direction="row">
                     <Text>
@@ -85,7 +81,7 @@ export default function ViewRegisteredPlayers() {
                         className="icon-button"
                         onClick={() =>
                           openModal(
-                            <UpdatePlayerModal player={registeredPlayer} />,
+                            <UpdatePlayerModal player={player} />,
                             "Update Player"
                           )
                         }
@@ -98,7 +94,7 @@ export default function ViewRegisteredPlayers() {
                           openModal(
                             <ConfirmDeleteModal
                               deleteFunction={() =>
-                                deletePlayer(registeredPlayer.id)
+                                deletePlayer(player)
                               }
                             />,
                             "Confirm Delete Player"
@@ -107,31 +103,31 @@ export default function ViewRegisteredPlayers() {
                       />
                     </Text>
                     <Text>
-                      {registeredPlayer.isShown ? (
+                      {player.isShown ? (
                         <KeyboardArrowUp
                           className="icon-button"
-                          onClick={() => updateIsShown(registeredPlayer.id)}
+                          onClick={() => updateIsShown(player.id)}
                         />
                       ) : (
                         <KeyboardArrowDown
                           className="icon-button"
-                          onClick={() => updateIsShown(registeredPlayer.id)}
+                          onClick={() => updateIsShown(player.id)}
                         />
                       )}
                     </Text>
                   </Flex>
                 </Flex>
                 <View className="info">
-                  <Text className="text">Name: {registeredPlayer.name}</Text>
+                  <Text className="text">Name: {player.name}</Text>
                   <Text className="text">
-                    Date of Birth: {formatDate(registeredPlayer.dob)}
+                    Date of Birth: {formatDate(player.dob)}
                   </Text>
                   <Text className="text">
-                    Age Group: {registeredPlayer.ageGroup}
+                    Age Group: {player.ageGroup}
                   </Text>
                   <Flex className="text">
                     <Text>Positions:</Text>
-                    {registeredPlayer.positions.map((position) => {
+                    {player.positions.map((position) => {
                       return (
                         <Badge className="position-badge" key={position}>
                           {position}
@@ -140,7 +136,7 @@ export default function ViewRegisteredPlayers() {
                     })}
                   </Flex>
                   <Text className="text">
-                    Skill Level: {registeredPlayer.skillLevel}
+                    Skill Level: {player.skillLevel}
                   </Text>
                 </View>
               </Card>
