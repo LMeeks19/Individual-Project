@@ -63,6 +63,37 @@ export async function GetProfile(user) {
   };
 }
 
+export async function GetProfileEmails(newEmail) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: listEmailProfiles,
+    variables: {
+      filter: { email: { eq: newEmail } },
+    },
+  });
+
+  return apiData.data.listProfiles.items;
+}
+
+export async function UpdateProfileEmail(currentUserId, newEmail) {
+  const client = generateClient();
+
+  try {
+    await client.graphql({
+      query: updateProfileEmail,
+      variables: {
+        input: {
+          id: currentUserId,
+          email: newEmail,
+        },
+      },
+    });
+  } catch (error) {
+    new SnackbarAlert().error("Unable to update email, please try again");
+  }
+}
+
 // Player API Calls
 export async function DeletePlayer(player) {
   const client = generateClient();
@@ -372,63 +403,6 @@ export async function GetChatMessages(chatId) {
   return apiData.data.listChatMessages.items;
 }
 
-// export async function DeleteChat(chat, currentUserId) {
-//   const client = generateClient();
-//   let updatedChat = {
-//     id: null,
-//     userIDs: [],
-//   };
-//
-//   try {
-//     chat.users.forEach(async (chatUser) => {
-//       if (chatUser.profileId === currentUserId) {
-//         await client.graphql({
-//           query: deleteProfileChat,
-//           variables: {
-//             input: {
-//               id: chatUser.id,
-//             },
-//           },
-//         });
-//
-//         let filteredUserIds = chat.userIDs.filter((id) => id !== currentUserId);
-//
-//         const apiData = await client.graphql({
-//           query: updateChat,
-//           variables: {
-//             input: {
-//               id: chat.id,
-//               userIDs: filteredUserIds,
-//             },
-//           },
-//         });
-//
-//         updatedChat = {
-//           id: apiData.data.updateChat.id,
-//           userIDs: apiData.data.updateChat.userIDs,
-//         };
-//       }
-//     });
-//
-//     if (updatedChat.userIDs.length === 0) {
-//       const apiData = await client.graphql({
-//         query: deleteChat,
-//         variables: {
-//           input: {
-//             id: chat.id,
-//           },
-//         },
-//       });
-//       new SnackbarAlert().success("Chat successfully deleted");
-//       return apiData.data.deleteChat.id;
-//     }
-//     new SnackbarAlert().success("Chat successfully left");
-//   } catch (e) {
-//     new SnackbarAlert().error(e.message);
-//   }
-//   return null;
-// }
-
 // Player Post API Calls
 export async function GetPlayerPosts() {
   const client = generateClient();
@@ -676,37 +650,7 @@ export async function ReactivatePlayerPost(playerPostId) {
   }
 }
 
-export async function GetProfileEmails(newEmail) {
-  const client = generateClient();
-
-  const apiData = await client.graphql({
-    query: listEmailProfiles,
-    variables: {
-      filter: { email: { eq: newEmail } },
-    },
-  });
-
-  return apiData.data.listProfiles.items;
-}
-
-export async function UpdateProfileEmail(currentUserId, newEmail) {
-  const client = generateClient();
-
-  try {
-    await client.graphql({
-      query: updateProfileEmail,
-      variables: {
-        input: {
-          id: currentUserId,
-          email: newEmail,
-        },
-      },
-    });
-  } catch (error) {
-    new SnackbarAlert().error("Unable to update email, please try again");
-  }
-}
-
+// Schedule API Calls
 export async function GetEvents(dateTime) {
   const client = generateClient();
 

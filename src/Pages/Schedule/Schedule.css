@@ -162,13 +162,8 @@
                         text-align: center;
                         padding-left: 20px !important;
                         padding: 10px;
-
-                        .amplify-text {
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                            white-space: nowrap;
-                        }
                     }
+
 
                     th:first-child,
                     td:first-child,
