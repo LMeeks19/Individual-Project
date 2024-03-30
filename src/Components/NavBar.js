@@ -140,6 +140,12 @@ export default function NavBar() {
         </Tabs.List>
       </Tabs.Container>
       <Menu width="fit-content" menuAlign="end">
+        <MenuItem onClick={() => navigate("/schedule")}>
+          <Text display="flex">
+            <CalendarMonth className="icon" />
+            SCHEDULE
+          </Text>
+        </MenuItem>
         <Divider />
         <MenuItem onClick={() => navigate("/match-posts")}>
           <Text display="flex">

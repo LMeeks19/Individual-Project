@@ -29,11 +29,13 @@ import {
 } from "../../Functions/GlobalState";
 import { useNavigate } from "react-router-dom";
 import {
+  CreateEvent,
   RemoveMatchPostInterestedUser,
   SelectMatchPostOpponent,
 } from "../../Functions/Server";
 import ConfirmModal from "../ConfirmModal";
 import { formatDateTime } from "../../Functions/FormatDate";
+import { EventStatus } from "../../Functions/Enums";
 
 export default function ViewMatchPostModal(props) {
   const currentUser = useRecoilValue(currentUserState);
@@ -71,6 +73,21 @@ export default function ViewMatchPostModal(props) {
       return post;
     });
     setMatchPosts(updatedMatchPosts);
+
+    let opposingCoach = updatedMatchPost.interestedUsers.find(
+      (iu) => iu.id === updatedMatchPost.selectedOpponent
+    );
+    await CreateEvent({
+      createdByProfileId: updatedMatchPost.createdByProfileID,
+      associtedUsersProfileIDs: [
+        updatedMatchPost.createdByProfileID,
+        updatedMatchPost.selectedOpponent,
+      ],
+      opposingCoachName: opposingCoach.profile.name,
+      location: `${updatedMatchPost.street}, ${updatedMatchPost.townCity}, ${updatedMatchPost.county}, ${updatedMatchPost.postcode}`,
+      date: updatedMatchPost.kickOff,
+      status: new EventStatus().SCHEDULED,
+    });
   }
 
   async function rejectCoach(interestedUserId) {

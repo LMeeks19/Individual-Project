@@ -2,9 +2,10 @@ import { Close } from "@mui/icons-material";
 import { enqueueSnackbar, closeSnackbar } from "notistack";
 
 export default class SnackbarAlert {
-  success(message) {
+  queueAlert(varient, message) {
     enqueueSnackbar(message, {
-      variant: "success",
+      variant: varient,
+      autoHideDuration: "2000",
       action: (key) => (
         <Close
           sx={{ cursor: "pointer" }}
@@ -13,57 +14,25 @@ export default class SnackbarAlert {
         />
       ),
     });
+  }
+
+  success(message) {
+    this.queueAlert("success", message);
   }
 
   info(message) {
-    enqueueSnackbar(message, {
-      variant: "info",
-      action: (key) => (
-        <Close
-          sx={{ cursor: "pointer" }}
-          size="small"
-          onClick={() => closeSnackbar(key)}
-        />
-      ),
-    });
+    this.queueAlert("info", message);
   }
 
   warn(message) {
-    enqueueSnackbar(message, {
-      variant: "warning",
-      action: (key) => (
-        <Close
-          sx={{ cursor: "pointer" }}
-          size="small"
-          onClick={() => closeSnackbar(key)}
-        />
-      ),
-    });
+    this.queueAlert("warning", message);
   }
 
   error(message) {
-    enqueueSnackbar(message, {
-      variant: "error",
-      action: (key) => (
-        <Close
-          sx={{ cursor: "pointer" }}
-          size="small"
-          onClick={() => closeSnackbar(key)}
-        />
-      ),
-    });
+    this.queueAlert("error", message);
   }
 
   default(message) {
-    enqueueSnackbar(message, {
-      variant: "default",
-      action: (key) => (
-        <Close
-          sx={{ cursor: "pointer" }}
-          size="small"
-          onClick={() => closeSnackbar(key)}
-        />
-      ),
-    });
+    this.queueAlert("default", message);
   }
 }

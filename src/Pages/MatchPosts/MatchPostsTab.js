@@ -18,7 +18,6 @@ import {
   AddMatchPostInterestedUser,
   DeleteMatchPost,
   RemoveMatchPostInterestedUser,
-  ReactivateMatchPost,
 } from "../../Functions/Server";
 import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
 import { useSetRecoilState, useRecoilState } from "recoil";
@@ -60,17 +59,6 @@ export default function MatchPostsTab(props) {
   async function deleteMatchPost(matchPost) {
     const deletedMatchPostId = await DeleteMatchPost(matchPost);
     setMatchPosts(matchPosts.filter((post) => post.id !== deletedMatchPostId));
-  }
-
-  async function reActivateMatchPost(matchPostId) {
-    const updatedMatchPost = await ReactivateMatchPost(matchPostId);
-    let updatedMatchPosts = [...matchPosts].map((post) => {
-      if (post.id === updatedMatchPost.id) {
-        return updatedMatchPost;
-      }
-      return post;
-    });
-    setMatchPosts(updatedMatchPosts);
   }
 
   async function registerInterest(profileId, matchPostId) {
@@ -285,19 +273,6 @@ export default function MatchPostsTab(props) {
                               }
                             />
                           </Tooltip>
-                          {post.createdByProfileID === props.currentUser.id ? (
-                            <>
-                              <Divider orientation="vertical" />
-                              <Tooltip title="Reactivate Match Post" arrow>
-                                <Replay
-                                  className="icon"
-                                  onClick={() => reActivateMatchPost(post.id)}
-                                />
-                              </Tooltip>
-                            </>
-                          ) : (
-                            <></>
-                          )}
                         </Flex>
                       </Text>
                     )}

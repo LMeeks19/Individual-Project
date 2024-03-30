@@ -7,7 +7,7 @@ const formatRelativeLocale = {
   today: "'Today at' h:mmaaa",
   tomorrow: "'Tomorrow at' h:mmaaa",
   nextWeek: "eeee 'at' h:mmaaa",
-  other: "do MMMM yyyy 'at' h:mmaaa",
+  other: "eeee do MMMM yyyy 'at' h:mmaaa",
 };
 
 const locale = {
@@ -23,12 +23,24 @@ export function formatDate(date) {
   return format(new Date(date), "do MMMM yyyy");
 }
 
+export function formatDayOfWeekDate(date) {
+  return format(new Date(date), "eeee do MMMM yyyy");
+}
+
 export function formatTime(date) {
   return format(new Date(date), "h:mmaaa");
 }
 
 export function formatDateTime(date) {
   return format(new Date(date), "do MMMM yyyy 'at' h:mmaaa");
+}
+
+export function formatDayOfWeekTimeDate(date) {
+  return format(new Date(date), "h:mmaaa 'on' eeee do MMMM yyyy");
+}
+
+export function formatDayOfWeekDateTime(date) {
+  return format(new Date(date), "eeee do MMMM yyyy 'at' h:mmaaa");
 }
 
 export function formatDateTimeRelative(date) {

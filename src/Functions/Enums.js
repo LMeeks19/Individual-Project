@@ -4,3 +4,8 @@ export class AccountType {
   PARENT = "PARENT";
   NONE = null;
 }
+
+export class EventStatus {
+  SCHEDULED = "SCHEDULED";
+  CANCELLED = "CANCELLED";
+}

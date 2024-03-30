@@ -2070,3 +2070,37 @@ export const updateProfileEmail = /* GraphQL */ `
     }
   }
 `;
+
+export const createEvent = /* GraphQL */ `
+  mutation CreateEvent(
+    $input: CreateEventInput!
+    $condition: ModelEventConditionInput
+  ) {
+    createEvent(input: $input, condition: $condition) {
+      id
+      createdByProfileId
+      associtedUsersProfileIDs
+      opposingCoachName
+      location
+      date
+      status
+    }
+  }
+`;
+
+export const updateEvent = /* GraphQL */ `
+  mutation UpdateEvent(
+    $input: UpdateEventInput!
+    $condition: ModelEventConditionInput
+  ) {
+    updateEvent(input: $input, condition: $condition) {
+      id
+      createdByProfileId
+      associtedUsersProfileIDs
+      opposingCoachName
+      location
+      date
+      status
+    }
+  }
+`;

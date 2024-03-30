@@ -8,34 +8,66 @@ import {
   TableHead,
   TableRow,
 } from "@aws-amplify/ui-react";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, IconButton, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import "./Schedule.css";
 import Calendar from "react-calendar";
-import { formatDate, formatTime } from "../../Functions/FormatDate";
-import { useRecoilState } from "recoil";
-import { eventsState } from "../../Functions/GlobalState";
-import { GetEvents } from "../../Functions/Server";
+import { formatDayOfWeekDate, formatTime } from "../../Functions/FormatDate";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  currentUserState,
+  eventsState,
+  modalState,
+} from "../../Functions/GlobalState";
+import { GetEvents, UpdateEventStatus } from "../../Functions/Server";
+import { EventStatus } from "../../Functions/Enums";
+import { ChangeCircle } from "@mui/icons-material";
+import ConfirmModal from "../../Modals/ConfirmModal";
 
 export default function Schedule() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isLoading, setIsLoading] = useState(true);
   const [events, setEvents] = useRecoilState(eventsState);
+  const setModal = useSetRecoilState(modalState);
+  const currentUser = useRecoilValue(currentUserState);
+  const eventStatus = new EventStatus();
 
   useEffect(() => {
     async function getEvents() {
       setIsLoading(true);
-      const selectedDateEvents = await GetEvents(selectedDate);
-      setEvents(
-        selectedDateEvents.sort((a, b) => a.date.localeCompare(b.date))
-      );
+      if (currentUser.id !== null) {
+        const selectedDateEvents = await GetEvents(
+          selectedDate,
+          currentUser.id
+        );
+        setEvents(
+          selectedDateEvents.sort((a, b) => a.date.localeCompare(b.date))
+        );
+      }
       setIsLoading(false);
     }
     getEvents();
   }, [selectedDate]);
 
-  function onDateChange(selectedDate) {
-    setSelectedDate(selectedDate);
+  async function updateEventStatus(event) {
+    setIsLoading(true);
+    const status =
+      event.status === eventStatus.SCHEDULED
+        ? eventStatus.CANCELLED
+        : eventStatus.SCHEDULED;
+    const updatedEvent = await UpdateEventStatus(event.id, status);
+    const updatedEvents = [...events].map((event) => {
+      if (event.id === updatedEvent.id) {
+        return updatedEvent;
+      }
+      return event;
+    });
+    setEvents(updatedEvents);
+    setIsLoading(false);
+  }
+
+  function openModal(component, title) {
+    setModal({ component: component, title: title, isShown: true });
   }
 
   return (
@@ -50,13 +82,14 @@ export default function Schedule() {
       <Flex className="schedule" gap="40px">
         <Flex className="calendar-container">
           <Calendar
-            onChange={(date) => onDateChange(date)}
+            onChange={(date) => setSelectedDate(date)}
             value={selectedDate}
+            d
           />
         </Flex>
         <Flex className="events-container">
           <Text level={5} className="header">
-            {formatDate(selectedDate)} Events
+            {formatDayOfWeekDate(selectedDate)} Events
           </Text>
           <View className="events">
             <Table className="events-table" variation="striped">
@@ -65,12 +98,13 @@ export default function Schedule() {
                   <th>Opposing Coach</th>
                   <th>Location</th>
                   <th>Time</th>
+                  <th>Status</th>
                 </TableRow>
               </TableHead>
               {isLoading || events.length === 0 ? (
                 <TableBody>
                   <TableRow>
-                    <td colSpan="3">
+                    <td colSpan="4">
                       {isLoading ? (
                         <Flex justifyContent="center" alignItems="center">
                           <Text fontSize="1rem" opacity="75%">
@@ -92,15 +126,58 @@ export default function Schedule() {
                 <TableBody>
                   {events.map((event) => {
                     return (
-                      <TableRow>
+                      <TableRow
+                        className={
+                          event.status === eventStatus.CANCELLED &&
+                          event.createdByProfileId !== currentUser.id
+                            ? "event-disabled"
+                            : ""
+                        }
+                      >
                         <td>
-                          <Text>{event.opposingCoach}</Text>
+                          <Text>{event.opposingCoachName}</Text>
                         </td>
                         <td>
                           <Text>{event.location}</Text>
                         </td>
                         <td>
                           <Text>{formatTime(event.date)}</Text>
+                        </td>
+                        <td>
+                          <Flex
+                            justifyContent="center"
+                            alignItems="center"
+                            gap="10px"
+                          >
+                            <Text
+                              color={
+                                event.status === eventStatus.CANCELLED
+                                  ? "red"
+                                  : "green"
+                              }
+                            >
+                              {event.status}
+                            </Text>
+                            {event.createdByProfileId === currentUser.id ? (
+                              <Text display="flex">
+                                <Tooltip title="Update Event Status" arrow>
+                                  <ChangeCircle
+                                    style={{ cursor: "pointer" }}
+                                    onClick={() =>
+                                      openModal(
+                                        <ConfirmModal
+                                          function={() => updateEventStatus(event)}
+                                        />,
+                                        "Confirm Status Change"
+                                      )
+                                    }
+                                  />
+                                </Tooltip>
+                              </Text>
+                            ) : (
+                              <></>
+                            )}
+                          </Flex>
                         </td>
                       </TableRow>
                     );

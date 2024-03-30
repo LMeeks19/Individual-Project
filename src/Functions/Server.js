@@ -27,10 +27,17 @@ import {
   createPlayerPlayerPost,
   deletePlayerPlayerPost,
   updateProfileEmail,
+  createEvent,
+  updateEvent,
 } from "../graphql/mutations";
 import { fetchUserAttributes } from "aws-amplify/auth";
 import SnackbarAlert from "../Components/Snackbar";
-import { formatDefaultDate } from "./FormatDate";
+import {
+  formatDayOfWeekDateTime,
+  formatDayOfWeekTimeDate,
+  formatDefaultDate,
+} from "./FormatDate";
+import { EventStatus } from "./Enums";
 
 // Profile API Calls
 export async function GetProfile(user) {
@@ -328,32 +335,6 @@ export async function SelectMatchPostOpponent(matchPostId, interestedUserId) {
   }
 }
 
-export async function ReactivateMatchPost(matchPostId) {
-  const client = generateClient();
-  try {
-    const apiData = await client.graphql({
-      query: updateMatchPost,
-      variables: {
-        input: {
-          id: matchPostId,
-          selectedOpponent: null,
-          isActive: true,
-        },
-      },
-    });
-
-    let data = apiData.data.updateMatchPost;
-    data.interestedUsers = data.interestedUsers.items;
-    new SnackbarAlert().success("Match Post successfully reactivated");
-    return data;
-  } catch (e) {
-    new SnackbarAlert().error(
-      "Unable to reactivate this Match Post, please try again later"
-    );
-    return {};
-  }
-}
-
 // Chat API Calls
 export async function GetChatsByProfileId(id) {
   const client = generateClient();
@@ -619,36 +600,8 @@ export async function UnselectPlayerPostPlayer(playerPost, selectedPlayerId) {
   }
 }
 
-export async function ReactivatePlayerPost(playerPostId) {
-  const client = generateClient();
-
-  try {
-    const apiData = await client.graphql({
-      query: updatePlayerPost,
-      variables: {
-        input: {
-          id: playerPostId,
-          selectedPlayers: [],
-          isActive: true,
-        },
-      },
-    });
-
-    let data = apiData.data.updatePlayerPost;
-    data.interestedUsers = data.interestedUsers.items;
-    data.registeredPlayers = data.registeredPlayers.items;
-    new SnackbarAlert().success("Player Post successfully reactivated");
-    return data;
-  } catch (e) {
-    new SnackbarAlert().error(
-      "Unable to reactivate Player Post, please try agian"
-    );
-    return {};
-  }
-}
-
 // Schedule API Calls
-export async function GetEvents(dateTime) {
+export async function GetEvents(dateTime, currentUserId) {
   const client = generateClient();
 
   let date = formatDefaultDate(dateTime);
@@ -656,11 +609,62 @@ export async function GetEvents(dateTime) {
   const apiData = await client.graphql({
     query: listEvents,
     variables: {
-      filter: { date: { contains: date } },
+      filter: {
+        and: {
+          date: { contains: date },
+          associtedUsersProfileIDs: { contains: currentUserId },
+        },
+      },
     },
   });
 
   return apiData.data.listEvents.items;
 }
 
-//TODO: Create Events;
+export async function CreateEvent(newEvent) {
+  const client = generateClient();
+
+  try {
+    const apiData = await client.graphql({
+      query: createEvent,
+      variables: {
+        input: {
+          createdByProfileId: newEvent.createdByProfileId,
+          associtedUsersProfileIDs: newEvent.associtedUsersProfileIDs,
+          opposingCoachName: newEvent.opposingCoachName,
+          location: newEvent.location,
+          date: newEvent.date,
+          status: new EventStatus().SCHEDULED,
+        },
+      },
+    });
+    new SnackbarAlert().success(
+      `Event Successfully created for ${formatDayOfWeekDateTime(
+        apiData.data.createEvent.date
+      )}`
+    );
+  } catch (error) {
+    new SnackbarAlert().error(error.message);
+  }
+}
+
+export async function UpdateEventStatus(eventId, status) {
+  const client = generateClient();
+
+  try {
+    const apiData = await client.graphql({
+      query: updateEvent,
+      variables: {
+        input: {
+          id: eventId,
+          status: status,
+        },
+      },
+    });
+    new SnackbarAlert().info(`Status changed for event scheduled at ${formatDayOfWeekTimeDate(apiData.data.updateEvent.date)}`);
+    return apiData.data.updateEvent;
+  } catch (error) {
+    new SnackbarAlert().error(error.message);
+  }
+  return null;
+}

@@ -2004,9 +2004,12 @@ export const listEvents = /* GraphQL */ `
     listEvents(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        opposingCoach
+        createdByProfileId
+        associtedUsersProfileIDs
+        opposingCoachName
         location
         date
+        status
       }
     }
   }

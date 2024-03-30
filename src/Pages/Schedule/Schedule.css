@@ -148,6 +148,11 @@
                     width: 1rem !important;
                 }
 
+                .event-disabled {
+                    pointer-events: none;
+                    opacity: 75%;
+                }
+
                 tr {
                     th {
                         background-color: #008080;

@@ -28,7 +28,7 @@ import {
   ThumbUpOffAlt,
   ThumbUpAlt,
 } from "@mui/icons-material";
-import { DeletePlayerPost, ReactivatePlayerPost } from "../../Functions/Server";
+import { DeletePlayerPost } from "../../Functions/Server";
 import ViewPlayerPostModal from "../../Modals/PlayerPostModals/ViewPlayerPostModal";
 import UpdatePlayerPostModal from "../../Modals/PlayerPostModals/UpdatePlayerPostModal";
 import RegisterPlayerModal from "../../Modals/PlayerPostModals/RegisterPlayerModal";
@@ -58,17 +58,6 @@ export default function PlayerPostsTab(props) {
     setPlayerPosts(
       playerPosts.filter((post) => post.id !== deletedPlayerPostId)
     );
-  }
-
-  async function reActivatePlayerPost(playerPostId) {
-    const updatedPlayerPost = await ReactivatePlayerPost(playerPostId);
-    let updatedPlayerPosts = [...playerPosts].map((post) => {
-      if (post.id === updatedPlayerPost.id) {
-        return updatedPlayerPost;
-      }
-      return post;
-    });
-    setPlayerPosts(updatedPlayerPosts);
   }
 
   function openModal(component, title) {
@@ -252,22 +241,6 @@ export default function PlayerPostsTab(props) {
                                 }
                               />
                             </Tooltip>
-                            {post.createdByProfileID ===
-                            props.currentUser.id ? (
-                              <>
-                                <Divider orientation="vertical" />
-                                <Tooltip title="Reactivate Player Post" arrow>
-                                  <Replay
-                                    className="icon"
-                                    onClick={() =>
-                                      reActivatePlayerPost(post.id)
-                                    }
-                                  />
-                                </Tooltip>
-                              </>
-                            ) : (
-                              <></>
-                            )}
                           </Flex>
                         </Text>
                       )}
