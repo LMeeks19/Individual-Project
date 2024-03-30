@@ -84,7 +84,6 @@ export default function Schedule() {
           <Calendar
             onChange={(date) => setSelectedDate(date)}
             value={selectedDate}
-            d
           />
         </Flex>
         <Flex className="events-container">
