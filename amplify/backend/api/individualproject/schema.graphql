@@ -167,7 +167,7 @@ type Event @model @auth(rules: [{ allow: public }]) {
   id: ID!
   createdByProfileId: ID!
   associtedUsersProfileIDs: [ID!]!
-  opposingCoachName: String!
+  organiserName: String!
   location: String!
   date: AWSDateTime!
   status: EventStatus!

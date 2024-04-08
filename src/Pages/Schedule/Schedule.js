@@ -94,7 +94,7 @@ export default function Schedule() {
             <Table className="events-table" variation="striped">
               <TableHead>
                 <TableRow>
-                  <th>Opposing Coach</th>
+                  <th>Organiser</th>
                   <th>Location</th>
                   <th>Time</th>
                   <th>Status</th>
@@ -134,7 +134,7 @@ export default function Schedule() {
                         }
                       >
                         <td>
-                          <Text>{event.opposingCoachName}</Text>
+                          <Text>{event.organiserName}</Text>
                         </td>
                         <td>
                           <Text>{event.location}</Text>

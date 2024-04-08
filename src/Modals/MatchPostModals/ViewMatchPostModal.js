@@ -60,10 +60,10 @@ export default function ViewMatchPostModal(props) {
     });
   }
 
-  async function acceptCoach(interestedUserId) {
+  async function acceptCoach(interestedUser) {
     const updatedMatchPost = await SelectMatchPostOpponent(
       post.id,
-      interestedUserId
+      interestedUser.profileId
     );
     setPost(updatedMatchPost);
     let updatedMatchPosts = [...matchPosts].map((post) => {
@@ -74,16 +74,13 @@ export default function ViewMatchPostModal(props) {
     });
     setMatchPosts(updatedMatchPosts);
 
-    let opposingCoach = updatedMatchPost.interestedUsers.find(
-      (iu) => iu.id === updatedMatchPost.selectedOpponent
-    );
     await CreateEvent({
       createdByProfileId: updatedMatchPost.createdByProfileID,
       associtedUsersProfileIDs: [
         updatedMatchPost.createdByProfileID,
         updatedMatchPost.selectedOpponent,
       ],
-      opposingCoachName: opposingCoach.profile.name,
+      organiserName: updatedMatchPost.createdByName,
       location: `${updatedMatchPost.street}, ${updatedMatchPost.townCity}, ${updatedMatchPost.county}, ${updatedMatchPost.postcode}`,
       date: updatedMatchPost.kickOff,
       status: new EventStatus().SCHEDULED,
@@ -324,7 +321,7 @@ export default function ViewMatchPostModal(props) {
                                 openModal(
                                   <ConfirmModal
                                     function={() =>
-                                      acceptCoach(interestedUser.id)
+                                      acceptCoach(interestedUser)
                                     }
                                   />,
                                   "Confirm"

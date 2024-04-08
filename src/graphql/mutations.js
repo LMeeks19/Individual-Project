@@ -2080,7 +2080,7 @@ export const createEvent = /* GraphQL */ `
       id
       createdByProfileId
       associtedUsersProfileIDs
-      opposingCoachName
+      organiserName
       location
       date
       status
@@ -2097,7 +2097,7 @@ export const updateEvent = /* GraphQL */ `
       id
       createdByProfileId
       associtedUsersProfileIDs
-      opposingCoachName
+      organiserName
       location
       date
       status

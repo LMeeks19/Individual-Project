@@ -75,6 +75,24 @@ export default function ViewPlayerPostModal(props) {
       return post;
     });
     setPlayerPosts(updatedPlayerPosts);
+
+    if (data.isActive && data.numOfPlayersNeeded == data.selectedPlayers.length) {
+
+      await CreateEvent({
+        createdByProfileId: updatedPlayerPost.createdByProfileID,
+          associtedUsersProfileIDs: [
+          updatedPlayerPost.createdByProfileID,
+          ...updatedPlayerPost.registeredPlayers.map((rp) => {
+            if (updatedPlayerPost.selectedPlayers.includes(rp.id))
+              return rp.profileID;
+          })
+        ],
+        organiserName: updatedPlayerPost.createdByName,
+        location: `${updatedPlayerPost.street}, ${updatedPlayerPost.townCity}, ${updatedPlayerPost.county}, ${updatedPlayerPost.postcode}`,
+        date: updatedPlayerPost.kickOff,
+        status: new EventStatus().SCHEDULED,
+      });
+    }
   }
 
   async function undoPlayerSelection(registeredPlayerId) {
@@ -421,11 +439,7 @@ export default function ViewPlayerPostModal(props) {
                       >
                         <TableCell>
                           {
-                            post.interestedUsers.find(
-                              (iu) =>
-                                iu.profileId ===
-                                registeredPlayer.player.profileID
-                            ).profile.username
+
                           }
                         </TableCell>
                         <TableCell>

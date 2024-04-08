@@ -2006,7 +2006,7 @@ export const listEvents = /* GraphQL */ `
         id
         createdByProfileId
         associtedUsersProfileIDs
-        opposingCoachName
+        organiserName
         location
         date
         status

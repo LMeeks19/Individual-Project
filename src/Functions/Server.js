@@ -564,6 +564,7 @@ export async function SelectPlayerPostPlayer(playerPost, selectedPlayerId) {
     let data = apiData.data.updatePlayerPost;
     data.interestedUsers = data.interestedUsers.items;
     data.registeredPlayers = data.registeredPlayers.items;
+
     new SnackbarAlert().success("Player successfully selected");
     return data;
   } catch (e) {
@@ -631,7 +632,7 @@ export async function CreateEvent(newEvent) {
         input: {
           createdByProfileId: newEvent.createdByProfileId,
           associtedUsersProfileIDs: newEvent.associtedUsersProfileIDs,
-          opposingCoachName: newEvent.opposingCoachName,
+          organiserName: newEvent.organiserName,
           location: newEvent.location,
           date: newEvent.date,
           status: new EventStatus().SCHEDULED,
