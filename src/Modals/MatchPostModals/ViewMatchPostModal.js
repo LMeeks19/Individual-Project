@@ -35,7 +35,6 @@ import {
 } from "../../Functions/Server";
 import ConfirmModal from "../ConfirmModal";
 import { formatDateTime } from "../../Functions/FormatDate";
-import { EventStatus } from "../../Functions/Enums";
 
 export default function ViewMatchPostModal(props) {
   const currentUser = useRecoilValue(currentUserState);
@@ -83,7 +82,6 @@ export default function ViewMatchPostModal(props) {
       organiserName: updatedMatchPost.createdByName,
       location: `${updatedMatchPost.street}, ${updatedMatchPost.townCity}, ${updatedMatchPost.county}, ${updatedMatchPost.postcode}`,
       date: updatedMatchPost.kickOff,
-      status: new EventStatus().SCHEDULED,
     });
   }
 

@@ -35,6 +35,7 @@ import {
   RemovePlayerPostRegisteredPlayer,
   SelectPlayerPostPlayer,
   UnselectPlayerPostPlayer,
+  CreateEvent,
 } from "../../Functions/Server";
 import ConfirmModal from "../ConfirmModal";
 import { formatDateTime } from "../../Functions/FormatDate";
@@ -76,21 +77,24 @@ export default function ViewPlayerPostModal(props) {
     });
     setPlayerPosts(updatedPlayerPosts);
 
-    if (data.isActive && data.numOfPlayersNeeded == data.selectedPlayers.length) {
-
+    if (
+      !updatedPlayerPost.isActive &&
+      updatedPlayerPost.numOfPlayersNeeded ==
+        updatedPlayerPost.selectedPlayers.length
+    ) {
+      let associtedUsersProfileIDs = [
+        updatedPlayerPost.createdByProfileID,
+        ...updatedPlayerPost.registeredPlayers.map((rp) => {
+          if (updatedPlayerPost.selectedPlayers.includes(rp.id))
+            return rp.player.profileID;
+        }),
+      ];
       await CreateEvent({
         createdByProfileId: updatedPlayerPost.createdByProfileID,
-          associtedUsersProfileIDs: [
-          updatedPlayerPost.createdByProfileID,
-          ...updatedPlayerPost.registeredPlayers.map((rp) => {
-            if (updatedPlayerPost.selectedPlayers.includes(rp.id))
-              return rp.profileID;
-          })
-        ],
+        associtedUsersProfileIDs: [...new Set(associtedUsersProfileIDs)],
         organiserName: updatedPlayerPost.createdByName,
         location: `${updatedPlayerPost.street}, ${updatedPlayerPost.townCity}, ${updatedPlayerPost.county}, ${updatedPlayerPost.postcode}`,
         date: updatedPlayerPost.kickOff,
-        status: new EventStatus().SCHEDULED,
       });
     }
   }
@@ -437,11 +441,7 @@ export default function ViewPlayerPostModal(props) {
                             : ""
                         }
                       >
-                        <TableCell>
-                          {
-
-                          }
-                        </TableCell>
+                        <TableCell>{}</TableCell>
                         <TableCell>
                           {
                             post.interestedUsers.find(
