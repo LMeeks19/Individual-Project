@@ -8,7 +8,7 @@ import {
   TableHead,
   TableRow,
 } from "@aws-amplify/ui-react";
-import { CircularProgress, IconButton, Tooltip } from "@mui/material";
+import { CircularProgress, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import "./Schedule.css";
 import Calendar from "react-calendar";

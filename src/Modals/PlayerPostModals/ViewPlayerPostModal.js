@@ -79,7 +79,7 @@ export default function ViewPlayerPostModal(props) {
 
     if (
       !updatedPlayerPost.isActive &&
-      updatedPlayerPost.numOfPlayersNeeded ==
+      updatedPlayerPost.numOfPlayersNeeded ===
         updatedPlayerPost.selectedPlayers.length
     ) {
       let associtedUsersProfileIDs = [
