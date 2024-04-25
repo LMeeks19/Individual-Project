@@ -381,6 +381,7 @@ export default function TeamCreateForm(props) {
       <TextField
         label="Phone number"
         isRequired={false}
+        descriptiveText="Please include your dial code when engerting your phone number e.g. 07123456789 -> +447123456789"
         isReadOnly={false}
         type="tel"
         value={phoneNumber}

@@ -229,6 +229,7 @@ export default function ProfileUpdateForm(props) {
       <TextField
         label="Phone number"
         isRequired={true}
+        descriptiveText="Please include your dial code when engerting your phone number e.g. 07123456789 -> +447123456789"
         isReadOnly={false}
         type="tel"
         value={phoneNumber}
