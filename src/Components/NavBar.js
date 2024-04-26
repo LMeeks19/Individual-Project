@@ -59,7 +59,7 @@ export default function NavBar() {
   return (
     <Flex gap="0" className="flex-container">
       <Heading className="header" level={3}>
-        Individual Project
+        Football Finder
       </Heading>
       <Tabs.Container className="tab-container" value={activeNavbarTab}>
         <Tabs.List className="navbar">
