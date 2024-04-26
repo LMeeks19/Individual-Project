@@ -21,9 +21,14 @@
     text-wrap: nowrap;
   }
 
+  .MuiBadge-badge {
+    display: none;
+  }
+
   .amplify-button {
     display: none;
     border: none;
+    padding: 0;
     color: #f7f5ef;
 
     .amplify-icon {
@@ -97,6 +102,11 @@
   .flex-container {
     padding-top: 15px;
     padding-bottom: 15px;
+
+    .MuiBadge-badge {
+      display: flex;
+    }
+
     .amplify-button {
       display: flex;
     }
