@@ -42,7 +42,7 @@ import {
   formatDefaultDate,
 } from "./FormatDate";
 import { EventStatus } from "./Enums";
-import { createEventCreatedClosedNotification } from "./NotificationMethods";
+import { createEventCreatedNotification } from "./NotificationMethods";
 
 // Profile API Calls
 export async function GetProfile(user) {
@@ -652,7 +652,7 @@ export async function CreateEvent(newEvent) {
     let userIds = apiData.data.createEvent.associtedUsersProfileIDs.filter(
       (id) => id !== apiData.data.createEvent.createdByProfileId
     );
-    createEventCreatedClosedNotification(userIds, apiData.data.newEvent.date);
+    createEventCreatedNotification(userIds, apiData.data.createEvent.date);
   } catch (error) {
     new SnackbarAlert().error(error.message);
   }

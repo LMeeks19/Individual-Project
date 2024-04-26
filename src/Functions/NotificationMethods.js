@@ -79,7 +79,7 @@ export function createMatchPostClosedNotification(userIDs, matchPostName) {
     });
 }
 
-export function createEventCreatedClosedNotification(userIDs, eventCreatedDate) {
+export function createEventCreatedNotification(userIDs, eventCreatedDate) {
     let notificationTypes = new NotificationType()
     userIDs.forEach(async (id) => {
         await CreateNotification(id, `Event Created for the ${formatDateTime(eventCreatedDate)}`, notificationTypes.EVENTCREATED)

@@ -73,7 +73,7 @@ export default function ViewMatchPostModal(props) {
       return post;
     });
     setMatchPosts(updatedMatchPosts);
-    createSelectedForMatchPostNotification([interestedUser.profileId], post.name)
+    createSelectedForMatchPostNotification([interestedUser.profileId], post.title)
 
     await CreateEvent({
       createdByProfileId: updatedMatchPost.createdByProfileID,

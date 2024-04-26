@@ -65,7 +65,7 @@ export default function MatchPostsTab(props) {
     let interestedUsersIds = [...matchPost.interestedUsers].map((iu) => {
       if (iu.profileId !== currentUser.id) return iu.profileId;
     });
-    createMatchPostDeletedNotification(interestedUsersIds, matchPost.name)
+    createMatchPostDeletedNotification(interestedUsersIds, matchPost.title)
   }
 
   async function registerInterest(profileId, matchPostId) {

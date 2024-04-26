@@ -40,7 +40,7 @@ export default function UpdateMatchPostModal(props) {
           let interestedUsersIds = [...props.post.interestedUsers].map((iu) => {
             if (iu.profileId !== currentUser.id) return iu.profileId;
           });
-          createMatchPostUpdatedNotification(interestedUsersIds, props.post.name);
+          createMatchPostUpdatedNotification(interestedUsersIds, props.post.title);
           setModal({ component: null, title: null, isShown: false });
         }}
         onError={(fields, errorMessage) => {

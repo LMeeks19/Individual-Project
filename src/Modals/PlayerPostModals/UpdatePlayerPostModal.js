@@ -33,7 +33,7 @@ export default function UpdatePlayerPostModal(props) {
           let interestedUsersIds = [...data.interestedUsers].map((iu) => {
             if (iu.profileId !== currentUser.id) return iu.profileId;
           });
-          createPlayerPostUpdatedNotification(interestedUsersIds, props.playerPost.name);
+          createPlayerPostUpdatedNotification(interestedUsersIds, props.playerPost.title);
           setModal({ component: null, title: null, isShown: false });
         }}
         onError={(fields, errorMessage) => {
