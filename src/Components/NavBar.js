@@ -62,7 +62,7 @@ export default function NavBar() {
         Individual Project
       </Heading>
       <Tabs.Container className="tab-container" value={activeNavbarTab}>
-        <Tabs.List className="navbar" spacing="equal">
+        <Tabs.List className="navbar">
           <Tabs.Item
             className="item"
             value="6"

@@ -46,7 +46,6 @@
       border-color: transparent;
       width: 100%;
       display: flex;
-      gap: 40px;
 
       .item {
         transition: border .5s ease-in-out;
@@ -94,7 +93,7 @@
 }
 
 
-@media screen and (max-width: 1210px) {
+@media screen and (max-width: 1250px) {
   .flex-container {
     padding-top: 15px;
     padding-bottom: 15px;
