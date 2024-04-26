@@ -30,7 +30,7 @@ import { AccountType } from "../Functions/Enums";
 export default function NavBar() {
   const navigate = useNavigate();
   const currentUser = useRecoilValue(currentUserState);
-  const notifications = useRecoilValue(notificationsState)
+  const notifications = useRecoilValue(notificationsState);
   const [activeNavbarTab, setActiveNavbarTab] =
     useRecoilState(activeNavbarTabState);
   const accountTypes = new AccountType();
@@ -142,9 +142,8 @@ export default function NavBar() {
           >
             <Badge
               badgeContent={
-                notifications.filter(
-                  (notification) => !notification.isRead
-                ).length
+                notifications.filter((notification) => !notification.isRead)
+                  .length
               }
               color="error"
             >
@@ -170,55 +169,61 @@ export default function NavBar() {
           </Tabs.Item>
         </Tabs.List>
       </Tabs.Container>
-      <Menu width="fit-content" menuAlign="end">
-        <MenuItem onClick={() => navigate("/schedule")}>
-          <Text display="flex">
-            <CalendarMonth className="icon" />
-            SCHEDULE
-          </Text>
-        </MenuItem>
-        <Divider />
-        <MenuItem onClick={() => navigate("/match-posts")}>
-          <Text display="flex">
-            <PostAdd className="icon" />
-            MATCH POSTS
-          </Text>
-        </MenuItem>
-        <MenuItem onClick={() => navigate("/player-posts")}>
-          <Text display="flex">
-            <GroupAdd className="icon" />
-            PLAYER POSTS
-          </Text>
-        </MenuItem>
-        <Divider />
-        <MenuItem onClick={() => navigate("/messages")}>
-          <Text display="flex">
-            <Chat className="icon" />
-            MESSAGES
-          </Text>
-        </MenuItem>
-        <MenuItem onClick={() => navigate("/notifications")}>
-          <Badge
-            badgeContent={
-              notifications.filter(
-                (notification) => !notification.isRead
-              ).length
-            }
-            color="error"
-          >
+      <Badge
+        badgeContent={
+          notifications.filter((notification) => !notification.isRead).length
+        }
+        color="error"
+      >
+        <Menu width="fit-content" menuAlign="end">
+          <MenuItem onClick={() => navigate("/schedule")}>
             <Text display="flex">
-              <Notifications className="icon" />
-              NOTIFICATIONS
+              <CalendarMonth className="icon" />
+              SCHEDULE
             </Text>
-          </Badge>
-        </MenuItem>
-        <MenuItem onClick={() => navigate("/account")}>
-          <Text display="flex">
-            <AccountCircle className="icon" />
-            ACCOUNT
-          </Text>
-        </MenuItem>
-      </Menu>
+          </MenuItem>
+          <Divider />
+          <MenuItem onClick={() => navigate("/match-posts")}>
+            <Text display="flex">
+              <PostAdd className="icon" />
+              MATCH POSTS
+            </Text>
+          </MenuItem>
+          <MenuItem onClick={() => navigate("/player-posts")}>
+            <Text display="flex">
+              <GroupAdd className="icon" />
+              PLAYER POSTS
+            </Text>
+          </MenuItem>
+          <Divider />
+          <MenuItem onClick={() => navigate("/messages")}>
+            <Text display="flex">
+              <Chat className="icon" />
+              MESSAGES
+            </Text>
+          </MenuItem>
+          <MenuItem onClick={() => navigate("/notifications")}>
+            <Badge
+              badgeContent={
+                notifications.filter((notification) => !notification.isRead)
+                  .length
+              }
+              color="error"
+            >
+              <Text display="flex">
+                <Notifications className="icon" />
+                NOTIFICATIONS
+              </Text>
+            </Badge>
+          </MenuItem>
+          <MenuItem onClick={() => navigate("/account")}>
+            <Text display="flex">
+              <AccountCircle className="icon" />
+              ACCOUNT
+            </Text>
+          </MenuItem>
+        </Menu>
+      </Badge>
     </Flex>
   );
 }
