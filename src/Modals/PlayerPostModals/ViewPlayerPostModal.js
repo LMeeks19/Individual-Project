@@ -39,6 +39,7 @@ import {
 } from "../../Functions/Server";
 import ConfirmModal from "../ConfirmModal";
 import { formatDateTime } from "../../Functions/FormatDate";
+import { createSelectedForPlayerPostNotification } from "../../Functions/NotificationMethods";
 
 export default function ViewPlayerPostModal(props) {
   const currentUser = useRecoilValue(currentUserState);
@@ -75,6 +76,10 @@ export default function ViewPlayerPostModal(props) {
       }
       return post;
     });
+    let interestedUsersIds = [...updatedPlayerPost.interestedUsers].map((iu) => {
+      if (iu.profileId !== currentUser.id) return iu.profileId;
+    });
+    createSelectedForPlayerPostNotification(interestedUsersIds, updatedPlayerPost.name);
     setPlayerPosts(updatedPlayerPosts);
 
     if (
@@ -111,6 +116,10 @@ export default function ViewPlayerPostModal(props) {
       }
       return post;
     });
+    let interestedUsersIds = [...updatedPlayerPost.interestedUsers].map((iu) => {
+      if (iu.profileId !== currentUser.id) return iu.profileId;
+    });
+    createSelectedForPlayerPostNotification(interestedUsersIds, updatedPlayerPost.name);
     setPlayerPosts(updatedPlayerPosts);
   }
 

@@ -15,17 +15,22 @@ import {
   Chat,
   AccountCircle,
   CalendarMonth,
+  Notifications,
+  GroupAdd,
 } from "@mui/icons-material";
+import Badge from "@mui/material/Badge";
 import { useRecoilValue, useRecoilState } from "recoil";
 import {
   activeNavbarTabState,
   currentUserState,
+  notificationsState,
 } from "../Functions/GlobalState";
 import { AccountType } from "../Functions/Enums";
 
 export default function NavBar() {
   const navigate = useNavigate();
   const currentUser = useRecoilValue(currentUserState);
+  const notifications = useRecoilValue(notificationsState)
   const [activeNavbarTab, setActiveNavbarTab] =
     useRecoilState(activeNavbarTabState);
   const accountTypes = new AccountType();
@@ -36,21 +41,24 @@ export default function NavBar() {
         navigate("/schedule");
       }
       if (window.location.href.endsWith("/schedule")) {
-        setActiveNavbarTab("6");
+        setActiveNavbarTab("1");
       }
       if (window.location.href.endsWith("/match-posts")) {
         if (currentUser.accountType === accountTypes.PARENT)
           navigate("/player-posts");
-        else setActiveNavbarTab("1");
+        else setActiveNavbarTab("2");
       }
       if (window.location.href.endsWith("/player-posts")) {
-        setActiveNavbarTab("2");
-      }
-      if (window.location.href.endsWith("/messages")) {
         setActiveNavbarTab("3");
       }
-      if (window.location.href.endsWith("/account")) {
+      if (window.location.href.endsWith("/messages")) {
         setActiveNavbarTab("4");
+      }
+      if (window.location.href.endsWith("/notifications")) {
+        setActiveNavbarTab("5");
+      }
+      if (window.location.href.endsWith("/account")) {
+        setActiveNavbarTab("6");
       }
     }
     setTab();
@@ -65,9 +73,9 @@ export default function NavBar() {
         <Tabs.List className="navbar">
           <Tabs.Item
             className="item"
-            value="6"
+            value="1"
             onClick={() => {
-              setActiveNavbarTab("6");
+              setActiveNavbarTab("1");
               navigate("/schedule");
             }}
           >
@@ -81,9 +89,9 @@ export default function NavBar() {
           currentUser.accountType === accountTypes.ADMIN ? (
             <Tabs.Item
               className="item"
-              value="1"
+              value="2"
               onClick={() => {
-                setActiveNavbarTab("1");
+                setActiveNavbarTab("2");
                 navigate("/match-posts");
               }}
             >
@@ -98,23 +106,23 @@ export default function NavBar() {
 
           <Tabs.Item
             className="item"
-            value="2"
+            value="3"
             onClick={() => {
-              setActiveNavbarTab("2");
+              setActiveNavbarTab("3");
               navigate("/player-posts");
             }}
           >
             <Text display="flex">
-              <PostAdd className="icon" />
+              <GroupAdd className="icon" />
               PLAYER POSTS
             </Text>
           </Tabs.Item>
 
           <Tabs.Item
             className="item"
-            value="3"
+            value="4"
             onClick={() => {
-              setActiveNavbarTab("3");
+              setActiveNavbarTab("4");
               navigate("/messages");
             }}
           >
@@ -126,9 +134,32 @@ export default function NavBar() {
 
           <Tabs.Item
             className="item"
-            value="4"
+            value="5"
             onClick={() => {
-              setActiveNavbarTab("4");
+              setActiveNavbarTab("5");
+              navigate("/notifications");
+            }}
+          >
+            <Badge
+              badgeContent={
+                notifications.filter(
+                  (notification) => !notification.isRead
+                ).length
+              }
+              color="error"
+            >
+              <Text display="flex">
+                <Notifications className="icon" />
+                NOTIFICATIONS
+              </Text>
+            </Badge>
+          </Tabs.Item>
+
+          <Tabs.Item
+            className="item"
+            value="6"
+            onClick={() => {
+              setActiveNavbarTab("6");
               navigate("/account");
             }}
           >
@@ -155,7 +186,7 @@ export default function NavBar() {
         </MenuItem>
         <MenuItem onClick={() => navigate("/player-posts")}>
           <Text display="flex">
-            <PostAdd className="icon" />
+            <GroupAdd className="icon" />
             PLAYER POSTS
           </Text>
         </MenuItem>
@@ -165,6 +196,21 @@ export default function NavBar() {
             <Chat className="icon" />
             MESSAGES
           </Text>
+        </MenuItem>
+        <MenuItem onClick={() => navigate("/notifications")}>
+          <Badge
+            badgeContent={
+              notifications.filter(
+                (notification) => !notification.isRead
+              ).length
+            }
+            color="error"
+          >
+            <Text display="flex">
+              <Notifications className="icon" />
+              NOTIFICATIONS
+            </Text>
+          </Badge>
         </MenuItem>
         <MenuItem onClick={() => navigate("/account")}>
           <Text display="flex">

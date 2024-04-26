@@ -86,14 +86,11 @@ export default function Profile() {
           ) : (
             <></>
           )}
-          {currentUser.accountType === accountTypes.PARENT ||
-          currentUser.accountType === accountTypes.ADMIN ? (
-            <Tabs.Item className="account-tab" value="4">
-              PLAYERS
-            </Tabs.Item>
-          ) : (
-            <></>
-          )}
+
+          <Tabs.Item className="account-tab" value="4">
+            PLAYERS
+          </Tabs.Item>
+
           <Tabs.Item className="account-tab" value="5">
             SETTINGS
           </Tabs.Item>

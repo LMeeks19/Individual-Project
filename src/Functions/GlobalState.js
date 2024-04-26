@@ -34,7 +34,13 @@ export const currentUserState = atom({
       website: null,
       players: [],
     },
+
   },
+});
+
+export const notificationsState = atom({
+  key: "notificationsState",
+  default: [],
 });
 
 export const eventsState = atom({

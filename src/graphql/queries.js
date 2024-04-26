@@ -2014,3 +2014,40 @@ export const listEvents = /* GraphQL */ `
     }
   }
 `;
+
+export const getNotification = /* GraphQL */ `
+  query GetNotification($id: ID!) {
+    getNotification(id: $id) {
+      id
+      toProfileId
+      message
+      type
+      isRead
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listNotifications = /* GraphQL */ `
+  query ListNotifications(
+    $filter: ModelNotificationFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listNotifications(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        toProfileId
+        message
+        type
+        isRead
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;

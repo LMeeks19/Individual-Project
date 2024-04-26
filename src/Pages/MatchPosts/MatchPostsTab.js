@@ -12,6 +12,7 @@ import {
   modalState,
   matchPostsState,
   activeNavbarTabState,
+  currentUserState,
 } from "../../Functions/GlobalState";
 import { useState } from "react";
 import {
@@ -20,7 +21,7 @@ import {
   RemoveMatchPostInterestedUser,
 } from "../../Functions/Server";
 import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
-import { useSetRecoilState, useRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilState, useRecoilValue } from "recoil";
 import ViewMatchPostModal from "../../Modals/MatchPostModals/ViewMatchPostModal";
 import UpdateMatchPostModal from "../../Modals/MatchPostModals/UpdateMatchPostModal";
 import "./MatchPosts.css";
@@ -37,6 +38,7 @@ import {
 } from "@mui/icons-material";
 import { AccountType } from "../../Functions/Enums";
 import { formatDateTimeRelative } from "../../Functions/FormatDate";
+import { createMatchPostDeletedNotification } from "../../Functions/NotificationMethods";
 
 export default function MatchPostsTab(props) {
   const [page, setPage] = useState(0);
@@ -45,6 +47,7 @@ export default function MatchPostsTab(props) {
   const [matchPosts, setMatchPosts] = useRecoilState(matchPostsState);
   const navigate = useNavigate();
   const setActiveNavbarTab = useSetRecoilState(activeNavbarTabState);
+  const currentUser = useRecoilValue(currentUserState);
   const accountTypes = new AccountType();
 
   const handleChangePage = (event, newPage) => {
@@ -59,6 +62,10 @@ export default function MatchPostsTab(props) {
   async function deleteMatchPost(matchPost) {
     const deletedMatchPostId = await DeleteMatchPost(matchPost);
     setMatchPosts(matchPosts.filter((post) => post.id !== deletedMatchPostId));
+    let interestedUsersIds = [...matchPost.interestedUsers].map((iu) => {
+      if (iu.profileId !== currentUser.id) return iu.profileId;
+    });
+    createMatchPostDeletedNotification(interestedUsersIds, matchPost.name)
   }
 
   async function registerInterest(profileId, matchPostId) {

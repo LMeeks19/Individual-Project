@@ -35,6 +35,7 @@ import {
 } from "../../Functions/Server";
 import ConfirmModal from "../ConfirmModal";
 import { formatDateTime } from "../../Functions/FormatDate";
+import { createSelectedForMatchPostNotification } from "../../Functions/NotificationMethods";
 
 export default function ViewMatchPostModal(props) {
   const currentUser = useRecoilValue(currentUserState);
@@ -72,6 +73,7 @@ export default function ViewMatchPostModal(props) {
       return post;
     });
     setMatchPosts(updatedMatchPosts);
+    createSelectedForMatchPostNotification([interestedUser.profileId], post.name)
 
     await CreateEvent({
       createdByProfileId: updatedMatchPost.createdByProfileID,
