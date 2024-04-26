@@ -59,7 +59,7 @@ export default function Page() {
               let updatedNotifications = [
                 ...notifications,
                 ...[data.onCreateNotification],
-              ];
+              ].sort((a, b) => a.createdAt.localeCompare(b.createdAt));
               setNotifications(updatedNotifications);
               new SnackbarAlert().info("Notification Recieved!");
             }
