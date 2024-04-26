@@ -23,6 +23,13 @@
 
   .MuiBadge-badge {
     display: none;
+    margin-right: 20px;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  .amplify-button--menu {
+    padding: 10px;
   }
 
   .amplify-button {
@@ -104,7 +111,7 @@
     padding-bottom: 15px;
 
     .MuiBadge-badge {
-      display: flex;
+      display: block;
     }
 
     .amplify-button {
