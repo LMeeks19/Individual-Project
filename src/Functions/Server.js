@@ -692,7 +692,7 @@ export async function GetNotificationsByProfileId(profileId) {
   });
 
   return apiData.data.listNotifications.items.sort((a, b) =>
-    a.createdAt.localeCompare(b.createdAt)
+    b.createdAt.localeCompare(a.createdAt)
   );
 }
 
