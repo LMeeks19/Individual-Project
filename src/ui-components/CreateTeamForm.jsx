@@ -268,7 +268,7 @@ export default function CreateTeamForm(props) {
       ></TextField>
       <TextField
         label="Email"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={email}
         onChange={(e) => {
@@ -298,7 +298,7 @@ export default function CreateTeamForm(props) {
       ></TextField>
       <TextField
         label="Phone number"
-        isRequired={false}
+        isRequired={true}
         descriptiveText="Please include your dial code when engerting your phone number e.g. 07123456789 -> +447123456789"
         isReadOnly={false}
         value={phoneNumber}

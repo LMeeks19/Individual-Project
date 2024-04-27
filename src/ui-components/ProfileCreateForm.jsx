@@ -226,6 +226,7 @@ export default function ProfileCreateForm(props) {
         label="Account Type"
         placeholder="Please select an option"
         isDisabled={false}
+        isRequired={true}
         value={accountType}
         onChange={(e) => {
           let { value } = e.target;

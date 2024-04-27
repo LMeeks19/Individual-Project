@@ -378,6 +378,7 @@ export default function PlayerCreateForm(props) {
       ></TextField>
       <SelectField
         label="Age group"
+        isRequired={true}
         placeholder="Please select an option"
         isDisabled={false}
         value={ageGroup}
@@ -483,6 +484,7 @@ export default function PlayerCreateForm(props) {
       <SelectField
         label="Skill level"
         placeholder="Please select an option"
+        isRequired={true}
         isDisabled={false}
         value={skillLevel}
         onChange={(e) => {
@@ -555,9 +557,11 @@ export default function PlayerCreateForm(props) {
         defaultFieldValue={""}
       >
         <SelectField
+          descriptiveText='Make sure you press add to confirm your selection'
           label="Positions"
           placeholder="Please select an option"
           isDisabled={false}
+          isRequired={true}
           value={currentPositionsValue}
           onChange={(e) => {
             let { value } = e.target;

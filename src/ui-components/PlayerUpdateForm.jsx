@@ -399,6 +399,7 @@ export default function PlayerUpdateForm(props) {
         label="Age group"
         placeholder="Please select an option"
         isDisabled={false}
+        isRequired={true}
         value={ageGroup}
         onChange={(e) => {
           let { value } = e.target;
@@ -503,6 +504,7 @@ export default function PlayerUpdateForm(props) {
         label="Skill level"
         placeholder="Please select an option"
         isDisabled={false}
+        isRequired={true}
         value={skillLevel}
         onChange={(e) => {
           let { value } = e.target;
@@ -577,6 +579,7 @@ export default function PlayerUpdateForm(props) {
           label="Positions"
           placeholder="Please select an option"
           isDisabled={false}
+          isRequired={true}
           value={currentPositionsValue}
           onChange={(e) => {
             let { value } = e.target;
