@@ -452,6 +452,7 @@ export default function PlayerPostCreateForm(props) {
       <SelectField
         label="Age group"
         placeholder="Please select an option"
+        isRequired={true}
         isDisabled={false}
         value={ageGroup}
         onChange={(e) => {
@@ -600,6 +601,7 @@ export default function PlayerPostCreateForm(props) {
       >
         <SelectField
           label="Positions needed"
+          isRequired={true}
           placeholder="Please select an option"
           isDisabled={false}
           value={currentPositionsNeededValue}
@@ -705,6 +707,7 @@ export default function PlayerPostCreateForm(props) {
         label="Skill level"
         placeholder="Please select an option"
         isDisabled={false}
+        isRequired={true}
         value={skillLevel}
         onChange={(e) => {
           let { value } = e.target;

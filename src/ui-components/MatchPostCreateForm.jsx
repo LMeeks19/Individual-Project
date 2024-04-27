@@ -312,6 +312,7 @@ export default function MatchPostCreateForm(props) {
       <SelectField
         label="Game type"
         placeholder="Please select an option"
+        isRequired={true}
         isDisabled={false}
         value={gameType}
         onChange={(e) => {
@@ -364,6 +365,7 @@ export default function MatchPostCreateForm(props) {
       <SelectField
         label="Age group"
         placeholder="Please select an option"
+        isRequired={true}
         isDisabled={false}
         value={ageGroup}
         onChange={(e) => {

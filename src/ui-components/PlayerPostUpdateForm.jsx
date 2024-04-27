@@ -622,6 +622,7 @@ export default function PlayerPostUpdateForm(props) {
           label="Positions needed"
           placeholder="Please select an option"
           isDisabled={false}
+          isRequired={true}
           value={currentPositionsNeededValue}
           onChange={(e) => {
             let { value } = e.target;
@@ -725,6 +726,7 @@ export default function PlayerPostUpdateForm(props) {
         label="Skill level"
         placeholder="Please select an option"
         isDisabled={false}
+        isRequired={true}
         value={skillLevel}
         onChange={(e) => {
           let { value } = e.target;

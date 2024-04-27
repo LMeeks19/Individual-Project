@@ -436,6 +436,7 @@ export default function TeamPlayerCreateForm(props) {
           label="Positions"
           placeholder="Please select an option"
           isDisabled={false}
+          isRequired={true}
           value={currentPositionsValue}
           onChange={(e) => {
             let { value } = e.target;

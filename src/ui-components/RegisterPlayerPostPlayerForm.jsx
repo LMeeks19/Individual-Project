@@ -722,7 +722,7 @@ export default function RegisterPlayerPostPlayerForm(props) {
       >
         <Autocomplete
           label="Interested users"
-          isRequired={false}
+          isRequired={registeredPlayers.some((rp) => rp.profileID === user.userId)}
           isReadOnly={false}
           placeholder="Search Profile"
           value={currentInterestedUsersDisplayValue}
@@ -805,7 +805,7 @@ export default function RegisterPlayerPostPlayerForm(props) {
       >
         <Autocomplete
           label="Players to Register"
-          isRequired={false}
+          isRequired={interestedUsers.some((iu) => iu.id === user.userId)}
           isReadOnly={false}
           placeholder="Search Player"
           value={currentRegisteredPlayersDisplayValue}

@@ -215,6 +215,7 @@ export default function TeamCreateForm(props) {
       <SelectField
         label="Age group"
         placeholder="Please select an option"
+        isRequired={true}
         isDisabled={false}
         value={ageGroup}
         onChange={(e) => {
@@ -350,7 +351,7 @@ export default function TeamCreateForm(props) {
       ></TextField>
       <TextField
         label="Email"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={email}
         onChange={(e) => {
@@ -380,7 +381,7 @@ export default function TeamCreateForm(props) {
       ></TextField>
       <TextField
         label="Phone number"
-        isRequired={false}
+        isRequired={true}
         descriptiveText="Please include your dial code when engerting your phone number e.g. 07123456789 -> +447123456789"
         isReadOnly={false}
         type="tel"
@@ -411,7 +412,7 @@ export default function TeamCreateForm(props) {
         {...getOverrideProps(overrides, "phoneNumber")}
       ></TextField>
       <TextField
-        label="Website"
+        label="Website (optional)"
         isRequired={false}
         isReadOnly={false}
         value={website}

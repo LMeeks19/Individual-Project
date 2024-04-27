@@ -456,6 +456,7 @@ export default function TeamPlayerUpdateForm(props) {
           label="Positions"
           placeholder="Please select an option"
           isDisabled={false}
+          isRequired={true}
           value={currentPositionsValue}
           onChange={(e) => {
             let { value } = e.target;
