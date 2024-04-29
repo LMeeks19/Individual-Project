@@ -14,41 +14,46 @@ import { MenuItem, Select, Tooltip } from "@mui/material";
 import { formatDateTimeRelative } from "../../Functions/FormatDate";
 import { useRecoilState } from "recoil";
 import { notificationsState } from "../../Functions/GlobalState";
-import "./Notifications.css";
 import { Delete, MarkEmailRead, MarkEmailUnread } from "@mui/icons-material";
 import {
   DeleteNotification,
   MarkNotificationAsRead,
 } from "../../Functions/Server";
 import { useEffect, useState } from "react";
+import "./Notifications.css";
 
 export default function Notifications() {
   const [notifications, setNotifications] = useRecoilState(notificationsState);
+  const filterTypes = {
+    NONE: "None",
+    READ: "Read",
+    UNREAD: "Unread",
+  };
+  const [filterValue, setFilterValue] = useState(filterTypes.NONE);
   const [activeNotifications, setActiveNotifications] = useState(notifications);
-  const [filterValue, setFilterValue] = useState("None");
 
   useEffect(() => {
-    function SetActiveNotifications() {
-      if (filterValue === "None") {
+    function filterActiveNotifications() {
+      if (filterValue === filterTypes.NONE) {
         setActiveNotifications(notifications);
-      } else if (filterValue === "Read") {
+      } else if (filterValue === filterTypes.READ) {
         let newActiveNotifications = notifications.filter(
           (notification) => notification.isRead
         );
         setActiveNotifications(newActiveNotifications);
-      } else if (filterValue === "UnRead") {
+      } else if (filterValue === filterTypes.UNREAD) {
         let newActiveNotifications = notifications.filter(
           (notification) => !notification.isRead
         );
         setActiveNotifications(newActiveNotifications);
       }
     }
-    SetActiveNotifications();
+    filterActiveNotifications();
   }, [filterValue, notifications]);
 
   async function markNotificationAsRead(notificationId) {
     let updatedNotification = await MarkNotificationAsRead(notificationId);
-    let updatedNotifications = [...notifications].map((notification) => {
+    let updatedNotifications = notifications.map((notification) => {
       if (notification.id === updatedNotification.id)
         return updatedNotification;
       return notification;
@@ -57,9 +62,11 @@ export default function Notifications() {
   }
 
   async function markAllNotificationAsRead() {
-    let updatedNotifications = [...notifications].map(async (notification) => {
-      return await MarkNotificationAsRead(notification.id);
-    });
+    let updatedNotifications = notifications
+      .filter((notification) => !notification.isRead)
+      .map(async (notification) => {
+        return await MarkNotificationAsRead(notification.id);
+      });
     setNotifications(updatedNotifications);
   }
 
@@ -87,7 +94,7 @@ export default function Notifications() {
             alignItems="center"
             fontSize="large"
           >
-            Filter By:
+            Filter:
           </Text>
           <Select
             style={{
@@ -99,9 +106,9 @@ export default function Notifications() {
             value={filterValue}
             onChange={(e) => setFilterValue(e.target.value)}
           >
-            <MenuItem value="None">None</MenuItem>
-            <MenuItem value="UnRead">UnRead</MenuItem>
-            <MenuItem value="Read">Read</MenuItem>
+            <MenuItem value={filterTypes.NONE}>{filterTypes.NONE}</MenuItem>
+            <MenuItem value={filterTypes.UNREAD}>{filterTypes.UNREAD}</MenuItem>
+            <MenuItem value={filterTypes.READ}>{filterTypes.READ}</MenuItem>
           </Select>
           <Button
             backgroundColor="#008080"
