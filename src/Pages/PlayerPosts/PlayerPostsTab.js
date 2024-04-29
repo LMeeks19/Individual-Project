@@ -10,12 +10,13 @@ import {
 import { CircularProgress, TablePagination, Tooltip } from "@mui/material";
 import {
   activeNavbarTabState,
+  currentUserState,
   modalState,
   playerPostsState,
 } from "../../Functions/GlobalState";
 import { useState } from "react";
 import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
-import { useSetRecoilState, useRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilState, useRecoilValue } from "recoil";
 import "./PlayerPosts.css";
 import "../../Components/Animations.css";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +25,6 @@ import {
   Edit,
   Delete,
   Visibility,
-  Replay,
   ThumbUpOffAlt,
   ThumbUpAlt,
 } from "@mui/icons-material";
@@ -34,6 +34,7 @@ import UpdatePlayerPostModal from "../../Modals/PlayerPostModals/UpdatePlayerPos
 import RegisterPlayerModal from "../../Modals/PlayerPostModals/RegisterPlayerModal";
 import { AccountType } from "../../Functions/Enums";
 import { formatDateTimeRelative } from "../../Functions/FormatDate";
+import { createsPlayerPostDeletedNotification } from "../../Functions/NotificationMethods";
 
 export default function PlayerPostsTab(props) {
   const [page, setPage] = useState(0);
@@ -42,6 +43,7 @@ export default function PlayerPostsTab(props) {
   const [playerPosts, setPlayerPosts] = useRecoilState(playerPostsState);
   const navigate = useNavigate();
   const setActiveNavbarTab = useSetRecoilState(activeNavbarTabState);
+  const currentUser = useRecoilValue(currentUserState);
   const accountTypes = new AccountType();
 
   const handleChangePage = (event, newPage) => {
@@ -58,6 +60,12 @@ export default function PlayerPostsTab(props) {
     setPlayerPosts(
       playerPosts.filter((post) => post.id !== deletedPlayerPostId)
     );
+    let interestedUsersIds = playerPost.interestedUsers
+      .filter((iu) => iu.profileId !== currentUser.id)
+      .map((iu) => {
+        return iu.profileId;
+      });
+    createsPlayerPostDeletedNotification(interestedUsersIds, playerPost.title);
   }
 
   function openModal(component, title) {

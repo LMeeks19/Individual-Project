@@ -1,8 +1,12 @@
 import "@aws-amplify/ui-react/styles.css";
 import React, { useEffect, useState } from "react";
 import { View, useAuthenticator } from "@aws-amplify/ui-react";
-import { useSetRecoilState, useRecoilValue } from "recoil";
-import { currentUserState, modalState } from "../Functions/GlobalState";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  currentUserState,
+  modalState,
+  notificationsState,
+} from "../Functions/GlobalState";
 import NavBar from "../Components/NavBar";
 import NavRouter from "../Components/Router";
 import { BrowserRouter as Router } from "react-router-dom";
@@ -10,18 +14,24 @@ import {
   GetProfile,
   GetPlayersByProfileId,
   GetTeamByProfileId,
+  GetNotificationsByProfileId,
 } from "../Functions/Server";
 import "./Page.css";
 import WarningMessage from "../Components/Warning-Message";
 import Modal from "../Modals/Modal";
 import { SnackbarProvider } from "notistack";
 import PreLoadScreen from "../Components/PreLoadScreen";
+import { onCreateNotification } from "../graphql/subscriptions";
+import { generateClient } from "aws-amplify/api";
+import SnackbarAlert from "../Components/Snackbar";
 
 export default function Page() {
   const modal = useRecoilValue(modalState);
   const { user } = useAuthenticator();
   const [isLoading, setIsLoading] = useState(true);
-  const setCurrentUser = useSetRecoilState(currentUserState);
+  const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
+  const [notifications, setNotifications] = useRecoilState(notificationsState);
+  const client = generateClient();
 
   useEffect(() => {
     async function fetchUser() {
@@ -30,10 +40,39 @@ export default function Page() {
         players: await GetPlayersByProfileId(user.userId),
         team: await GetTeamByProfileId(user.userId),
       });
+      setNotifications(await GetNotificationsByProfileId(user.userId));
       setIsLoading(false);
     }
     fetchUser();
   }, []);
+
+  useEffect(() => {
+    async function getNotifications() {
+      setIsLoading(true);
+      const sub = client
+        .graphql({
+          query: onCreateNotification,
+        })
+        .subscribe({
+          next: ({ data }) => {
+            if (data.onCreateNotification.toProfileId === currentUser.id) {
+              let updatedNotifications = [
+                ...notifications,
+                ...[data.onCreateNotification],
+              ].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+              setNotifications(updatedNotifications);
+              new SnackbarAlert().info("Notification Recieved!");
+            }
+          },
+          error: (error) => console.log(error),
+        });
+      setIsLoading(false);
+      return () => {
+        sub.unsubscribe();
+      };
+    }
+    getNotifications();
+  }, [notifications]);
 
   if (isLoading) {
     return <PreLoadScreen />;

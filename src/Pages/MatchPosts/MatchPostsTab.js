@@ -12,6 +12,7 @@ import {
   modalState,
   matchPostsState,
   activeNavbarTabState,
+  currentUserState,
 } from "../../Functions/GlobalState";
 import { useState } from "react";
 import {
@@ -20,7 +21,7 @@ import {
   RemoveMatchPostInterestedUser,
 } from "../../Functions/Server";
 import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
-import { useSetRecoilState, useRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilState, useRecoilValue } from "recoil";
 import ViewMatchPostModal from "../../Modals/MatchPostModals/ViewMatchPostModal";
 import UpdateMatchPostModal from "../../Modals/MatchPostModals/UpdateMatchPostModal";
 import "./MatchPosts.css";
@@ -31,12 +32,11 @@ import {
   Edit,
   Delete,
   Visibility,
-  Replay,
   ThumbUpOffAlt,
   ThumbUpAlt,
 } from "@mui/icons-material";
-import { AccountType } from "../../Functions/Enums";
 import { formatDateTimeRelative } from "../../Functions/FormatDate";
+import { createMatchPostDeletedNotification } from "../../Functions/NotificationMethods";
 
 export default function MatchPostsTab(props) {
   const [page, setPage] = useState(0);
@@ -45,7 +45,7 @@ export default function MatchPostsTab(props) {
   const [matchPosts, setMatchPosts] = useRecoilState(matchPostsState);
   const navigate = useNavigate();
   const setActiveNavbarTab = useSetRecoilState(activeNavbarTabState);
-  const accountTypes = new AccountType();
+  const currentUser = useRecoilValue(currentUserState);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -59,6 +59,12 @@ export default function MatchPostsTab(props) {
   async function deleteMatchPost(matchPost) {
     const deletedMatchPostId = await DeleteMatchPost(matchPost);
     setMatchPosts(matchPosts.filter((post) => post.id !== deletedMatchPostId));
+    let interestedUsersIds = matchPost.interestedUsers
+    .filter((iu) => iu.profileId !== currentUser.id)
+    .map((iu) => {
+      return iu.profileId;
+    });
+    createMatchPostDeletedNotification(interestedUsersIds, matchPost.title)
   }
 
   async function registerInterest(profileId, matchPostId) {

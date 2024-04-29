@@ -39,6 +39,7 @@ import {
 } from "../../Functions/Server";
 import ConfirmModal from "../ConfirmModal";
 import { formatDateTime } from "../../Functions/FormatDate";
+import { createSelectedForPlayerPostNotification } from "../../Functions/NotificationMethods";
 
 export default function ViewPlayerPostModal(props) {
   const currentUser = useRecoilValue(currentUserState);
@@ -75,6 +76,15 @@ export default function ViewPlayerPostModal(props) {
       }
       return post;
     });
+    let interestedUsersIds = updatedPlayerPost.interestedUsers
+      .filter((iu) => iu.profileId !== currentUser.id)
+      .map((iu) => {
+        return iu.profileId;
+      });
+    createSelectedForPlayerPostNotification(
+      interestedUsersIds,
+      updatedPlayerPost.name
+    );
     setPlayerPosts(updatedPlayerPosts);
 
     if (
@@ -84,10 +94,11 @@ export default function ViewPlayerPostModal(props) {
     ) {
       let associtedUsersProfileIDs = [
         updatedPlayerPost.createdByProfileID,
-        ...updatedPlayerPost.registeredPlayers.map((rp) => {
-          if (updatedPlayerPost.selectedPlayers.includes(rp.id))
+        ...updatedPlayerPost.registeredPlayers
+          .filter((rp) => updatedPlayerPost.selectedPlayers.includes(rp.id))
+          .map((rp) => {
             return rp.player.profileID;
-        }),
+          }),
       ];
       await CreateEvent({
         createdByProfileId: updatedPlayerPost.createdByProfileID,
@@ -111,6 +122,15 @@ export default function ViewPlayerPostModal(props) {
       }
       return post;
     });
+    let interestedUsersIds = updatedPlayerPost.interestedUsers
+      .filter((iu) => iu.profileId !== currentUser.id)
+      .map((iu) => {
+        return iu.profileId;
+      });
+    createSelectedForPlayerPostNotification(
+      interestedUsersIds,
+      updatedPlayerPost.name
+    );
     setPlayerPosts(updatedPlayerPosts);
   }
 

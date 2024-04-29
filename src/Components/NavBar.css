@@ -9,7 +9,7 @@
   justify-content: space-between;
   gap: 40px;
   padding-left: 30px;
-  padding-right: 10px;
+  padding-right: 30px;
   min-width: fit-content;
 
   .header {
@@ -21,25 +21,73 @@
     text-wrap: nowrap;
   }
 
+  .MuiBadge-root {
+    display: none;
+    height: fit-content;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 10px;
+  }
+
+  .MuiBadge-badge {
+    display: none;
+    margin-bottom: auto;
+    margin-top: auto;
+  }
+
+  .amplify-tabs__item {
+    .MuiBadge-root {
+      display: block !important;
+
+      .MuiBadge-badge {
+        display: block !important;
+        margin-right: -10px;
+      }
+    }
+  }
+
+  .amplify-button--menu {
+    padding: 12.5px 10px 12.50px 10px !important;
+
+    .MuiBadge-root {
+      .MuiBadge-badge {
+        margin-right: -10px !important;
+      }
+    }
+  }
+
+  .amplify-menu__trigger {
+    margin-right: 10px;
+  }
+
   .amplify-button {
     display: none;
     border: none;
+    padding: 0;
     color: #f7f5ef;
 
     .amplify-icon {
-      width: 1.4rem !important;
-      height: 1.4rem !important;
+      width: 1.75rem !important;
+      height: 1.75rem !important;
     }
 
+
     .amplify-icon>svg {
-      width: 1.4rem !important;
-      height: 1.4rem !important;
+      width: 1.75rem !important;
+      height: 1.75rem !important;
 
     }
   }
 
+  .amplify-button:hover,
+  .amplify-button:active,
+  .amplify-button:focus {
+    background-color: #008080;
+    filter: drop-shadow(0 0 .5rem #404040);
+    box-shadow: none;
+  }
+
   .tab-container {
-    padding-right: 40px;
 
     .navbar {
       z-index: 5;
@@ -93,10 +141,32 @@
 }
 
 
-@media screen and (max-width: 1250px) {
+@media screen and (max-width: 1460px) {
   .flex-container {
     padding-top: 15px;
     padding-bottom: 15px;
+
+    .amplify-tabs__item {
+      display: none;
+
+      .MuiBadge-root {
+        display: none !important;
+
+        .MuiBadge-badge {
+          display: none !important
+        }
+      }
+    }
+
+    .MuiBadge-root {
+      display: block;
+    }
+
+    .MuiBadge-badge {
+      display: block;
+      margin-right: 10px;
+    }
+
     .amplify-button {
       display: flex;
     }

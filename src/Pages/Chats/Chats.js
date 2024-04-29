@@ -28,6 +28,7 @@ import { onCreateChatMessage } from "../../graphql/subscriptions";
 import { generateClient } from "aws-amplify/api";
 import { CircularProgress, Tooltip } from "@mui/material";
 import { AccountType } from "../../Functions/Enums";
+import { createMessageReceivedNotification } from "../../Functions/NotificationMethods";
 
 export default function Chats() {
   const [chats, setChats] = useRecoilState(chatsState);
@@ -91,7 +92,14 @@ export default function Chats() {
   }, [selectedChat]);
 
   async function sendMessage() {
-    await CreateChatMessage(selectedChat.id, currentUser.id, message);
+    await CreateChatMessage(selectedChat.id, currentUser.id, message).then(
+      async () =>
+        createMessageReceivedNotification(
+          selectedChat.userIDs.filter((id) => id !== currentUser.id),
+          selectedChat.name,
+          currentUser.name
+        )
+    );
     setMessage("");
   }
 
