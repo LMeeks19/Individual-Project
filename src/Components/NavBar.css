@@ -9,7 +9,7 @@
   justify-content: space-between;
   gap: 40px;
   padding-left: 30px;
-  padding-right: 10px;
+  padding-right: 30px;
   min-width: fit-content;
 
   .header {
@@ -22,6 +22,7 @@
   }
 
   .MuiBadge-root {
+    display: none;
     height: fit-content;
     margin-top: auto;
     margin-bottom: auto;
@@ -31,12 +32,22 @@
   .MuiBadge-badge {
     display: none;
     margin-bottom: auto;
-    margin-right: 10px;
     margin-top: auto;
   }
 
+  .amplify-tabs__item {
+    .MuiBadge-root {
+      display: block !important;
+
+      .MuiBadge-badge {
+        display: block !important;
+        margin-right: -10px;
+      }
+    }
+  }
+
   .amplify-button--menu {
-    padding: 10px !important;
+    padding: 12.5px 10px 12.50px 10px !important;
 
     .MuiBadge-root {
       .MuiBadge-badge {
@@ -56,19 +67,27 @@
     color: #f7f5ef;
 
     .amplify-icon {
-      width: 1.4rem !important;
-      height: 1.4rem !important;
+      width: 1.75rem !important;
+      height: 1.75rem !important;
     }
 
+
     .amplify-icon>svg {
-      width: 1.4rem !important;
-      height: 1.4rem !important;
+      width: 1.75rem !important;
+      height: 1.75rem !important;
 
     }
   }
 
+  .amplify-button:hover,
+  .amplify-button:active,
+  .amplify-button:focus {
+    background-color: #008080;
+    filter: drop-shadow(0 0 .5rem #404040);
+    box-shadow: none;
+  }
+
   .tab-container {
-    padding-right: 40px;
 
     .navbar {
       z-index: 5;
@@ -127,8 +146,25 @@
     padding-top: 15px;
     padding-bottom: 15px;
 
+    .amplify-tabs__item {
+      display: none;
+
+      .MuiBadge-root {
+        display: none !important;
+
+        .MuiBadge-badge {
+          display: none !important
+        }
+      }
+    }
+
+    .MuiBadge-root {
+      display: block;
+    }
+
     .MuiBadge-badge {
       display: block;
+      margin-right: 10px;
     }
 
     .amplify-button {

@@ -8,7 +8,7 @@ import {
   View,
 } from "@aws-amplify/ui-react";
 import "./Account.css";
-import { Edit, Delete, Propane } from "@mui/icons-material";
+import { Edit, Delete } from "@mui/icons-material";
 import { DeleteTeamPlayer } from "../../Functions/Server";
 import { currentUserState, modalState } from "../../Functions/GlobalState";
 import { useRecoilState, useSetRecoilState } from "recoil";

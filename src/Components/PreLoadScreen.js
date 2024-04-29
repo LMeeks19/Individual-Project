@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, Flex } from "@aws-amplify/ui-react";
+import { Flex } from "@aws-amplify/ui-react";
 import { CircularProgress } from "@mui/material";
 import "./PreLoadScreen.css";
 

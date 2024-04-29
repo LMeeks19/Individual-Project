@@ -1,6 +1,6 @@
 import { View, Heading, Divider } from "@aws-amplify/ui-react";
 import { ChatCreateForm } from "../../ui-components";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
   chatsState,
   currentUserState,
@@ -10,7 +10,7 @@ import SnackbarAlert from "../../Components/Snackbar";
 import { GetChatsByProfileId } from "../../Functions/Server";
 
 export default function CreateChatModal() {
-  const [chats, setChats] = useRecoilState(chatsState);
+  const setChats = useSetRecoilState(chatsState);
   const currentUser = useRecoilValue(currentUserState);
   const setModal = useSetRecoilState(modalState);
 
