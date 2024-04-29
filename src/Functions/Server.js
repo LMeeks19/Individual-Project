@@ -10,6 +10,7 @@ import {
   listPlayerPosts,
   listEmailProfiles,
   listEvents,
+  listNotifications,
 } from "../graphql/queries";
 import {
   deletePlayer,
@@ -29,6 +30,9 @@ import {
   updateProfileEmail,
   createEvent,
   updateEvent,
+  updateNotification,
+  createNotification,
+  deleteNotification,
 } from "../graphql/mutations";
 import { fetchUserAttributes } from "aws-amplify/auth";
 import SnackbarAlert from "../Components/Snackbar";
@@ -38,6 +42,7 @@ import {
   formatDefaultDate,
 } from "./FormatDate";
 import { EventStatus } from "./Enums";
+import { createEventCreatedNotification } from "./NotificationMethods";
 
 // Profile API Calls
 export async function GetProfile(user) {
@@ -644,6 +649,10 @@ export async function CreateEvent(newEvent) {
         apiData.data.createEvent.date
       )}`
     );
+    let userIds = apiData.data.createEvent.associtedUsersProfileIDs.filter(
+      (id) => id !== apiData.data.createEvent.createdByProfileId
+    );
+    createEventCreatedNotification(userIds, apiData.data.createEvent.date);
   } catch (error) {
     new SnackbarAlert().error(error.message);
   }
@@ -662,10 +671,74 @@ export async function UpdateEventStatus(eventId, status) {
         },
       },
     });
-    new SnackbarAlert().info(`Status changed for event scheduled at ${formatDayOfWeekTimeDate(apiData.data.updateEvent.date)}`);
+    new SnackbarAlert().info(
+      `Status changed for event scheduled at ${formatDayOfWeekTimeDate(
+        apiData.data.updateEvent.date
+      )}`
+    );
     return apiData.data.updateEvent;
   } catch (error) {
     new SnackbarAlert().error(error.message);
   }
   return null;
+}
+
+export async function GetNotificationsByProfileId(profileId) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: listNotifications,
+    variables: { filter: { toProfileId: { eq: profileId } } },
+  });
+
+  return apiData.data.listNotifications.items.sort((a, b) =>
+    b.createdAt.localeCompare(a.createdAt)
+  );
+}
+
+export async function CreateNotification(profileId, message, type) {
+  const client = generateClient();
+
+  await client.graphql({
+    query: createNotification,
+    variables: {
+      input: {
+        toProfileId: profileId,
+        message: message,
+        type: type,
+        isRead: false,
+      },
+    },
+  });
+}
+
+export async function MarkNotificationAsRead(notificationId) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: updateNotification,
+    variables: {
+      input: {
+        id: notificationId,
+        isRead: true,
+      },
+    },
+  });
+
+  return apiData.data.updateNotification;
+}
+
+export async function DeleteNotification(notificationId) {
+  const client = generateClient();
+
+  const apiData = await client.graphql({
+    query: deleteNotification,
+    variables: {
+      input: {
+        id: notificationId,
+      },
+    },
+  });
+
+  return apiData.data.deleteNotification.id;
 }

@@ -23,6 +23,7 @@ import { GetEvents, UpdateEventStatus } from "../../Functions/Server";
 import { EventStatus } from "../../Functions/Enums";
 import { ChangeCircle } from "@mui/icons-material";
 import ConfirmModal from "../../Modals/ConfirmModal";
+import { createEventReScheduledClosedNotification, createEventUnScheduledClosedNotification } from "../../Functions/NotificationMethods";
 
 export default function Schedule() {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -63,6 +64,11 @@ export default function Schedule() {
       return event;
     });
     setEvents(updatedEvents);
+    let userIds = updatedEvent.associtedUsersProfileIDs.filter((id) => id !== updatedEvent.createdByProfileId)
+    if (status === eventStatus.SCHEDULED)
+      createEventReScheduledClosedNotification(userIds, updatedEvent.date)
+    else
+      createEventUnScheduledClosedNotification(userIds, updatedEvent.date)
     setIsLoading(false);
   }
 

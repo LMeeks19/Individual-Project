@@ -2113,3 +2113,52 @@ export const onDeleteProfileChat = /* GraphQL */ `
     }
   }
 `;
+
+export const onCreateNotification = /* GraphQL */ `
+  subscription OnCreateNotification(
+    $filter: ModelSubscriptionNotificationFilterInput
+  ) {
+    onCreateNotification(filter: $filter) {
+      id
+      toProfileId
+      message
+      type
+      isRead
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateNotification = /* GraphQL */ `
+  subscription OnUpdateNotification(
+    $filter: ModelSubscriptionNotificationFilterInput
+  ) {
+    onUpdateNotification(filter: $filter) {
+      id
+      toProfileId
+      message
+      type
+      isRead
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteNotification = /* GraphQL */ `
+  subscription OnDeleteNotification(
+    $filter: ModelSubscriptionNotificationFilterInput
+  ) {
+    onDeleteNotification(filter: $filter) {
+      id
+      toProfileId
+      message
+      type
+      isRead
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
