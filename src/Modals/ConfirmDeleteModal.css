@@ -1,0 +1,30 @@
+.confirm-delete-container {
+    width: 100%;
+    padding: 20px;
+
+    .header {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .button {
+        width: 50%;
+        color: white;
+        box-shadow: 0 0 20px -4px #000;
+        border-color: transparent;
+
+        &.cancel {
+            background-color: grey;
+        }
+
+        &.delete {
+            background-color: red;
+        }
+
+        &.cancel:hover, &.delete:hover {
+            opacity: 75%;
+        }
+
+
+    }
+}

@@ -1,0 +1,43 @@
+.content {
+    padding: 40px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.table {
+    table-layout: fixed;
+    border-collapse: separate; 
+    
+    th,
+    td {
+        border: transparent;
+        padding: 10px;
+    }
+
+    th {
+        color: #f7f5ef;
+        background-color: #008080;
+    }
+
+    th:last-child {
+        text-align: center;
+    }
+
+    td {
+        .icon {
+            cursor: pointer;
+
+            &.red {
+                color: red;
+            }
+
+            &.green {
+                color: green;
+            }
+        }
+
+        .icon:hover {
+            opacity: 75%;
+        }
+    }
+}

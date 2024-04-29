@@ -15,23 +15,24 @@ export const components = {
         <View textAlign="center">
           <Heading
             padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
-            level={3}>
+            level={3}
+          >
             Sign in to your account
           </Heading>
         </View>
       );
     },
+    FormFields() {},
     Footer() {
       const { toForgotPassword } = useAuthenticator();
 
       return (
         <View textAlign="center">
           <Button
-            fontWeight="normal"
+            fontWeight="large"
             onClick={toForgotPassword}
-            size="small"
             variation="link"
->
+          >
             Reset Password
           </Button>
         </View>
@@ -59,12 +60,7 @@ export const components = {
 
       return (
         <View textAlign="center">
-          <Button
-            fontWeight="normal"
-            onClick={toSignIn}
-            size="small"
-            variation="link"
-          >
+          <Button fontWeight="large" onClick={toSignIn} variation="link">
             Back to Sign In
           </Button>
         </View>
@@ -140,9 +136,6 @@ export const components = {
 
 export const formFields = {
   signUp: {
-    name: {
-      order: 1,
-    },
     username: {
       order: 2,
     },
@@ -150,7 +143,6 @@ export const formFields = {
       order: 3,
     },
     password: {
-
       order: 4,
     },
     confirm_password: {
@@ -170,8 +162,8 @@ export const formFields = {
   confirmResetPassword: {
     confirmation_code: {
       placeholder: "Enter your Confirmation Code:",
-      label: "New Label",
-      isRequired: false,
+      label: "Confirmation Code",
+      isRequired: true,
     },
     confirm_password: {
       placeholder: "Enter your Password Please:",
@@ -183,19 +175,16 @@ export const formFields = {
       totpUsername: "amplify_qr_test_user",
     },
     confirmation_code: {
-      label: "New Label",
+      label: "Confirmation Code",
       placeholder: "Enter your Confirmation Code:",
-      isRequired: false,
+      isRequired: true,
     },
   },
   confirmSignIn: {
     confirmation_code: {
-      label: "New Label",
+      label: "Confirmation Code",
       placeholder: "Enter your Confirmation Code:",
-      isRequired: false,
+      isRequired: true,
     },
   },
 };
-
-
-

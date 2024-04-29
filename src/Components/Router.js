@@ -1,24 +1,19 @@
-import Home from "../Pages/Home";
-import MatchPost from "../Pages/MatchPost";
-import PlayersPost from "../Pages/PlayersPost";
-import Schedule from "../Pages/Schedule"
-import Profile from "../Pages/Profile";
-import Settings from "../Pages/Settings";
+import MatchPosts from "../Pages/MatchPosts/MatchPosts";
+import PlayersPosts from "../Pages/PlayerPosts/PlayerPosts";
+import Account from "../Pages/Account/Account";
+import Messages from "../Pages/Chats/Chats";
 
-import {
-    Routes,
-    Route,
-  } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import Schedule from "../Pages/Schedule/Schedule";
 
 export default function NavRouter() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/schedule" element={<Schedule />} />
-      <Route path="/match-post" element={<MatchPost />} />
-      <Route path="/players-post" element={<PlayersPost />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/settings" element={<Settings />} />
+      <Route index path="/schedule" element={<Schedule />} />
+      <Route path="/match-posts" element={<MatchPosts />} />
+      <Route path="/player-posts" element={<PlayersPosts />} />
+      <Route path="/account" element={<Account />} />
+      <Route path="/messages" element={<Messages />} />
     </Routes>
   );
 }

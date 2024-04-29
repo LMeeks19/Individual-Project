@@ -1,23 +1,108 @@
-.navbar {
-  z-index: 2;
-  box-shadow: 0px 0px 25px 0px #000;
-  border-color: transparent;
+.flex-container {
+  width: 100%;
+  box-shadow: 0px 10px 25px -4px #000;
+  z-index: 5;
+  position: relative;
+  background-color: #008080;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: space-between;
+  gap: 40px;
+  padding-left: 30px;
+  padding-right: 10px;
+  min-width: fit-content;
 
-  .item {
-    transition: border .5s ease-in-out, color .5s ease-in-out;
-    font-size: larger;
-    font-weight: bold;
-    padding: 20px;
-    border-color: #000;
-    z-index: 2;
+  .header {
+    display: flex;
+    justify-self: start;
+    align-self: center;
+    color: #f7f5ef;
+    flex-wrap: nowrap;
+    text-wrap: nowrap;
   }
 
-  .item:hover,
-  .item[aria-selected='true'] {
-    border-color: hsl(190, 70%, 70%);
+  .amplify-button {
+    display: none;
+    border: none;
+    color: #f7f5ef;
+
+    .amplify-icon {
+      width: 1.4rem !important;
+      height: 1.4rem !important;
+    }
+
+    .amplify-icon>svg {
+      width: 1.4rem !important;
+      height: 1.4rem !important;
+
+    }
+  }
+
+  .tab-container {
+    padding-right: 40px;
+
+    .navbar {
+      z-index: 5;
+      border-color: transparent;
+      width: 100%;
+      display: flex;
+
+      .item {
+        transition: border .5s ease-in-out;
+        font-size: larger;
+        font-weight: bold;
+        padding: 20px;
+        border-color: transparent;
+        z-index: 5;
+        display: flex;
+
+        .amplify-text {
+          color: #f7f5ef;
+          margin-top: auto;
+          margin-bottom: auto;
+          text-wrap: nowrap;
+        }
+
+        .icon {
+          margin-right: 5px;
+          margin-top: auto;
+          margin-bottom: auto;
+        }
+      }
+
+      .item:hover,
+      .item[aria-selected='true'] {
+        border-color: white;
+      }
+    }
   }
 }
 
-.link {
-  text-decoration: none;
+.amplify-menu__wrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+
+  .amplify-menu__content {
+    overflow: auto !important;
+
+    .amplify-button:hover {
+      background-color: #008080;
+    }
+  }
+}
+
+
+@media screen and (max-width: 1250px) {
+  .flex-container {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    .amplify-button {
+      display: flex;
+    }
+
+    .tab-container {
+      display: none;
+    }
+  }
 }
