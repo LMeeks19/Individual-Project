@@ -30,10 +30,15 @@ export default function UpdatePlayerPostModal(props) {
           curPosts.push(data);
           setPlayerPosts(curPosts);
           new SnackbarAlert().success("Player Post successfully updated");
-          let interestedUsersIds = [...data.interestedUsers].map((iu) => {
-            if (iu.profileId !== currentUser.id) return iu.profileId;
-          });
-          createPlayerPostUpdatedNotification(interestedUsersIds, props.playerPost.title);
+          let interestedUsersIds = props.playerPost.interestedUsers
+            .filter((iu) => iu.profileId !== currentUser.id)
+            .map((iu) => {
+              return iu.profileId;
+            });
+          createPlayerPostUpdatedNotification(
+            interestedUsersIds,
+            props.playerPost.title
+          );
           setModal({ component: null, title: null, isShown: false });
         }}
         onError={(fields, errorMessage) => {

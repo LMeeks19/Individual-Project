@@ -60,10 +60,12 @@ export default function PlayerPostsTab(props) {
     setPlayerPosts(
       playerPosts.filter((post) => post.id !== deletedPlayerPostId)
     );
-    let interestedUsersIds = [...playerPost.interestedUsers].map((iu) => {
-      if (iu.profileId !== currentUser.id) return iu.profileId;
-    });
-    createsPlayerPostDeletedNotification(interestedUsersIds, playerPost.title)
+    let interestedUsersIds = playerPost.interestedUsers
+      .filter((iu) => iu.profileId !== currentUser.id)
+      .map((iu) => {
+        return iu.profileId;
+      });
+    createsPlayerPostDeletedNotification(interestedUsersIds, playerPost.title);
   }
 
   function openModal(component, title) {

@@ -32,11 +32,9 @@ import {
   Edit,
   Delete,
   Visibility,
-  Replay,
   ThumbUpOffAlt,
   ThumbUpAlt,
 } from "@mui/icons-material";
-import { AccountType } from "../../Functions/Enums";
 import { formatDateTimeRelative } from "../../Functions/FormatDate";
 import { createMatchPostDeletedNotification } from "../../Functions/NotificationMethods";
 
@@ -48,7 +46,6 @@ export default function MatchPostsTab(props) {
   const navigate = useNavigate();
   const setActiveNavbarTab = useSetRecoilState(activeNavbarTabState);
   const currentUser = useRecoilValue(currentUserState);
-  const accountTypes = new AccountType();
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -62,8 +59,10 @@ export default function MatchPostsTab(props) {
   async function deleteMatchPost(matchPost) {
     const deletedMatchPostId = await DeleteMatchPost(matchPost);
     setMatchPosts(matchPosts.filter((post) => post.id !== deletedMatchPostId));
-    let interestedUsersIds = [...matchPost.interestedUsers].map((iu) => {
-      if (iu.profileId !== currentUser.id) return iu.profileId;
+    let interestedUsersIds = matchPost.interestedUsers
+    .filter((iu) => iu.profileId !== currentUser.id)
+    .map((iu) => {
+      return iu.profileId;
     });
     createMatchPostDeletedNotification(interestedUsersIds, matchPost.title)
   }

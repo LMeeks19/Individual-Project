@@ -10,7 +10,7 @@ import {
   Divider,
   Button,
 } from "@aws-amplify/ui-react";
-import { Tooltip } from "@mui/material";
+import { MenuItem, Select, Tooltip } from "@mui/material";
 import { formatDateTimeRelative } from "../../Functions/FormatDate";
 import { useRecoilState } from "recoil";
 import { notificationsState } from "../../Functions/GlobalState";
@@ -20,9 +20,31 @@ import {
   DeleteNotification,
   MarkNotificationAsRead,
 } from "../../Functions/Server";
+import { useEffect, useState } from "react";
 
 export default function Notifications() {
   const [notifications, setNotifications] = useRecoilState(notificationsState);
+  const [activeNotifications, setActiveNotifications] = useState(notifications);
+  const [filterValue, setFilterValue] = useState("None");
+
+  useEffect(() => {
+    function SetActiveNotifications() {
+      if (filterValue === "None") {
+        setActiveNotifications(notifications);
+      } else if (filterValue === "Read") {
+        let newActiveNotifications = notifications.filter(
+          (notification) => notification.isRead
+        );
+        setActiveNotifications(newActiveNotifications);
+      } else if (filterValue === "UnRead") {
+        let newActiveNotifications = notifications.filter(
+          (notification) => !notification.isRead
+        );
+        setActiveNotifications(newActiveNotifications);
+      }
+    }
+    SetActiveNotifications();
+  }, [filterValue, notifications]);
 
   async function markNotificationAsRead(notificationId) {
     let updatedNotification = await MarkNotificationAsRead(notificationId);
@@ -31,14 +53,14 @@ export default function Notifications() {
         return updatedNotification;
       return notification;
     });
-    setNotifications([...updatedNotifications]);
+    setNotifications(updatedNotifications);
   }
 
   async function markAllNotificationAsRead() {
     let updatedNotifications = [...notifications].map(async (notification) => {
       return await MarkNotificationAsRead(notification.id);
     });
-    setNotifications([...updatedNotifications]);
+    setNotifications(updatedNotifications);
   }
 
   async function deleteNotification(notificationId) {
@@ -55,27 +77,58 @@ export default function Notifications() {
         marginBottom="20px"
         justifyContent="space-between"
         alignItems="center"
+        wrap="wrap"
       >
         <Heading level={3}>Notifications</Heading>
-        <Button
-          backgroundColor="#008080"
-          border="none"
-          disabled={notifications.every((notification) => notification.isRead)}
-          onClick={() => markAllNotificationAsRead()}
-        >
-          <Tooltip
-            title={
-              notifications.length === 0
-                ? "No notifications to mark as read"
-                : notifications.every((notification) => notification.isRead)
-                ? "All notifications have been marked as read"
-                : "Mark all notifications as read"
-            }
-            arrow
+        <Flex gap="20px">
+          <Text
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            fontSize="large"
           >
-            Mark all as Read
-          </Tooltip>
-        </Button>
+            Filter By:
+          </Text>
+          <Select
+            style={{
+              border: "none",
+              backgroundColor: "#008080",
+              color: "#f9f9f9",
+              width: "150px",
+            }}
+            value={filterValue}
+            onChange={(e) => setFilterValue(e.target.value)}
+          >
+            <MenuItem value="None">None</MenuItem>
+            <MenuItem value="UnRead">UnRead</MenuItem>
+            <MenuItem value="Read">Read</MenuItem>
+          </Select>
+          <Button
+            backgroundColor="#008080"
+            border="none"
+            disabled={activeNotifications.every(
+              (notification) => notification.isRead
+            )}
+            onClick={() => markAllNotificationAsRead()}
+          >
+            <Tooltip
+              title={
+                activeNotifications.length === 0
+                  ? "No notifications to mark as read"
+                  : activeNotifications.every(
+                      (notification) => notification.isRead
+                    )
+                  ? "All notifications have been marked as read"
+                  : "Mark all notifications as read"
+              }
+              arrow
+            >
+              <Text style={{ cursor: "inherit", color: "inherit" }}>
+                Mark all as Read
+              </Text>
+            </Tooltip>
+          </Button>
+        </Flex>
       </Flex>
       <Flex className="notifications">
         <Flex className="notifications-container">
@@ -88,7 +141,7 @@ export default function Notifications() {
                   <th>Actions</th>
                 </TableRow>
               </TableHead>
-              {notifications.length === 0 ? (
+              {activeNotifications.length === 0 ? (
                 <TableBody>
                   <TableRow>
                     <td colSpan="3">
@@ -102,7 +155,7 @@ export default function Notifications() {
                 </TableBody>
               ) : (
                 <TableBody>
-                  {notifications.map((notification) => {
+                  {activeNotifications.map((notification) => {
                     return (
                       <TableRow key={notification.id}>
                         <td>
