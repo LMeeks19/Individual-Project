@@ -9,6 +9,8 @@ import {
 import SnackbarAlert from "../../Components/Snackbar";
 import { GetUsersMatchPosts } from "../../Functions/Server";
 
+// This component is used in the modal to create a match post
+
 export default function CreateMatchPostModal() {
   const currentUser = useRecoilValue(currentUserState);
   const [matchPosts, setMatchPosts] = useRecoilState(matchPostsState);

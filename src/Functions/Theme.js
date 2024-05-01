@@ -1,3 +1,5 @@
+// This file contains all the them based styling for the them switcher
+
 export const theme = {
   name: "my-theme",
   overrides: [

@@ -3,6 +3,8 @@ import { useSetRecoilState } from "recoil";
 import { View, Button, Flex, Heading } from "@aws-amplify/ui-react";
 import { modalState } from "../Functions/GlobalState";
 
+// Implementation of the Confirm Delete Modal component
+
 export default function ConfirmDeleteModal(props) {
   const setModal = useSetRecoilState(modalState);
 

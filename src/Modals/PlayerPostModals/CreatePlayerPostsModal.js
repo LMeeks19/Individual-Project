@@ -9,6 +9,8 @@ import {
 import SnackbarAlert from "../../Components/Snackbar";
 import { GetUsersPlayerPosts } from "../../Functions/Server";
 
+// This component is used in the modal to create a player post
+
 export default function CreatePlayerPostModal() {
   const currentUser = useRecoilValue(currentUserState);
   const [playerPosts, setPlayerPosts] = useRecoilState(playerPostsState);

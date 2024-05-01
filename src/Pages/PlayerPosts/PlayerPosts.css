@@ -1,3 +1,5 @@
+/* All CSS for the player posts page */
+
 .player-posts-tab:hover,
 .player-posts-tab[aria-selected='true'] {
     color: #008080;

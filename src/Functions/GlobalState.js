@@ -1,5 +1,8 @@
 import { atom } from "recoil";
 
+// This state contains all the various global variables that when altered will change site-wide
+// This is so loads of local components and unnecessary calls to the api don;t need to be made 
+
 export const themeState = atom({
   key: "themeState",
   default: "system",

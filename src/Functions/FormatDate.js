@@ -1,6 +1,8 @@
 import { format, formatRelative } from "date-fns";
 import { enGB } from "date-fns/locale/en-GB";
 
+// This file utilises date-fns and new methods are created that can be used globally to format dates a certain way 
+
 const formatRelativeLocale = {
   lastWeek: "'Last' eeee 'at' h:mmaaa",
   yesterday: "'Yesterday at' h:mmaaa",

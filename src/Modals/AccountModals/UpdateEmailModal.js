@@ -10,6 +10,8 @@ import {
 import { currentUserState } from "../../Functions/GlobalState";
 import { GetProfileEmails, UpdateProfileEmail } from "../../Functions/Server";
 
+// This component is used in the modal to update an email
+
 export default function UpdateEmailModal() {
   const setModal = useSetRecoilState(modalState);
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);

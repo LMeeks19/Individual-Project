@@ -5,6 +5,8 @@ import { currentUserState, modalState } from "../../Functions/GlobalState";
 import SnackbarAlert from "../../Components/Snackbar";
 import { GetTeamByProfileId } from "../../Functions/Server";
 
+// This component is used in the modal to create a team
+
 export default function CreateTeamModal() {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const setModal = useSetRecoilState(modalState);

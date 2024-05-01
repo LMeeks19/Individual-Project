@@ -9,6 +9,8 @@ import {
 import { GetPlayerPosts } from "../../Functions/Server";
 import SnackbarAlert from "../../Components/Snackbar";
 
+// This component is used in the modal to register or unregister a player on a player post
+
 export default function RegisterPlayerModal(props) {
   const currentUser = useRecoilValue(currentUserState);
   const setPlayerPosts = useSetRecoilState(playerPostsState);

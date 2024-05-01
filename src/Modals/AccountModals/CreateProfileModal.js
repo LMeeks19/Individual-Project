@@ -4,6 +4,9 @@ import { currentUserState, modalState } from "../../Functions/GlobalState";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import SnackbarAlert from "../../Components/Snackbar";
 
+// This component is used in the modal to create a profile
+
+
 export default function CreateProfileModal() {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const setModal = useSetRecoilState(modalState);

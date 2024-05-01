@@ -4,6 +4,8 @@ import { useRecoilState } from "recoil";
 import { modalState } from "../Functions/GlobalState";
 import "./Modal.css";
 
+// Implementation of the Modal component base template
+
 export default function Modal() {
   const [modal, setModal] = useRecoilState(modalState);
 

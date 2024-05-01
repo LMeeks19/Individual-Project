@@ -8,6 +8,8 @@ import { Alert, IconButton } from "@mui/material";
 import { Close, Warning } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
+// Implementation of the warning message that is displayed when a users has no profile
+
 export default function WarningMessage() {
   const [warningIsShown, setWarningIsShown] =
     useRecoilState(warningIsShownState);
