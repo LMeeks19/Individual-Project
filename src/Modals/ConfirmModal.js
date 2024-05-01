@@ -3,6 +3,8 @@ import { useSetRecoilState } from "recoil";
 import { View, Button, Flex, Heading } from "@aws-amplify/ui-react";
 import { modalState } from "../Functions/GlobalState";
 
+// Implementation of the Confirm Modal component
+
 export default function ConfirmModal(props) {
   const setModal = useSetRecoilState(modalState);
 

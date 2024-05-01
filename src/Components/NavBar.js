@@ -27,6 +27,8 @@ import {
 } from "../Functions/GlobalState";
 import { AccountType } from "../Functions/Enums";
 
+// Implementation of the navbar component
+
 export default function NavBar() {
   const navigate = useNavigate();
   const currentUser = useRecoilValue(currentUserState);

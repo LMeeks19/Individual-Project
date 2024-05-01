@@ -5,6 +5,8 @@ import { currentUserState, modalState } from "../../Functions/GlobalState";
 import { ProfileUpdateForm } from "../../ui-components";
 import SnackbarAlert from "../../Components/Snackbar";
 
+// This component is used in the modal to update a profile
+
 export default function UpdateProfileModal() {
   const setModal = useSetRecoilState(modalState);
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);

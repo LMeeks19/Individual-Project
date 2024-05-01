@@ -1,3 +1,5 @@
+// File containing a collection of enums
+
 export class AccountType {
   ADMIN = "ADMIN";
   COACH = "COACH";

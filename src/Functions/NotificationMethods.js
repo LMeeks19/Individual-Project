@@ -2,6 +2,8 @@ import { NotificationType } from "./Enums";
 import { formatDateTime } from "./FormatDate";
 import { CreateNotification } from "./Server";
 
+// This file contains functions that create a variety of types of notifications that can be used globally
+
 export function createMessageReceivedNotification(userIDs, chatName, currentUserName) {
     let notificationTypes = new NotificationType()
     userIDs.forEach(async (id) => {

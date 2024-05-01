@@ -1,5 +1,7 @@
 @import "react-calendar/dist/Calendar.css";
 
+/* All CSS for the schedule page */
+
 .schedule {
     height: 100%;
     overflow: hidden;

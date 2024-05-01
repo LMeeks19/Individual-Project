@@ -37,6 +37,8 @@ import ConfirmModal from "../ConfirmModal";
 import { formatDateTime } from "../../Functions/FormatDate";
 import { createSelectedForMatchPostNotification } from "../../Functions/NotificationMethods";
 
+// The component is displayed in the modal and displays all the details for the selected match post and allows the creator to select and reject interested users
+
 export default function ViewMatchPostModal(props) {
   const currentUser = useRecoilValue(currentUserState);
   const navigate = useNavigate();

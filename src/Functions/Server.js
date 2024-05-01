@@ -44,6 +44,8 @@ import {
 import { EventStatus } from "./Enums";
 import { createEventCreatedNotification } from "./NotificationMethods";
 
+// This file contains all a bunch of API calls placed un globally used methods that are used to Retrieve, Update, Create and Delete data
+
 // Profile API Calls
 export async function GetProfile(user) {
   const client = generateClient();
@@ -683,6 +685,7 @@ export async function UpdateEventStatus(eventId, status) {
   return null;
 }
 
+// Notifications API Calls
 export async function GetNotificationsByProfileId(profileId) {
   const client = generateClient();
 

@@ -36,6 +36,8 @@ import { AccountType } from "../../Functions/Enums";
 import { formatDateTimeRelative } from "../../Functions/FormatDate";
 import { createsPlayerPostDeletedNotification } from "../../Functions/NotificationMethods";
 
+// This page implements the template for the various player posts tables and will allow users to interact with the player posts
+
 export default function PlayerPostsTab(props) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(8);

@@ -22,6 +22,10 @@ import {
 import { useEffect, useState } from "react";
 import "./Notifications.css";
 
+// This page implements the notifications page, This page allows users to view their notifications.
+// Users can then also mark all or individual notifications as read, 
+// filter between read and unread and none and also delete notifications
+
 export default function Notifications() {
   const [notifications, setNotifications] = useRecoilState(notificationsState);
   const filterTypes = {
