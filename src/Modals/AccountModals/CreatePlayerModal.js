@@ -5,6 +5,8 @@ import { currentUserState, modalState } from "../../Functions/GlobalState";
 import SnackbarAlert from "../../Components/Snackbar";
 import { GetPlayersByProfileId } from "../../Functions/Server";
 
+// This component is used in the modal to create a player
+
 export default function CreatePlayerModal() {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const setModal = useSetRecoilState(modalState);

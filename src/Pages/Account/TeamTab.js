@@ -15,6 +15,8 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import UpdateTeamPlayerModal from "../../Modals/AccountModals/UpdateTeamPlayerModal";
 import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
 
+// This component is displayed when viewing the team tab on the accounts page it allows user to create a team to their account
+
 export function TeamDetails(props) {
   return (
     <View>

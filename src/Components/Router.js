@@ -3,9 +3,10 @@ import PlayersPosts from "../Pages/PlayerPosts/PlayerPosts";
 import Account from "../Pages/Account/Account";
 import Messages from "../Pages/Chats/Chats";
 import Notifications from "../Pages/Notifications/Notifications"
-
 import { Routes, Route } from "react-router-dom";
 import Schedule from "../Pages/Schedule/Schedule";
+
+// All page components implemented as routes for navigation purposes
 
 export default function NavRouter() {
   return (

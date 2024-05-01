@@ -5,6 +5,8 @@ import SnackbarAlert from "../../Components/Snackbar";
 import { useState } from "react";
 import { updatePassword } from "aws-amplify/auth";
 
+// This component is used in the modal to update a password
+
 export default function UpdatePasswordModal() {
   const setModal = useSetRecoilState(modalState);
   const [oldPassword, setOldPassword] = useState("");

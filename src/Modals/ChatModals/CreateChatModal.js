@@ -9,6 +9,8 @@ import {
 import SnackbarAlert from "../../Components/Snackbar";
 import { GetChatsByProfileId } from "../../Functions/Server";
 
+// This component is used in the modal to create a chat with another user
+
 export default function CreateChatModal() {
   const setChats = useSetRecoilState(chatsState);
   const currentUser = useRecoilValue(currentUserState);

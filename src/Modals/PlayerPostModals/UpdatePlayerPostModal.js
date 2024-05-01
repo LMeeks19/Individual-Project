@@ -9,6 +9,8 @@ import {
 import SnackbarAlert from "../../Components/Snackbar";
 import { createPlayerPostUpdatedNotification } from "../../Functions/NotificationMethods";
 
+// This component is used in the modal to update a player post
+
 export default function UpdatePlayerPostModal(props) {
   const [playerPosts, setPlayerPosts] = useRecoilState(playerPostsState);
   const setModal = useSetRecoilState(modalState);

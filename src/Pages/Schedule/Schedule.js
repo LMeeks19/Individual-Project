@@ -25,6 +25,9 @@ import { ChangeCircle } from "@mui/icons-material";
 import ConfirmModal from "../../Modals/ConfirmModal";
 import { createEventReScheduledClosedNotification, createEventUnScheduledClosedNotification } from "../../Functions/NotificationMethods";
 
+// This page implements the schedule page, This page allows users to view their schedule for any given day, 
+// allowing them to click visit any upcoming or past date and view the schedule for that date
+
 export default function Schedule() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isLoading, setIsLoading] = useState(true);

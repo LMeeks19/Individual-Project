@@ -1,6 +1,8 @@
 import { Close } from "@mui/icons-material";
 import { enqueueSnackbar, closeSnackbar } from "notistack";
 
+// Class that allows gor the queueing of alerts with various styles
+
 export default class SnackbarAlert {
   queueAlert(varient, message) {
     enqueueSnackbar(message, {

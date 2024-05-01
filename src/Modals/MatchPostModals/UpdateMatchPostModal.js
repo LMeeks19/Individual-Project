@@ -9,6 +9,8 @@ import {
 import SnackbarAlert from "../../Components/Snackbar";
 import { createMatchPostUpdatedNotification } from "../../Functions/NotificationMethods";
 
+// This component is used in the modal to update a match post
+
 export default function UpdateMatchPostModal(props) {
   const [matchPosts, setMatchPosts] = useRecoilState(matchPostsState);
   const setModal = useSetRecoilState(modalState);

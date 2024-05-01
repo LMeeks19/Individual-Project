@@ -23,6 +23,8 @@ import { AccountType } from "../../Functions/Enums";
 import { Tooltip } from "@mui/material";
 import { formatDate } from "../../Functions/FormatDate";
 
+// This file contains a variert if tables that eill be displayed when viewing certain parts of the account page
+
 export function ViewPersonalTable(props) {
 
   return (

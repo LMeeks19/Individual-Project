@@ -6,6 +6,8 @@ import {
   Button,
 } from "@aws-amplify/ui-react";
 
+// Contains all the necessary components needed for the Authenticator
+
 export const components = {
   SignIn: {
     Header() {

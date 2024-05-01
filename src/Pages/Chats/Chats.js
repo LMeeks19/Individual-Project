@@ -30,6 +30,8 @@ import { CircularProgress, Tooltip } from "@mui/material";
 import { AccountType } from "../../Functions/Enums";
 import { createMessageReceivedNotification } from "../../Functions/NotificationMethods";
 
+// This page implements the chats page, This page allows users to view chats, create new chats and send real-time messages in existing chats
+
 export default function Chats() {
   const [chats, setChats] = useRecoilState(chatsState);
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);

@@ -1,3 +1,5 @@
+/* All CSS for the match posts page */
+
 .match-posts-tab:hover,
 .match-posts-tab[aria-selected='true'] {
     color: #008080;

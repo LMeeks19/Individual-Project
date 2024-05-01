@@ -25,6 +25,8 @@ import { onCreateNotification } from "../graphql/subscriptions";
 import { generateClient } from "aws-amplify/api";
 import SnackbarAlert from "../Components/Snackbar";
 
+// This is the base template that all other pages are based off of and contains the initial api calls to get the currenct user
+
 export default function Page() {
   const modal = useRecoilValue(modalState);
   const { user } = useAuthenticator();

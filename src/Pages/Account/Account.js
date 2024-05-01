@@ -31,6 +31,8 @@ import CreateTeamPlayerModal from "../../Modals/AccountModals/CreateTeamPlayerMo
 import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
 import { AccountType } from "../../Functions/Enums";
 
+// This page implements the profie page, This page displayes a variety of tabs related to the users account where they can create, update all data but only delete certain parts
+
 export default function Profile() {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const { signOut } = useAuthenticator();

@@ -14,6 +14,8 @@ import CreatePlayerPostModal from "../../Modals/PlayerPostModals/CreatePlayerPos
 import { Tooltip } from "@mui/material";
 import { AccountType } from "../../Functions/Enums";
 
+// This page implements the base template for the players posts page, This page will allow users to select tabs that filter player posts
+
 export default function MatchPosts() {
   const currentUser = useRecoilValue(currentUserState);
   const [playerPosts, setPlayerPosts] = useRecoilState(playerPostsState);

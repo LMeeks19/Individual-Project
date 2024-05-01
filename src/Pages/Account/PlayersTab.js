@@ -14,6 +14,8 @@ import UpdatePlayerModal from "../../Modals/AccountModals/UpdatePlayerModal";
 import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
 import { formatDate } from "../../Functions/FormatDate";
 
+// This component is displayed when viewing the players tab on the accounts page it allows user to add players to their account
+
 export default function ViewRegisteredPlayers() {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
   const setModal = useSetRecoilState(modalState);

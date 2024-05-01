@@ -38,6 +38,8 @@ import {
 import { formatDateTimeRelative } from "../../Functions/FormatDate";
 import { createMatchPostDeletedNotification } from "../../Functions/NotificationMethods";
 
+// This page implements the template for the various match posts tables and will allow users to interact with the match posts
+
 export default function MatchPostsTab(props) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(8);
