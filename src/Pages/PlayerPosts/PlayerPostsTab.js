@@ -18,7 +18,6 @@ import { useState } from "react";
 import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
 import { useSetRecoilState, useRecoilState, useRecoilValue } from "recoil";
 import "./PlayerPosts.css";
-import "../../Components/Animations.css";
 import { useNavigate } from "react-router-dom";
 import {
   Message,
