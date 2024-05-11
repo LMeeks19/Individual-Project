@@ -63,8 +63,7 @@ export default function MatchPosts() {
               }
               disabled={
                 currentUser.accountType === accountTypes.PARENT ||
-                currentUser.accountType === accountTypes.NONE ||
-                currentUser.team.id === null
+                currentUser.accountType === accountTypes.NONE
               }
             >
               <Add fontSize="small" className="icon" htmlColor="#f9f1f1" />
