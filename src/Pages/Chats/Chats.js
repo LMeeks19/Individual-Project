@@ -61,24 +61,16 @@ export default function Chats() {
           .subscribe({
             next: ({ data }) => {
               if (data.onCreateChatMessage.chatID === selectedChat.id) {
+                let newMessage = [data.onCreateChatMessage];
                 let updatedMessages = [
                   ...selectedChat.messages,
-                  ...[data.onCreateChatMessage.message],
-                ].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+                  ...newMessage,
+                ];
+                updatedMessages = updatedMessages.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
                 setSelectedChat({
                   ...selectedChat,
                   messages: updatedMessages,
                 });
-                let updatedChats = [...chats].map((chat) => {
-                  if (chat.id === data.onCreateChatMessage.chatID)
-                    return {
-                      ...chat,
-                      messages: updatedMessages,
-                    };
-                  else return chat;
-                });
-
-                setChats(updatedChats);
               }
             },
             error: (error) => console.log(error),
