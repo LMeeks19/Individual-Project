@@ -57,7 +57,13 @@ export default function Page() {
         })
         .subscribe({
           next: ({ data }) => {
-            if (data.onCreateNotification.toProfileId === currentUser.id) {
+            if (
+              data.onCreateNotification.toProfileId === currentUser.id &&
+              !notifications.some(
+                (notification) =>
+                  notification.id === data.onCreateNotification.id
+              )
+            ) {
               let updatedNotifications = [
                 ...notifications,
                 ...[data.onCreateNotification],

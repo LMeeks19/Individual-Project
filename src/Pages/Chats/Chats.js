@@ -60,7 +60,12 @@ export default function Chats() {
           })
           .subscribe({
             next: ({ data }) => {
-              if (data.onCreateChatMessage.chatID === selectedChat.id) {
+              if (
+                data.onCreateChatMessage.chatID === selectedChat.id &&
+                !selectedChat.messages.some(
+                  (message) => message.id === data.onCreateChatMessage.id
+                )
+              ) {
                 let newMessage = [data.onCreateChatMessage];
                 let updatedMessages = [...selectedChat.messages, ...newMessage];
                 updatedMessages = updatedMessages.sort((a, b) =>
