@@ -63,7 +63,7 @@ export default function Chats() {
               if (data.onCreateChatMessage.chatID === selectedChat.id) {
                 let updatedMessages = [
                   ...selectedChat.messages,
-                  ...[data.onCreateChatMessage],
+                  ...[data.onCreateChatMessage.message],
                 ].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
                 setSelectedChat({
                   ...selectedChat,
