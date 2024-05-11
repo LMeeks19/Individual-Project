@@ -59,23 +59,12 @@ export default function Chats() {
             query: onCreateChatMessage,
           })
           .subscribe({
-            next: ({ data }) => {
-              if (
-                data.onCreateChatMessage.chatID === selectedChat.id &&
-                !selectedChat.messages.some(
-                  (message) => message.id === data.onCreateChatMessage.id
-                )
-              ) {
-                let newMessage = [data.onCreateChatMessage];
-                let updatedMessages = [...selectedChat.messages, ...newMessage];
-                updatedMessages = updatedMessages.sort((a, b) =>
-                  b.createdAt.localeCompare(a.createdAt)
-                );
-                let updatedSelectedChat = {
+            next: async ({ data }) => {
+              if (data.onCreateChatMessage.chatID === selectedChat.id) {
+                setSelectedChat({
                   ...selectedChat,
-                  messages: updatedMessages,
-                };
-                setSelectedChat(updatedSelectedChat);
+                  messages: await GetChatMessages(selectedChat.id),
+                });
               }
             },
             error: (error) => console.log(error),

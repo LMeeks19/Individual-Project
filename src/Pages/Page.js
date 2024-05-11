@@ -56,19 +56,9 @@ export default function Page() {
           query: onCreateNotification,
         })
         .subscribe({
-          next: ({ data }) => {
-            if (
-              data.onCreateNotification.toProfileId === currentUser.id &&
-              !notifications.some(
-                (notification) =>
-                  notification.id === data.onCreateNotification.id
-              )
-            ) {
-              let updatedNotifications = [
-                ...notifications,
-                ...[data.onCreateNotification],
-              ].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-              setNotifications(updatedNotifications);
+          next: async ({ data }) => {
+            if (data.onCreateNotification.toProfileId === currentUser.id) {
+              setNotifications(await GetNotificationsByProfileId(user.userId));
               new SnackbarAlert().info("Notification Recieved!");
             }
           },
