@@ -39,6 +39,8 @@ export default function MatchPosts() {
       return "Create a Profile to create a match post";
     if (currentUser.accountType === accountTypes.PARENT)
       return "Parents cannot create Match Posts";
+    if (currentUser.team.id === null)
+      return "Create a Team first"
     return "Create Match Post";
   }
 
