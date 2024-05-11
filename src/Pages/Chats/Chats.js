@@ -61,9 +61,12 @@ export default function Chats() {
           .subscribe({
             next: async ({ data }) => {
               if (data.onCreateChatMessage.chatID === selectedChat.id) {
+                let chatMessages = await GetChatMessages(selectedChat.id);
                 setSelectedChat({
                   ...selectedChat,
-                  messages: await GetChatMessages(selectedChat.id),
+                  messages: chatMessages.sort((a, b) =>
+                    b.createdAt.localeCompare(a.createdAt)
+                  ),
                 });
               }
             },
