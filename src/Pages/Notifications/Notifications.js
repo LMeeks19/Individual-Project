@@ -69,8 +69,8 @@ export default function Notifications() {
     let unreadNotifications = notifications.filter(
       (notification) => !notification.isRead
     );
-    unreadNotifications.forEach(
-      async (notification) => await MarkNotificationAsRead(notification.id)
+    unreadNotifications.forEach((notification) =>
+      markNotificationAsRead(notification.id)
     );
     let updatedNotifications = notifications.map((notification) => {
       return { ...notification, isRead: true };

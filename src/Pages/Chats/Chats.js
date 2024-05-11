@@ -62,15 +62,15 @@ export default function Chats() {
             next: ({ data }) => {
               if (data.onCreateChatMessage.chatID === selectedChat.id) {
                 let newMessage = [data.onCreateChatMessage];
-                let updatedMessages = [
-                  ...selectedChat.messages,
-                  ...newMessage,
-                ];
-                updatedMessages = updatedMessages.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-                setSelectedChat({
+                let updatedMessages = [...selectedChat.messages, ...newMessage];
+                updatedMessages = updatedMessages.sort((a, b) =>
+                  b.createdAt.localeCompare(a.createdAt)
+                );
+                let updatedSelectedChat = {
                   ...selectedChat,
                   messages: updatedMessages,
-                });
+                };
+                setSelectedChat(updatedSelectedChat);
               }
             },
             error: (error) => console.log(error),
