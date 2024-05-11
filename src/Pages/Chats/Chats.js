@@ -8,7 +8,6 @@ import {
 } from "@aws-amplify/ui-react";
 import { AddCircle, Send } from "@mui/icons-material";
 import "./Chats.css";
-import "../../Components/Animations.css";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
