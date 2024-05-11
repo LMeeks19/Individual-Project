@@ -23,7 +23,7 @@ import { useEffect, useState } from "react";
 import "./Notifications.css";
 
 // This page implements the notifications page, This page allows users to view their notifications.
-// Users can then also mark all or individual notifications as read, 
+// Users can then also mark all or individual notifications as read,
 // filter between read and unread and none and also delete notifications
 
 export default function Notifications() {
@@ -66,12 +66,15 @@ export default function Notifications() {
   }
 
   async function markAllNotificationAsRead() {
-    let updatedNotifications = notifications
-      .filter((notification) => !notification.isRead)
-      .map(async (notification) => {
-        let updatedNotification = await MarkNotificationAsRead(notification.id);
-        return updatedNotification
-      });
+    let unreadNotifications = notifications.filter(
+      (notification) => !notification.isRead
+    );
+    unreadNotifications.forEach(
+      async (notification) => await MarkNotificationAsRead(notification.id)
+    );
+    let updatedNotifications = notifications.map((notification) => {
+      return { ...notification, isRead: true };
+    });
     setNotifications(updatedNotifications);
   }
 
