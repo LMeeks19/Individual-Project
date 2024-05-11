@@ -69,7 +69,8 @@ export default function Notifications() {
     let updatedNotifications = notifications
       .filter((notification) => !notification.isRead)
       .map(async (notification) => {
-        return await MarkNotificationAsRead(notification.id);
+        let updatedNotification = await MarkNotificationAsRead(notification.id);
+        return updatedNotification
       });
     setNotifications(updatedNotifications);
   }
