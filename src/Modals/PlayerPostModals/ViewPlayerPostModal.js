@@ -463,7 +463,15 @@ export default function ViewPlayerPostModal(props) {
                             : ""
                         }
                       >
-                        <TableCell>{}</TableCell>
+                        <TableCell>
+                          {
+                            post.interestedUsers.find(
+                              (iu) =>
+                                iu.profileId ===
+                                registeredPlayer.player.profileID
+                            ).profile.name
+                          }
+                        </TableCell>
                         <TableCell>
                           {
                             post.interestedUsers.find(
