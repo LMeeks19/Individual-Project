@@ -59,7 +59,7 @@ export default function Page() {
           next: async ({ data }) => {
             if (data.onCreateNotification.toProfileId === currentUser.id) {
               setNotifications(await GetNotificationsByProfileId(user.userId));
-              new SnackbarAlert().info("Notification Recieved!");
+              new SnackbarAlert().info(`Notification Recieved: ${data.onCreateNotification.message}`);
             }
           },
           error: (error) => console.log(error),
