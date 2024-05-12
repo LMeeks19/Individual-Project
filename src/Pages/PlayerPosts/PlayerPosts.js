@@ -7,7 +7,7 @@ import {
   playerPostsState,
 } from "../../Functions/GlobalState";
 import { modalState } from "../../Functions/GlobalState";
-import { Add } from "@mui/icons-material";
+import { Add, Replay } from "@mui/icons-material";
 import "./PlayerPosts.css";
 import { GetPlayerPosts } from "../../Functions/Server";
 import CreatePlayerPostModal from "../../Modals/PlayerPostModals/CreatePlayerPostsModal";
@@ -24,14 +24,16 @@ export default function MatchPosts() {
   const accountTypes = new AccountType();
 
   useEffect(() => {
-    async function getPlayerPosts() {
-      let playerPosts = await GetPlayerPosts();
-      playerPosts = playerPosts.sort((a, b) => a.title.localeCompare(b.title));
-      setPlayerPosts(playerPosts);
-      setIsLoading(false);
-    }
     getPlayerPosts();
   }, []);
+
+  async function getPlayerPosts() {
+    setIsLoading(true);
+    let playerPosts = await GetPlayerPosts();
+    playerPosts = playerPosts.sort((a, b) => a.title.localeCompare(b.title));
+    setPlayerPosts(playerPosts);
+    setIsLoading(false);
+  }
 
   function openModal(component, title) {
     setModal({ component: component, title: title, isShown: true });
@@ -53,24 +55,39 @@ export default function MatchPosts() {
         alignItems="center"
       >
         <Heading level={3}>Player Posts</Heading>
-        <Tooltip title={getTooltipMessage()} arrow>
-          <span>
-            <Button
-              className="custom-button"
-              variation="primary"
-              onClick={() =>
-                openModal(<CreatePlayerPostModal />, "Create Player Post")
-              }
-              disabled={
-                currentUser.accountType === accountTypes.PARENT ||
-                currentUser.accountType === accountTypes.NONE
-              }
-            >
-              <Add fontSize="small" className="icon" htmlColor="#f9f1f1" />
-              <Text fontWeight="medium">Create</Text>
-            </Button>
-          </span>
-        </Tooltip>
+        <Flex>
+          <Tooltip title="Refresh Player Posts" arrow>
+            <span>
+              <Button
+                className="custom-button"
+                variation="primary"
+                onClick={() => getPlayerPosts()}
+                disabled={isLoading}
+              >
+                <Replay fontSize="small" className="icon" htmlColor="#f9f1f1" />
+                <Text fontWeight="medium">Refresh</Text>
+              </Button>
+            </span>
+          </Tooltip>
+          <Tooltip title={getTooltipMessage()} arrow>
+            <span>
+              <Button
+                className="custom-button"
+                variation="primary"
+                onClick={() =>
+                  openModal(<CreatePlayerPostModal />, "Create Player Post")
+                }
+                disabled={
+                  currentUser.accountType === accountTypes.PARENT ||
+                  currentUser.accountType === accountTypes.NONE
+                }
+              >
+                <Add fontSize="small" className="icon" htmlColor="#f9f1f1" />
+                <Text fontWeight="medium">Create</Text>
+              </Button>
+            </span>
+          </Tooltip>
+        </Flex>
       </Flex>
       <Tabs.Container defaultValue="1">
         <Tabs.List spacing="equal" wrap="wrap">

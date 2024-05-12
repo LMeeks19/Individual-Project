@@ -237,32 +237,27 @@ export default function Profile() {
           <></>
         )}
 
-        {currentUser.accountType === accountTypes.PARENT ||
-        currentUser.accountType === accountTypes.ADMIN ? (
-          <Tabs.Panel value="4">
-            <Heading marginBottom="20px" level={3}>
-              Players
-            </Heading>
+        <Tabs.Panel value="4">
+          <Heading marginBottom="20px" level={3}>
+            Players
+          </Heading>
 
-            <Flex justifyContent="space-between" alignItems="center">
-              <Heading level={4}>Registered Players</Heading>
-              <Button
-                className="custom-button"
-                variation="primary"
-                onClick={() => openModal(<CreatePlayerModal />, "Add Player")}
-              >
-                <Text display="flex">
-                  <Add className="icon" />
-                  Add
-                </Text>
-              </Button>
-            </Flex>
-            <Divider marginTop="10px" />
-            <ViewRegisteredPlayers />
-          </Tabs.Panel>
-        ) : (
-          <></>
-        )}
+          <Flex justifyContent="space-between" alignItems="center">
+            <Heading level={4}>Registered Players</Heading>
+            <Button
+              className="custom-button"
+              variation="primary"
+              onClick={() => openModal(<CreatePlayerModal />, "Add Player")}
+            >
+              <Text display="flex">
+                <Add className="icon" />
+                Add
+              </Text>
+            </Button>
+          </Flex>
+          <Divider marginTop="10px" />
+          <ViewRegisteredPlayers />
+        </Tabs.Panel>
 
         <Tabs.Panel value="5">
           <Heading marginBottom="20px" level={3}>
