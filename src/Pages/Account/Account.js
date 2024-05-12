@@ -51,14 +51,25 @@ export default function Profile() {
   }
 
   function getDeleteTeamTooltipMessage() {
-    if (currentUser.team.players.length > 0) {
+    if (currentUser.team.players.length > 0)
       return "Remove all team players first";
-    }
     return "Create Team";
   }
 
-  function hasNoProfile(object) {
-    return Object.values(object).some((v) => v === null);
+  function getTeamAddTooltipMessage() {
+    if (hasNoProfile())
+      return "Create a Profile first"
+    return "Create Team"
+  }
+
+  function getPlayersAddTooltipMessage() {
+    if (hasNoProfile())
+      return "Create a Profile first"
+    return "Add Player"
+  }
+
+  function hasNoProfile() {
+    return Object.values(currentUser).some((v) => v === null);
   }
 
   return (
@@ -101,7 +112,7 @@ export default function Profile() {
         <Tabs.Panel value="1">
           <Flex marginBottom="20px" justifyContent="space-between">
             <Heading level={3}>My Profile</Heading>
-            {!hasNoProfile(currentUser) ? (
+            {!hasNoProfile() ? (
               <Button
                 className="custom-button"
                 variation="primary"
@@ -177,16 +188,23 @@ export default function Profile() {
                   </span>
                 </Tooltip>
               ) : (
-                <Button
-                  className="custom-button"
-                  variation="primary"
-                  onClick={() => openModal(<CreateTeamModal />, "Create Team")}
-                >
-                  <Text display="flex">
-                    <Add fontSize="small" className="icon" />
-                    Create Team
-                  </Text>
-                </Button>
+                <Tooltip title={getTeamAddTooltipMessage()} arrow>
+                  <span>
+                    <Button
+                      className="custom-button"
+                      variation="primary"
+                      disabled={hasNoProfile()}
+                      onClick={() =>
+                        openModal(<CreateTeamModal />, "Create Team")
+                      }
+                    >
+                      <Text display="flex">
+                        <Add fontSize="small" className="icon" />
+                        Create Team
+                      </Text>
+                    </Button>
+                  </span>
+                </Tooltip>
               )}
             </Flex>
             <Flex justifyContent="space-between" alignItems="center">
@@ -244,16 +262,21 @@ export default function Profile() {
 
           <Flex justifyContent="space-between" alignItems="center">
             <Heading level={4}>Registered Players</Heading>
-            <Button
-              className="custom-button"
-              variation="primary"
-              onClick={() => openModal(<CreatePlayerModal />, "Add Player")}
-            >
-              <Text display="flex">
-                <Add className="icon" />
-                Add
-              </Text>
-            </Button>
+            <Tooltip title={getPlayersAddTooltipMessage()} arrow>
+              <span>
+                <Button
+                  className="custom-button"
+                  variation="primary"
+                  disabled={hasNoProfile()}
+                  onClick={() => openModal(<CreatePlayerModal />, "Add Player")}
+                >
+                  <Text display="flex">
+                    <Add className="icon" />
+                    Add
+                  </Text>
+                </Button>
+              </span>
+            </Tooltip>
           </Flex>
           <Divider marginTop="10px" />
           <ViewRegisteredPlayers />
