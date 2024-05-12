@@ -46,7 +46,6 @@ export default function Page() {
       setIsLoading(false);
     }
     fetchUser();
-    getNotifications();
   }, []);
 
   useEffect(() => {
