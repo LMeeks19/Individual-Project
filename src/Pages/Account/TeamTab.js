@@ -52,7 +52,7 @@ export function TeamDetails(props) {
                   Phone Nmuber: {props.team.phoneNumber ?? "N/A"}
                 </Text>
                 <Text className="text">
-                  Website:
+                  Website:{" "}
                   {props.team.website !== null ? (
                     <a
                       target="_blank"
