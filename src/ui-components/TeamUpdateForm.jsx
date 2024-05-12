@@ -369,68 +369,6 @@ export default function TeamUpdateForm(props) {
         {...getOverrideProps(overrides, "location")}
       ></TextField>
       <TextField
-        label="Email"
-        isRequired={true}
-        isReadOnly={false}
-        value={email}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name,
-              league,
-              ageGroup,
-              location,
-              email: value,
-              phoneNumber,
-              website,
-            };
-            const result = onChange(modelFields);
-            value = result?.email ?? value;
-          }
-          if (errors.email?.hasError) {
-            runValidationTasks("email", value);
-          }
-          setEmail(value);
-        }}
-        onBlur={() => runValidationTasks("email", email)}
-        errorMessage={errors.email?.errorMessage}
-        hasError={errors.email?.hasError}
-        {...getOverrideProps(overrides, "email")}
-      ></TextField>
-      <TextField
-        label="Phone number"
-        isRequired={true}
-        descriptiveText="Please include your dial code when engerting your phone number e.g. 07123456789 -> +447123456789"
-        isReadOnly={false}
-        type="tel"
-        value={phoneNumber}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name,
-              league,
-              ageGroup,
-              location,
-              email,
-              phoneNumber: value,
-              website,
-            };
-            const result = onChange(modelFields);
-            value = result?.phoneNumber ?? value;
-          }
-          if (errors.phoneNumber?.hasError) {
-            runValidationTasks("phoneNumber", value);
-          }
-          setPhoneNumber(value);
-        }}
-        onBlur={() => runValidationTasks("phoneNumber", phoneNumber)}
-        errorMessage={errors.phoneNumber?.errorMessage}
-        hasError={errors.phoneNumber?.hasError}
-        {...getOverrideProps(overrides, "phoneNumber")}
-      ></TextField>
-      <TextField
         label="Website (optional)"
         isRequired={false}
         isReadOnly={false}
