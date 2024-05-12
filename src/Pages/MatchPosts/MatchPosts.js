@@ -6,7 +6,7 @@ import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
 import { currentUserState, matchPostsState } from "../../Functions/GlobalState";
 import CreateMatchPostModal from "../../Modals/MatchPostModals/CreateMatchPostModal";
 import { modalState } from "../../Functions/GlobalState";
-import { Add } from "@mui/icons-material";
+import { Add, Replay } from "@mui/icons-material";
 import "./MatchPosts.css";
 import { Tooltip } from "@mui/material";
 import { AccountType } from "../../Functions/Enums";
@@ -21,14 +21,16 @@ export default function MatchPosts() {
   const accountTypes = new AccountType();
 
   useEffect(() => {
-    async function getMatchPosts() {
-      let apiPosts = await GetMatchPosts();
-      apiPosts = apiPosts.sort((a, b) => a.title.localeCompare(b.title));
-      setMatchPosts(apiPosts);
-      setIsLoading(false);
-    }
     getMatchPosts();
   }, []);
+
+  async function getMatchPosts() {
+    setIsLoading(true);
+    let apiPosts = await GetMatchPosts();
+    apiPosts = apiPosts.sort((a, b) => a.title.localeCompare(b.title));
+    setMatchPosts(apiPosts);
+    setIsLoading(false);
+  }
 
   function openModal(component, title) {
     setModal({ component: component, title: title, isShown: true });
@@ -39,8 +41,7 @@ export default function MatchPosts() {
       return "Create a Profile to create a match post";
     if (currentUser.accountType === accountTypes.PARENT)
       return "Parents cannot create Match Posts";
-    if (currentUser.team.id === null)
-      return "Create a Team first"
+    if (currentUser.team.id === null) return "Create a Team first";
     return "Create Match Post";
   }
 
@@ -52,25 +53,40 @@ export default function MatchPosts() {
         alignItems="center"
       >
         <Heading level={3}>Match Posts</Heading>
-        <Tooltip title={getTooltipMessage()} arrow>
-          <span>
-            <Button
-              className="custom-button"
-              variation="primary"
-              onClick={() =>
-                openModal(<CreateMatchPostModal />, "Create Match Post")
-              }
-              disabled={
-                currentUser.accountType === accountTypes.PARENT ||
-                currentUser.accountType === accountTypes.NONE ||
-                currentUser.team.id === null
-              }
-            >
-              <Add fontSize="small" className="icon" htmlColor="#f9f1f1" />
-              <Text fontWeight="medium">Create</Text>
-            </Button>
-          </span>
-        </Tooltip>
+        <Flex>
+          <Tooltip title="Refresh Match Posts" arrow>
+            <span>
+              <Button
+                className="custom-button"
+                variation="primary"
+                onClick={() => getMatchPosts()}
+                disabled={isLoading}
+              >
+                <Replay fontSize="small" className="icon" htmlColor="#f9f1f1" />
+                <Text fontWeight="medium">Refresh</Text>
+              </Button>
+            </span>
+          </Tooltip>
+          <Tooltip title={getTooltipMessage()} arrow>
+            <span>
+              <Button
+                className="custom-button"
+                variation="primary"
+                onClick={() =>
+                  openModal(<CreateMatchPostModal />, "Create Match Post")
+                }
+                disabled={
+                  currentUser.accountType === accountTypes.PARENT ||
+                  currentUser.accountType === accountTypes.NONE ||
+                  currentUser.team.id === null
+                }
+              >
+                <Add fontSize="small" className="icon" htmlColor="#f9f1f1" />
+                <Text fontWeight="medium">Create</Text>
+              </Button>
+            </span>
+          </Tooltip>
+        </Flex>
       </Flex>
       <Tabs.Container defaultValue="1">
         <Tabs.List spacing="equal" wrap="wrap">
