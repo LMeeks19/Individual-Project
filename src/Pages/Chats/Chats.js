@@ -54,25 +54,28 @@ export default function Chats() {
     const sub = client
       .graphql({
         query: onCreateChatMessage,
+        variables: {
+          chatID: {
+            eq: selectedChat.id,
+          },
+        },
       })
       .subscribe({
         next: ({ data }) => {
-          if (data.onCreateChatMessage.chatID === selectedChat.id) {
-            let chatMessages = [
-              ...selectedChat.messages,
-              ...[data.onCreateChatMessage],
-            ];
-            setSelectedChat({
-              ...selectedChat,
-              messages: chatMessages.sort((a, b) =>
-                b.createdAt.localeCompare(a.createdAt)
-              ),
-            });
-          }
+          let chatMessages = [
+            ...selectedChat.messages,
+            ...[data.onCreateChatMessage],
+          ];
+          setSelectedChat({
+            ...selectedChat,
+            messages: chatMessages.sort((a, b) =>
+              b.createdAt.localeCompare(a.createdAt)
+            ),
+          });
         },
       });
     return () => sub.unsubscribe();
-  }, []);
+  }, [selectedChat]);
 
   async function sendMessage() {
     await CreateChatMessage(selectedChat.id, currentUser.id, message).then(
