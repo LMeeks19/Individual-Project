@@ -32,7 +32,7 @@ export default function UpdateTeamModal() {
             ...currentUser,
             team: { ...data, players: currentUser.team.players },
           });
-          new SnackbarAlert().success("Team successfully created");
+          new SnackbarAlert().success("Team successfully updated");
           setModal({ component: null, title: null, isShown: false });
         }}
         onError={(fields, errorMessage) => {
