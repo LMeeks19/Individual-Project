@@ -23,6 +23,8 @@ export default function UpdateTeamModal() {
           const updatedFields = fields;
           updatedFields.id = currentUser.team.id;
           updatedFields.profileID = currentUser.team.profileID;
+          updatedFields.email = currentUser.email
+          updatedFields.phoneNumber = currentUser.phoneNumber
           return updatedFields;
         }}
         onSuccess={(data) => {

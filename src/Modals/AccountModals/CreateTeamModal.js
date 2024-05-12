@@ -21,6 +21,8 @@ export default function CreateTeamModal() {
         onSubmit={(fields) => {
           const updatedFields = fields;
           updatedFields.profileID = currentUser.id;
+          updatedFields.email = currentUser.email
+          updatedFields.phoneNumber = currentUser.phoneNumber
           return updatedFields;
         }}
         onSuccess={async (data) => {
