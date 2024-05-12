@@ -228,6 +228,7 @@ export default function Chats() {
             <TextField
               width="100%"
               labelHidden
+              autoComplete="off"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyUp={async (e) => {
