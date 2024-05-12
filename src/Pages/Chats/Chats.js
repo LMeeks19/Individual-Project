@@ -51,32 +51,28 @@ export default function Chats() {
   }, []);
 
   useEffect(() => {
-    async function getChatMessages() {
-      if (selectedChat?.id) {
-        setIsLoading(true);
-        const sub = client
-          .graphql({
-            query: onCreateChatMessage,
-          })
-          .subscribe({
-            next: async ({ data }) => {
-              if (data.onCreateChatMessage.chatID === selectedChat.id) {
-                let chatMessages = [...selectedChat.messages, ...[data.onCreateChatMessage]]
-                setSelectedChat({
-                  ...selectedChat,
-                  messages: chatMessages.sort((a, b) =>
-                    b.createdAt.localeCompare(a.createdAt)
-                  ),
-                });
-              }
-            },
-            error: (error) => console.log(error),
-          });
-        setIsLoading(false);
-      }
-    }
-    getChatMessages();
-  }, [selectedChat]);
+    const sub = client
+      .graphql({
+        query: onCreateChatMessage,
+      })
+      .subscribe({
+        next: ({ data }) => {
+          if (data.onCreateChatMessage.chatID === selectedChat.id) {
+            let chatMessages = [
+              ...selectedChat.messages,
+              ...[data.onCreateChatMessage],
+            ];
+            setSelectedChat({
+              ...selectedChat,
+              messages: chatMessages.sort((a, b) =>
+                b.createdAt.localeCompare(a.createdAt)
+              ),
+            });
+          }
+        },
+      });
+    return () => sub.unsubscribe();
+  }, []);
 
   async function sendMessage() {
     await CreateChatMessage(selectedChat.id, currentUser.id, message).then(
