@@ -46,9 +46,6 @@ export default function Page() {
       setIsLoading(false);
     }
     fetchUser();
-  }, []);
-
-  useEffect(() => {
     getNotifications();
   }, []);
 
@@ -70,9 +67,6 @@ export default function Page() {
         error: (error) => console.log(error),
       });
     setIsLoading(false);
-    return () => {
-      sub.unsubscribe();
-    };
   }
 
   if (isLoading) {
