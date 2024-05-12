@@ -49,27 +49,25 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    async function getNotifications() {
-      setIsLoading(true);
-      const sub = client
-        .graphql({
-          query: onCreateNotification,
-        })
-        .subscribe({
-          next: async ({ data }) => {
-            if (data.onCreateNotification.toProfileId === currentUser.id) {
-              setNotifications(await GetNotificationsByProfileId(user.userId));
-              new SnackbarAlert().info("Notification Recieved!");
-            }
-          },
-          error: (error) => console.log(error),
-        });
-      setIsLoading(false);
-      return () => {
-        sub.unsubscribe();
-      };
-    }
-    getNotifications();
+    const sub = client
+      .graphql({
+        query: onCreateNotification,
+      })
+      .subscribe({
+        next: ({ data }) => {
+          if (data.onCreateNotification.toProfileId === currentUser.id) {
+            let newNotifications = [
+              ...notifications,
+              ...[data.onCreateNotification],
+            ].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+            setNotifications(newNotifications);
+            new SnackbarAlert().info(
+              `Notification Recieved: ${data.onCreateNotification.message}`
+            );
+          }
+        },
+      });
+    return () => sub.unsubscribe();
   }, [notifications]);
 
   if (isLoading) {
