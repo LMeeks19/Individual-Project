@@ -61,7 +61,7 @@ export default function Chats() {
           .subscribe({
             next: async ({ data }) => {
               if (data.onCreateChatMessage.chatID === selectedChat.id) {
-                let chatMessages = await GetChatMessages(selectedChat.id);
+                let chatMessages = [...selectedChat.messages, ...[data.onCreateChatMessage]]
                 setSelectedChat({
                   ...selectedChat,
                   messages: chatMessages.sort((a, b) =>
@@ -73,9 +73,6 @@ export default function Chats() {
             error: (error) => console.log(error),
           });
         setIsLoading(false);
-        return () => {
-          sub.unsubscribe();
-        };
       }
     }
     getChatMessages();
